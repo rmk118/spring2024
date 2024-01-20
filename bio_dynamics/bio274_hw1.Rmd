@@ -1,0 +1,102 @@
+---
+title: "BIOL 274 Homework 1"
+author: "Ruby Krasnow"
+date: "2024-01-20"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+```
+
+## Question 1
+>Assume that once a drug is administered to a patient, it leaves the body following exponential decay. After administration of a dose, the concentration of the drug in the body decreases by 50% in 30 hours. Approximately how long does it take for the drug to decrease to 1% of its initial value (round to the nearest hour)?
+
+We can represent the concentration of drug in the body at time $t$ as $x(t)=x_0e^{kt}$. Since the drug leaves the body according to an exponential decay model, that means $k$ should be negative.
+
+We are given $\frac{x}{x_0}=0.5$ at $t=30$ hours. Plugging into our equation, we get
+$$0.5=e^{30k}$$
+$$\ln(0.5)=\ln(e^{30k})$$
+$$\ln(0.5)=30k$$
+$$k=\frac{\ln(0.5)}{30}$$
+```{r solve k}
+k = log(0.5)/30
+k
+```
+
+<!-- So $k$ = `r k`. -->
+Now, we want to know how long it will take for $x$ to be 1% of $x_0$, or at what time $t$ we will have $\frac{x(t)}{x(0)}=0.01$. 
+$$0.01=e^{kt}$$
+$$t=\frac{\ln{(0.01)}}{k}$$
+
+```{r solve t}
+t = log(0.01)/k
+round(t, 0)
+```
+
+It will take approximately 199 hours for the drug to decrease to 1% of its initial value.
+
+## Question 2
+> Consider the population model: $\frac{dP}{dt}=0.3 \left( 1-\frac{P}{200} \right) \left(\frac{P}{50}-1 \right)P$.  
+
+>a. For what values of P is the population increasing?
+b. For what values of P is the population decreasing?
+
+If the population is increasing, that means the rate of change $\frac{dP}{dt}$ is positive, while a decreasing population means that $\frac{dP}{dt}$ is negative. First we need to find the equilibrium points, or the values of $P$ for which $\frac{dP}{dt}=0.3 \left( 1-\frac{P}{200} \right) \left(\frac{P}{50}-1 \right)P=0$.
+
+We can see that this will clearly occur if $P=0$; i.e., the population has no organisms in it. The other equilibrium points occur when
+$$1-\frac{P}{200}=0$$
+$$1=\frac{P}{200}$$
+$$P=200$$
+
+and similarly when $1=\frac{P}{50}$ or $P=50$.
+So we need to determine the sign of $\frac{dP}{dt}$ on the intervals $(0,50),(50,200),$ and $(200,\infty)$.
+Let's evaluate some convenient values within these intervals: 25, 100, and 400.
+
+```{r}
+eqn <- function(P){
+  0.3*(1-(P/200))*((P/50-1))*P
+} 
+eqn(25)
+eqn(100)
+eqn(400)
+```
+
+So the population is decreasing when $0<P<50$ or $P>200$ and the population is increasing when $50<P<200$. Let's confirm this with a quick plot:
+```{r}
+x=c(1:250)
+
+ggplot()+
+  geom_line(aes(x=x, y=0.3*(1-(x/200))*((x/50-1))*x))+
+  geom_vline(xintercept = c(50, 200), linetype="dashed")+
+  geom_hline(yintercept = 0, linetype="dashed", color="red")+
+  theme_bw()+
+  labs(x="P", y="dP/dt")
+```
+
+## Question 3
+Find the general solution to each of the following DEs:
+
+### a
+$$ \frac{dy}{dt}=\frac{3t+1}{2y}$$
+$$ 2y \, dy=(3t+1)dt$$
+$$\int 2y \, dy=\int(3t+1)dt$$
+$$y^2=\frac{3t^2}{2}+t+C$$
+$$y=\sqrt{\frac{3t^2}{2}+t+C}$$
+
+### b
+$$\frac{dy}{dx}=x\sqrt[3]{y}$$
+
+$$y^{-\frac{1}{3}} \, dy=x \, dx$$
+$$\int y^{-\frac{1}{3}} \, dy= \int x \, dx$$
+$$\frac{3}{2}y^{\frac{2}{3}}=\frac{x^2}{2}+C_1$$
+$$y^{\frac{2}{3}}=\frac{x^2+C_2}{3}$$
+$$y=\left(\frac{x^2+C_2}{3} \right)^\frac{3}{2}=\frac{(x^2+C_2)^{\frac{3}{2}}}{3\sqrt3}$$
+
+### c
+$$\frac{dp}{dt}=\frac{1}{3tp^2}$$
+$$3p^2\,dp=\frac{1}{t}dt$$
+$$\int 3p^2\,dp=\int \frac{1}{t}dt$$
+$$p^3=\ln(t)+C$$
+$$p=\sqrt[3]{\ln(t)+C}$$
