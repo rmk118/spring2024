@@ -20,7 +20,7 @@ $$0.5=e^{30k}$$
 $$\ln(0.5)=\ln(e^{30k})$$
 $$\ln(0.5)=30k$$
 $$k=\frac{\ln(0.5)}{30}$$
-```{r solve k}
+```{r solve_k_1}
 k = log(0.5)/30
 k
 ```
@@ -30,7 +30,7 @@ Now, we want to know how long it will take for $x$ to be 1% of $x_0$, or at what
 $$0.01=e^{kt}$$
 $$t=\frac{\ln{(0.01)}}{k}$$
 
-```{r solve t}
+```{r solve_t_1}
 t = log(0.01)/k
 round(t, 0)
 ```
@@ -78,14 +78,14 @@ ggplot()+
 ## Question 3
 Find the general solution to each of the following DEs:
 
-### a
+### a)
 $$ \frac{dy}{dt}=\frac{3t+1}{2y}$$
 $$ 2y \, dy=(3t+1)dt$$
 $$\int 2y \, dy=\int(3t+1)dt$$
 $$y^2=\frac{3t^2}{2}+t+C$$
 $$y=\sqrt{\frac{3t^2}{2}+t+C}$$
 
-### b
+### b)
 $$\frac{dy}{dx}=x\sqrt[3]{y}$$
 
 $$y^{-\frac{1}{3}} \, dy=x \, dx$$
@@ -94,9 +94,114 @@ $$\frac{3}{2}y^{\frac{2}{3}}=\frac{x^2}{2}+C_1$$
 $$y^{\frac{2}{3}}=\frac{x^2+C_2}{3}$$
 $$y=\left(\frac{x^2+C_2}{3} \right)^\frac{3}{2}=\frac{(x^2+C_2)^{\frac{3}{2}}}{3\sqrt3}$$
 
-### c
+### c)
 $$\frac{dp}{dt}=\frac{1}{3tp^2}$$
 $$3p^2\,dp=\frac{1}{t}dt$$
 $$\int 3p^2\,dp=\int \frac{1}{t}dt$$
 $$p^3=\ln(t)+C$$
 $$p=\sqrt[3]{\ln(t)+C}$$
+
+## Question 4
+>According to Newton’s law of cooling, the rate of decrease of temperature of a body is proportional to the difference between its temperature and that of its environment. If the temperature in your living room is 20°C, you remove a log from the fireplace at 100°C, and it takes 10 minutes to cool to 60°C, how long will it take to decrease the temperature of the log to 25°C?
+
+$$\frac{dT}{dt}=k(T_{body}-T_{env})=k(T_{body}-20)$$
+$$
+\frac{1}{(T_{body}-20)}dT=k\,dt
+$$
+$$\int\frac{1}{(T_{body}-20)}dT=kt+C$$
+
+$$\ln{(T_{body}-20)}=kt+C$$
+$$T_{body}=e^{kt+C}+20=Ce^{kt}+20$$
+
+Since $T_{body}=C+20$ at time $t=0$, we can write the equation as
+$$T_{body}(t)=(T_0-20)e^{kt}+20$$
+for the temperature of the body at time $t$.
+Now using the information we are given,
+$$60=(100-20)e^{10k}+20$$
+$$40=80e^{10k}$$
+$$\frac{1}{2}=e^{10k}$$
+$$\frac{\ln{(1/2)}}{10}=k$$
+
+```{r solve_k_2}
+k2 = log(1/2)/(10)
+k2
+```
+
+Now we want to solve for $t$ in the following equation:
+$$25=(60-20)e^{kt}+20$$
+$$5=40e^{kt}$$
+$$\frac{\ln{(1/8)}}{k}=t$$
+
+```{r solve_t_2}
+t2 = (log(1/8))/(k2)
+t2
+```
+
+*Quick sanity check*:
+If it took 10 minutes to cool from 100°C to 60°C and 30 minutes to cool from 60°C to 25°C, it should take 40 minutes to cool from 100°C to 25°C:
+```{r}
+# 25=(100-20)e^kt+20
+# 5=80e^kt
+# ln(1/16)=kt
+
+t3=(log(1/16))/(k2)
+t3
+```
+
+## Question 5
+Solve each of the following IVPs:
+
+### a)
+$$\frac{dx}{dt}=-xt,\, x(0)=1/\sqrt{\pi}$$
+
+$$\frac{1}{x}dx=-t\,dt$$
+$$\int \frac{1}{x}dx=\int-t\,dt$$
+$$\ln{(x)}=-\frac{t^2}{2}+C$$
+
+$$x(t)=Ce^{-t^2/2}$$
+is our general solution to the differential equation.
+Now we plug in the initial conditions:
+$$1/\sqrt{\pi}=Ce^{-(0^2/2)}=Ce^0=C$$
+
+$$x(t)=\frac{e^{-t^2/2}}{\pi}$$
+
+is the solution to the IVP.
+
+
+### b)
+$$\frac{dy}{dx}=xy^2+2y^2,\, y(0)=1$$
+
+$$\frac{dy}{dx}=y^2(x+2)$$
+$$y^{-2}dy=(x+2)dx$$
+
+$$-\frac{1}{y}=\frac{x^2}{2}+2x+C$$
+
+We can plug in our initial conditions now:
+$$-\frac{1}{1}=0+0+C$$
+so $C=-1$.
+$$-\frac{1}{y}=\frac{x^2}{2}+2x-1$$
+$$\frac{1}{y}=1-\frac{x^2}{2}-2x$$
+$$\frac{1}{y}=1-\frac{x^2}{2}-2x$$
+or
+$$\frac{2}{y}=2-x^2-4x$$
+
+$$y(x)=\frac{2}{2-x^2-4x}$$
+is the solution to the IVP.
+
+### c)
+
+$$ \frac{du}{dt}=\frac{\cos(t)}{9u^2}, \, u(0)=2$$
+
+$$ u^2du=\frac{\cos(t)}{9}dt$$
+$$ \int u^2du=\frac{1}{9}\int \cos(t)dt$$
+
+$$ \frac{u^3}{3}=\frac{1}{9}\sin(t)+C$$
+
+$$ u^3=\frac{\sin(t)}{3}+C$$
+
+Now we plug in the initial conditions:
+$$ 2^3=\frac{\sin(0)}{3}+C=0+C$$
+So $C=8$ and we have
+$$ u(t)=\sqrt[3]{\frac{\sin(t)}{3}+8}$$
+
+as the solution to the IVP.
