@@ -1,0 +1,179 @@
+---
+title: "BIOL 274 Homework 2"
+author: "Ruby Krasnow"
+date: "2024-01-26"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+```
+
+## Question 1
+Suppose a species of fish in a particular lake has a population that is modeled by the Logistic
+Growth model with $r = 0.3, K = 2500$, and $P_0 = 2500$. Adjust the model and write down an
+IVP to represent each of the following situations.
+
+>a. One hundred fish are harvested each year.
+>b. One-third of the fish population is harvested annually.
+>c. The number of fish harvested each year is proportional to the square root of the number
+of fish in the lake.
+
+We will assume that, in the absence of harvesting, the fish population at time t, $p(t)$, can be modeled by a discrete logistic growth equation with a time step of $\Delta t=1$ year. Given an initial population size of $P(0)=P_0 = 2500$, we have the following IVP:
+
+\begin{equation}
+    \begin{cases}
+      \frac{dP}{dt}=0.3P \left( 1- \frac{P}{2500} \right) \\
+      P(0)=2500
+    \end{cases}       
+\end{equation}
+
+Although since we are working in discrete time, it might be more accurate to write the change in population as a difference equation, $P_{n+1}-P_n=\Delta P= 0.3P \left( 1- \frac{P}{2500} \right)$. For now we will continue using differential equation notation and apologize to Leibniz.
+
+The initial conditions will remain the same for each of the three situations, but we can adjust the differential equation for each scenario as follows:
+
+> **a.** One hundred fish are harvested each year:
+
+$$\frac{dP}{dt}=0.3P \left( 1- \frac{P}{2500} \right)-100$$
+
+
+> **b.** One-third of the fish population is harvested annually: 
+
+$$\frac{dP}{dt}=0.3P \left( 1- \frac{P}{2500} \right)-\frac{P}{3}$$
+
+> **c.** The number of fish harvested each year is proportional to the square root of the number
+of fish in the lake:
+
+$$\frac{dP}{dt}=0.3P \left( 1- \frac{P}{2500} \right)-\alpha \sqrt{P}$$
+Where $\alpha$ is a constant of proportionality.
+
+Now we're going to have some fun and see how the population would change over a 100-year period if no harvesting occurred and under each of these three harvesting strategies! We will use the numerical ODE solver from the `deSolve` package.
+
+```{r}
+
+library(deSolve) # best package for solving ODEs in R
+
+#First we define our state variables
+state_fish <- c(Po = 2500, #original - no harvest
+                Pc = 2500, #constant harvest (100 fish/year)
+                P3 = 2500, #1/3 of the fish are harvested every year
+                Ps = 2500) #fish are harvested prop. to the square root of P
+
+#How many time steps (years) do we want the model to run for?
+times_fish <- seq(0, 100, 1)
+
+#Provide values for our parameters. This makes it easy to identify 
+#how the population might change if we changed the carrying capacity 
+#or had a different harvesting intensity in scenario C.
+params_fish <- c(K=2500, #carrying capacity
+                 a=0.5) #constant that scales the harvest intensity in scenario C
+```
+
+
+```{r}
+#Define the model structure and the differential equations
+fish_model <- function(t, state, parameters) { 
+  
+  with(as.list(c(state, parameters)), { 
+    dPo_dt <- 0.3*(1-(Po/K)) #original - no harvest
+    dPc_dt <- 0.3*(1-(Pc/K))-100 #constant harvest (100 fish/year)
+    dP3_dt <- 0.3*(1-(P3/K))-P3/3 #1/3 of the fish are harvested every year
+    dPs_dt <- 0.3*(1-(Ps/K))-a*sqrt(Ps) #fish are harvested prop. to the square root of P
+  
+  #output
+    return(list(c(dPo_dt, dPc_dt, dP3_dt, dPs_dt)))
+  })
+}
+
+#Run the model
+ode_output_fish <- ode(y = state_fish, t = times_fish, func = fish_model, parms = params_fish)
+
+#Convert model output to a better format for visualization
+fish_output <- ode_output_fish %>% 
+  as.data.frame() %>% 
+  pivot_longer(cols=2:5, names_to = "eqn", values_to = "P") %>% 
+  mutate(names_full = case_when(
+    eqn =="Po" ~ "No harvesting",
+    eqn =="Pc" ~ "100 fish",
+    eqn =="P3" ~ "1/3 of P",
+    eqn =="Ps"~"0.5*sqrt(P)")
+  )
+```
+
+Let's see what we got!
+```{r}
+ggplot()+
+  geom_line(data=fish_output, aes(x=time, y=P, color=names_full))+
+  theme_bw()+
+  labs(x="Time (years)", y="Pop. size", color=NULL)
+```
+
+
+```{r}
+#How many fish are left after 100 years?
+fish_output %>% slice_tail(n=4)
+```
+
+Cool! So in the original formulation, the population doesn't change because our initial conditions had P equal to our carrying capacity, so the $\left( 1- \frac{P}{K} \right)$ term was equal to zero and therefore $\frac{dP}{dt}=0$. 
+
+When we harvest 100 fish per year, the population continues to decrease even beyond zero. To improve this model, we would need to add an if statement so that no harvesting occured once the population was at zero, since we cannot have negative fish.
+
+
+
+```{r}
+ fish_output %>% filter(eqn=="P3", P<1) %>% head()
+```
+Harvesting 1/3 of the population each year is not a sustainable management strategy, because we are basically at zero fish only 31 years after we started.
+
+Harvest scenario 3 actually did pretty well, and the impact on the population would be even smaller if we changed the values of $\alpha$. If I was doing a whole project on these equations, it would be fun to test different values of $K$, $P_0$, and $\alpha$ and test the impacts on the population, dive into how the bifurcation points and stability of the solutions might change, and explore how we could use the model to identify an optimal harvest strategy. 
+
+## Question 2
+Using Separation of Variables, find a solution to the IVP representing the situation in #1b.
+
+Recall that the IVP for the situation in #1b is:
+\begin{equation}
+    \begin{cases}
+      \frac{dP}{dt}=0.3P \left( 1- \frac{2500}{P} \right)-\frac{P}{3} \\
+      P(0)=2500
+    \end{cases}       
+\end{equation}
+
+
+$$\frac{dP}{dt}=\frac{3P}{10} \left( 1- \frac{P}{2500} \right)-\frac{P}{3}$$
+$$dP\, \frac{1}{\frac{3P}{10} \left( 1- \frac{P}{2500} \right)-\frac{P}{3}}=dt$$
+$$dP\, \frac{1}{\frac{3P}{10} - \frac{3P^2}{25000}-\frac{P}{3}}=dt$$
+$$dP\, \frac{1}{P \left( \frac{3}{10} - \frac{3P}{25000}- \frac{1}{3} \right)} = dt $$
+$$dP\, \frac{1}{P \left( \frac{9}{30} - \frac{3P}{25000}- \frac{10}{30} \right)} = dt $$
+$$dP\, \frac{1}{P \left(- \frac{3P}{25000}- \frac{1}{30} \right)} = dt $$
+
+Now we use partial fraction decomposition to rewrite the fraction, assuming there exist some $A, B$ such that
+$$\frac{1}{P \left(- \frac{3P}{25000}- \frac{1}{30} \right)}=
+\frac{A}{- \frac{3P}{25000}- \frac{1}{30}} + \frac{B}{P} $$
+
+$$AP+B\left(- \frac{3P}{25000}- \frac{1}{30} \right)=1 $$
+$$AP-\frac{3BP}{25000}-\frac{B}{30}=1 $$
+$-\frac{B}{30}=1$, so $B=-30$.
+$$P\left( A-\frac{3B}{25000} \right) = P\left( A+\frac{9}{2500} \right)=0 $$
+$A=-\frac{9}{2500}$, so now
+$$\frac{A}{- \frac{3P}{25000}- \frac{1}{30}} + \frac{B}{P}=$$
+$$\frac{-9}{- \frac{3P}{10}- \frac{250}{3}} + \frac{-30}{P}$$
+$$ \left( \frac{9}{ \frac{3P}{10}+ \frac{250}{3}} - \frac{30}{P} \right) dP= dt$$
+$$ \left( \frac{9}{ \frac{9P+2500}{30}} - \frac{30}{P} \right) dP= dt$$
+$$270 \int \frac{1}{ 9P+2500} dP-30\int  \frac{1}{P}\,dP= \int dt$$
+$$30\ln{(9P+2500)}-30\ln(P)= t+C_1$$
+$$\ln{(9P+2500)}-\ln(P)= \frac{t+C_1}{30}$$
+$$\ln{\left(\frac{9P+2500}{P}\right)}= \frac{t+C_1}{30}$$
+$$\frac{9P+2500}{P}= e^{\frac{t}{30}+\frac{C_1}{30}}=C_2e^{\frac{t}{30}}$$
+
+$$9P+2500=PC_2e^{\frac{t}{30}}$$
+$$9P-PC_2e^{\frac{t}{30}}=-2500$$
+$$P\left (9-C_2e^{\frac{t}{30}}\right)=-2500$$
+
+$$P=\frac{2500}{C_2e^{\frac{t}{30}}-9}$$
+
+Now using our initial conditions,
+$$2500=\frac{2500}{C_2-9}$$
+$C_2-9=1$, so $C_2=10$
+
+$$P=\frac{2500}{10e^{\frac{t}{30}}-9}$$

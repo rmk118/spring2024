@@ -1,0 +1,17 @@
+
+```{r}
+x=c(100:5000)
+
+fish1 <- tibble(x=x,
+                orig=0.3*(1-(x/2500)),
+                constant=0.3*(1-(x/2500))-100,
+                third=0.3*(1-(x/2500))-x/3,
+                prop=0.3*(1-(x/2500))-0.5*sqrt(x))
+fish1 <- fish1 %>% pivot_longer(cols=2:5, names_to = "eqn", values_to = "dP_dt")
+
+ggplot()+
+ # geom_line(data=fish1, aes(x=x, y=dP_dt, color=eqn))+
+  geom_line(data=fish1 %>% filter(eqn=="orig"), aes(x=x, y=dP_dt, color=eqn))+
+  theme_bw()+
+  labs(x="P", y="dP/dt", color="type")
+```
