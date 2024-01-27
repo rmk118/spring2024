@@ -76,10 +76,10 @@ params_fish <- c(K=2500, #carrying capacity
 fish_model <- function(t, state, parameters) { 
   
   with(as.list(c(state, parameters)), { 
-    dPo_dt <- 0.3*(1-(Po/K)) #original - no harvest
-    dPc_dt <- 0.3*(1-(Pc/K))-100 #constant harvest (100 fish/year)
-    dP3_dt <- 0.3*(1-(P3/K))-P3/3 #1/3 of the fish are harvested every year
-    dPs_dt <- 0.3*(1-(Ps/K))-a*sqrt(Ps) #fish are harvested prop. to the square root of P
+    dPo_dt <- 0.3*Po*(1-(Po/K)) #original - no harvest
+    dPc_dt <- 0.3*Pc*(1-(Pc/K))-100 #constant harvest (100 fish/year)
+    dP3_dt <- 0.3*P3*(1-(P3/K))-P3/3 #1/3 of the fish are harvested every year
+    dPs_dt <- 0.3*Ps*(1-(Ps/K))-a*sqrt(Ps) #fish are harvested prop. to the square root of P
   
   #output
     return(list(c(dPo_dt, dPc_dt, dP3_dt, dPs_dt)))
@@ -117,14 +117,7 @@ fish_output %>% slice_tail(n=4)
 
 Cool! So in the original formulation, the population doesn't change because our initial conditions had P equal to our carrying capacity, so the $\left( 1- \frac{P}{K} \right)$ term was equal to zero and therefore $\frac{dP}{dt}=0$. 
 
-When we harvest 100 fish per year, the population continues to decrease even beyond zero. To improve this model, we would need to add an if statement so that no harvesting occured once the population was at zero, since we cannot have negative fish.
-
-
-
-```{r}
- fish_output %>% filter(eqn=="P3", P<1) %>% head()
-```
-Harvesting 1/3 of the population each year is not a sustainable management strategy, because we are basically at zero fish only 31 years after we started.
+Harvesting 1/3 of the population each year is not a sustainable management strategy, because we have decreased the population to almost zero.
 
 Harvest scenario 3 actually did pretty well, and the impact on the population would be even smaller if we changed the values of $\alpha$. If I was doing a whole project on these equations, it would be fun to test different values of $K$, $P_0$, and $\alpha$ and test the impacts on the population, dive into how the bifurcation points and stability of the solutions might change, and explore how we could use the model to identify an optimal harvest strategy. 
 
@@ -132,7 +125,7 @@ Harvest scenario 3 actually did pretty well, and the impact on the population wo
 Using Separation of Variables, find a solution to the IVP representing the situation in #1b.
 
 Recall that the IVP for the situation in #1b is:
-\begin{equation}
+\begin{equation}\label{IVP}
     \begin{cases}
       \frac{dP}{dt}=0.3P \left( 1- \frac{2500}{P} \right)-\frac{P}{3} \\
       P(0)=2500
@@ -176,4 +169,103 @@ Now using our initial conditions,
 $$2500=\frac{2500}{C_2-9}$$
 $C_2-9=1$, so $C_2=10$
 
-$$P=\frac{2500}{10e^{\frac{t}{30}}-9}$$
+Our final solution is therefore:
+\begin{equation}\label{solution}P(t)=\frac{2500}{10e^{\frac{t}{30}}-9}\end{equation}
+Here is what it looks like:
+```{r}
+t=c(1:250)
+y=2500/(10*exp(t/30)-9)
+
+ggplot()+
+  geom_line(aes(x=t, y=y, color="P(t)"))+
+  theme_bw()+
+  labs(x="time", y="P")
+```
+
+
+Let's check and make sure it is actually a solution and satisfies our initial conditions:
+
+We want to show that the derivative with respect to $t$ of (\ref{solution}) is equivalent to $\frac{3P}{10} \left( 1- \frac{P}{2500} \right)-\frac{P}{3}$.
+
+Using the chain rule, we differentiate (\ref{solution}) to get:
+$$P'=2500(-1) \left( 10e^{\frac{t}{30}}-9 \right)^{-2} \left( 10e^{\frac{t}{30}} \right) \left(\frac{1}{30}\right)=\frac{-2500e^{\frac{t}{30}}}{3 \left( 10e^{\frac{t}{30}}-9 \right)^{2}}$$
+Since there are no $t$'s in the original $\frac{dP}{dt}$, we can use our solution to rewrite them as a function of $P$:
+$$P\left( 10e^{\frac{t}{30}}-9\right)=2500$$
+$$10e^{\frac{t}{30}}=\frac{2500}{P}+9$$
+$$e^{\frac{t}{30}}=\frac{250}{P}+\frac{9}{10}$$
+Now substituting this into our equation for $P'$, we get
+$$\frac{-2500 \left( \frac{250}{P}+\frac{9}{10} \right)}
+{3 \left( 10\left( \frac{250}{P}+\frac{9}{10} \right)-9 \right)^{2}} = 
+\frac{-2500 \left( \frac{250}{P}+\frac{9}{10} \right)}
+{3 \left( \frac{2500}{P}+9-9 \right)^{2}} = 
+\frac{-2500 \left( \frac{250}{P}+\frac{9}{10} \right)}
+{3 \left( \frac{2500^2}{P^2} \right)} = 
+\frac{ \frac{-250}{P}-\frac{9}{10}}
+{3 \left( \frac{2500}{P^2} \right)}$$
+Now multiply the numerator and denominator by $P$:
+
+$$\frac{-250-\frac{9P}{10}}
+{\frac{7500}{P}} = \left(-250-\frac{9P}{10}\right)\left( \frac{P}{7500}\right)=
+\frac{-250P}{7500}-\frac{9P^2}{75000}=P \left(- \frac{3P}{25000}- \frac{1}{30} \right)$$
+
+And see that our initial $\frac{dP}{dt}$,
+$$\frac{3P}{10} \left( 1- \frac{P}{2500} \right)-\frac{P}{3} = 
+\frac{3P}{10} - \frac{3P^2}{2500}-\frac{P}{3} =
+P \left(- \frac{3P}{25000}- \frac{1}{30} \right)$$
+
+So indeed, our solution satisfies the differential equation.
+
+And checking the initial conditions:
+$$P(0)=\frac{2500}{10e^{0}-9}=\frac{2500}{1}=2500$$
+We can also confirm by using R to calculate the derivative of our solution and plotting it alongside the original expression for $\frac{dP}{dt}$:
+
+```{r}
+dy=D(expression(2500/(10*exp(t/30)-9)), "t")
+
+ggplot()+
+  geom_line(aes(x=y, y=eval(dy), color="calculated"), linewidth=3, alpha=0.5)+
+  geom_line(aes(x=y, y= 0.3*y*(1-(y/2500))-y/3, color="original dP/dt"))+
+  scale_color_manual(values=c("lightblue", "black"))+
+  theme_bw()+
+  labs(x="P", y="dP/dt")
+```
+
+## Question 2
+Using Bernoulli's method, find a solution to the IVP representing the situation in #1b.
+
+$$\frac{dP}{dt} = \frac{3P}{10} - \frac{3P^2}{25000}-\frac{1P}{30}$$
+
+Bernoulli's method review:
+If the differential equation is in the form $y'(x)+p(x)y=g(x)y^n$,
+we can divide by $y^n$ and then use the substitution $z=y^{1-n}$.
+
+Here,
+$$P'(t)+\frac{1P}{30}=-\frac{3P^2}{25000}$$
+Divide by $P^2$:
+$$P'(P^{-2})+\frac{1}{30P}=-\frac{3}{25000}$$
+Use the substitution $z=P^{-1}$, $z'=-P^{-2}P'$:
+$$-z'+\frac{z}{30}=-\frac{3}{25000}$$
+$$z'-\frac{z}{30}=\frac{3}{25000}$$
+$$\mu=e^{\int \frac{-1}{30} dt}=e^{\frac{-t}{30}}$$
+
+$$\int \left( e^{\frac{-t}{30}}z \right)'dt=\int \frac{3e^{\frac{-t}{30}}}{25000} dt $$
+
+
+$$ e^{\frac{-t}{30}}z=\frac{-9e^{\frac{-t}{30}}}{2500}+C_1$$
+
+$$z=\frac{-9}{2500}+\frac{C_1}{e^{\frac{-t}{30}}}$$
+
+$$P=1/z= \frac{1}{\frac{-9}{2500}+C_1e^{\frac{t}{30}}}$$
+
+$$P(0)= 2500=\frac{1}{\frac{-9}{2500}+C_1}$$
+
+$$2500 \left( \frac{-9}{2500}+C_1 \right)=1$$
+
+$$-9+2500 C_1=1$$
+
+Then $2500 C_1=10$, so $C_1=\frac{1}{250}$
+
+$$P(t)= \frac{1} {\frac{-9}{2500}+\left( \frac{1}{250}\right) e^{\frac{t}{30}}}=
+\frac{2500} {10e^{\frac{t}{30}}-9}$$
+
+So we did get the same answer as when we used separation of variables.
