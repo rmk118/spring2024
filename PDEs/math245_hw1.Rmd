@@ -1,0 +1,129 @@
+---
+title: "MATH 245 Homework 1"
+author: "Ruby Krasnow"
+date: "2024-01-28"
+output:
+  pdf_document:
+    extra_dependencies: ["derivative"]
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+```
+
+## Question 1
+Show the function is a solution of the PDE:  
+(a) $u_{xx}+u_{yy}=0$   
+(i) $u(x,y)=e^x\sin(y)$  
+$$u_x=e^x\sin(y), \, u_{xx}=e^x\sin(y), \, u_y=e^x\cos(y),\, u_{yy}=-e^x\sin(y)$$
+Which means that $u_{xx}+u_{yy}=e^x\sin(y)+\left(-e^x\sin(y)\right)=0$ and so $u(x,y)=e^x\sin(y)$ is
+a solution to the PDE.  
+(ii) $u(x,y)=\log{\sqrt{x^2+y^2}}$  
+Assuming this is meant to be $u(x,y)=\ln\sqrt{{{x^2+y^2}}}$,
+$$u_x=\left({{x^2+y^2}}\right)^{-1/2}
+\left(\frac{1}{2}\right)\left({{x^2+y^2}}\right)^{-1/2}
+\left(2x\right)=x\left({{x^2+y^2}}\right)^{-1}$$
+
+$$u_{xx}=x(-1)\left({{x^2+y^2}}\right)^{-2}\left(2x\right)+\left({{x^2+y^2}}\right)^{-1}$$
+
+$$u_y=\left({{x^2+y^2}}\right)^{-1/2}
+\left(\frac{1}{2}\right)\left({{x^2+y^2}}\right)^{-1/2}
+\left(2y\right)=y\left({{x^2+y^2}}\right)^{-1}$$
+
+$$u_{yy}=y(-1)\left({{x^2+y^2}}\right)^{-2}\left(2y\right)+\left({{x^2+y^2}}\right)^{-1}$$
+
+$$u_{xx}+u_{yy}=\frac{-2x^2}{\left({{x^2+y^2}}\right)^{2}}+
+\frac{-2y^2}{\left({{x^2+y^2}}\right)^{2}}+
+\frac{2}{\left({{x^2+y^2}}\right)}=$$
+
+$$\frac{-2\left({{x^2+y^2}}\right)}{\left({{x^2+y^2}}\right)^{2}}+ \frac{2}{\left({{x^2+y^2}}\right)}=0$$
+Which means that $u(x,y)=\log{\sqrt{x^2+y^2}}$ is a solution to the PDE. 
+
+(b) $bu_x+au_y+u=0, \, u(x,y)=\exp{\left(\frac{-x}{b}\right)}f(ax-by)$ for arbitrary differentiable function $f$.
+$$u_x=e^{\frac{-x}{b}} \left(\frac{-1}{b}\right)f(ax-by)+f'(ax-by)(a)e^{\frac{-x}{b}}$$
+$$u_y=e^{\frac{-x}{b}}f'(ax-by)(-b)$$
+Then,
+$$bu_x+au_y+u=-e^{\frac{-x}{b}}f(ax-by)+(ab)\left(e^{\frac{-x}{b}}\right)f'(ax-by)+
+e^{\frac{-x}{b}}f'(ax-by)(-ab)+e^{\frac{-x}{b}}f(ax-by)=0$$
+
+So $u(x,y)=\exp{\left(\frac{-x}{b}\right)}f(ax-by)$ is a solution to the PDE for an arbitrary differentiable function $f$.  
+
+(c) $u_{xx}-\frac{1}{x}u_x-x^2u_{yy}=0, \, u(x,y)=f\left(2y+x^2\right)+g\left(2y-x^2\right)$ for arbitrary twice-differentiable functions $f$ and $g$.  
+
+$$u_x=\left(f'\left(2y+x^2\right)\right)(2x)+\left(g'\left(2y-x^2\right)\right)(-2x)$$
+$$u_y=2 \left(f'\left(2y+x^2\right)\right) +2\left(g'\left(2y-x^2\right)\right)$$
+$$u_{xx}=2f'+(f'')(4x^2)-2g'+(g'')(4x^2)$$
+$$u_{yy}=4f''+4g''$$
+$$u_{xx}-\frac{1}{x}u_x-x^2u_{yy}=$$ $$2f'+4x^2f''-2g'+4x^2g''-\frac{1}{x}\left(2xf'-2xg'\right)-x^2\left(4f''+4g''\right)=$$
+$$2f'-2f'+4x^2f''-4x^2f''-2g'+2g'+4x^2g''-4x^2g''=0 $$
+
+So $u(x,y)=f\left(2y+x^2\right)+g\left(2y-x^2\right)$ is a solution to the PDE for arbitrary twice-differentiable functions $f$ and $g$.  
+
+### Question 2
+(a) 2nd-order linear homogenous  
+(b) 4th-order linear inhomogenous  
+(c) 2nd-order quasi-linear homogeneous  
+(d) We can rewrite this as $u^{-5}u_{xx}+u^{-5}u_{yy}+u^{-4}f(x,y)=g(x,y)$ to see that it is a 2nd-order quasi-linear inhomogeneous PDE.
+
+### Question 3
+Use separation of variables to solve the following problems:  
+#### (a)
+$u_x+u=u_y, \, u(x,0)=4x^{-3x}$, use $u(x,y)=f(x)g(y)$
+
+#### (b)
+$x^2u_{xy}+9y^2u=0, \, u(x,0)=\exp{\left(\frac{1}{x}\right)}$, use $u(x,y)=f(x)g(y)$
+
+#### (c)
+$u_x^2+u_y^2=1$, use $u(x,y)=f(x)+g(y)$
+
+#### (d)
+$x^2u_x^2+y^2u_y^2=u^2$, use $u(x,y)=e^{f(x)}e^{g(y)}$
+
+
+### Question 4
+For each of the following IVPs, (i) find and plot the characteristic lines (curves), (ii) solve the IVP, and (iii) plot the solution of (a)-(b) for indicated time.  
+#### (a)
+$u_t+\left(1+x^2\right)u_x=0, \, u(0,x)=\arctan{(x)}, \, t=1,2,3$, and
+what is $\lim\limits_{x \to \infty}u(t,x)$?
+
+$$\frac{dx}{dt}=1+x^2$$
+$$\frac{1}{1+x^2}dx=dt$$
+
+$$\arctan{(x)}=t+C$$
+So $x=\tan{(t+C)}$ are the characteristic curves of $u_t+\left(1+x^2\right)u_x=0$.  
+On each of the curves, $u(x,t)$ is constant because $\frac{d}{dt}u(t,\tan{(t+C)}) = \pdv {u}{t}+\pdv{u}{x} \sec^2{(t+c)}$.  
+And since $1+\tan^2\theta=\sec^2\theta$, this means $\frac{d}{dt}u(t,\tan{(t+C)}) = \pdv {u}{t}+\pdv{u}{x}\left( 1+\tan^2{(t+c)}\right)=u_t+\left(1+x^2\right)u_x$, which we know is 0.
+
+Thus $u(t, \tan{(t+C)})=u(0, \tan{(0+C)})=u(0, C)$ is independent of $t$. Putting $x=\tan{(t+C)}$ and $C=\arctan{(x)}-t$, we have
+$$u(t, x)=u(0,\arctan{(x)}-t)$$
+It follows that $u(t,x)=f(\arctan{(x)}-t)$. And since we are given that $u(0,x)=\arctan{(x)}$, we have $f(\arctan{(x)}-0)=\arctan{(x)}$ so that $f(w)=w$ for any $w$, yielding our solution of 
+$$u(t,x)=\arctan{(x)}-t$$
+
+```{r}
+C=1
+df_4a <- tibble(x = seq(-2*pi, 2*pi, length.out = 1000),
+                y=tan(x+C)) %>% 
+  mutate(y = ifelse(abs(y) < 20, y, NA))
+                      
+ggplot(df_4a, aes(x=x, y=y)) + 
+  geom_line()+
+  coord_cartesian(ylim=c(-10,10), xlim = c(-5,5))+
+  theme_bw()+
+  labs(x="t", y="x")+
+  ggtitle("Characteristic curves for Problem 4a", subtitle = "with C=1")
+```
+
+Since the range of $\arctan$ is limited to $\left(\frac{-\pi}{2},\frac{\pi}{2}\right)$, as $\lim\limits_{t \to \infty}$ that means $u(t,x)=\arctan(x)-t$ will go to $-\infty$.
+
+```{r}
+
+x=seq(-10,10,length.out = 1000)
+ggplot() + 
+  geom_line(aes(x=x, y=atan(x)-1, color="1"))+
+  geom_line(aes(x=x, y=atan(x)-2, color="2"))+
+  geom_line(aes(x=x, y=atan(x)-3, color="3"))+
+  theme_bw()+
+  labs(x="x", y="u(x,t)", color="Value of t")+
+  ggtitle("Solution curves for Problem 4a")
+```
