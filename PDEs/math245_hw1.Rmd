@@ -1,6 +1,6 @@
 ---
 title: "MATH 245 Homework 1"
-author: "Ruby Krasnow"
+author: "Ruby Krasnow and Tommy Thach"
 date: "2024-01-29"
 output:
   pdf_document:
@@ -61,10 +61,10 @@ $$2f'-2f'+4x^2f''-4x^2f''-2g'+2g'+4x^2g''-4x^2g''=0 $$
 So $u(x,y)=f\left(2y+x^2\right)+g\left(2y-x^2\right)$ is a solution to the PDE for arbitrary twice-differentiable functions $f$ and $g$.  
 
 ### Question 2
-(a) 2nd-order linear homogenous  
-(b) 4th-order linear inhomogenous  
+(a) 2nd-order linear homogeneous  
+(b) 4th-order linear inhomogeneous  
 (c) 2nd-order quasi-linear homogeneous  
-(d) We can rewrite this as $u^{-5}u_{xx}+u^{-5}u_{yy}+u^{-4}f(x,y)=g(x,y)$ to see that it is a 2nd-order quasi-linear inhomogeneous PDE.
+(d) We can rewrite this as $u_{xx}+u_{yy}+f(x,y)u-g(x,y)u^5=0$, making it clear that this is a 2nd-order semi-linear homogeneous PDE.
 
 ### Question 3
 Use separation of variables to solve the following problems:  
@@ -104,7 +104,7 @@ It follows that $u(t,x)=f(\arctan{(x)}-t)$.
 And since we are given that $u(0,x)=\arctan{(x)}$, we have $f(\arctan{(x)}-0)=\arctan{(x)}$ so that $f(w)=w$ for any $w$, yielding our solution of 
 $$u(t,x)=\arctan{(x)}-t$$
 
-```{r}
+```{r, echo=FALSE}
 C=1
 df_4a <- tibble(x = seq(-2*pi, 2*pi, length.out = 1000),
                 y=tan(x+C)) %>% 
@@ -120,7 +120,7 @@ ggplot(df_4a, aes(x=x, y=y)) +
 
 Since the range of $\arctan$ is limited to $\left(\frac{-\pi}{2},\frac{\pi}{2}\right)$, as $\lim\limits_{t \to \infty}$ that means $u(t,x)=\arctan(x)-t$ will go to $-\infty$.
 
-```{r}
+```{r, echo=FALSE}
 
 x=seq(-10,10,length.out = 1000)
 ggplot() + 
@@ -145,16 +145,15 @@ $$\frac{1}{x}dx=-dt$$
 Solving this ODE gives the equations for the characteristic lines:
 $$x=Ce^{-t}$$
 
-```{r, warning = FALSE}
-curves_4a <- tibble(C=c(1:5), seq=list(x)) %>% 
+```{r, warning = FALSE, echo=FALSE}
+curves_4b <- tibble(C=c(1:5), seq=list(x)) %>% 
   rowwise() %>% 
   mutate(y=list(C*exp(-seq))) %>% 
   unnest(c(seq,y))
 
-ggplot(data=curves_4a)+
+ggplot(data=curves_4b)+
   geom_line(aes(x=seq, y=y, color=as.factor(C)))+
-  ylim(NA, 100)+
-  xlim(-5, NA)+
+  coord_cartesian(ylim=c(NA, 100), xlim=c(-5, 9))+
   labs(x="t", y="x", color="C")+
   theme_light()+
   ggtitle("Characteristic curves for Problem 4b")
@@ -184,7 +183,8 @@ $$u_t=-\left(1+\left(xe^t\right)^2\right)^{-2}\left(2xe^t\right)xe^t$$
 $$u_x=-\left(1+\left(xe^t\right)^2\right)^{-2}\left(2xe^t\right)e^t$$
 And we see that $u_t-xe_t$ indeed equals zero.
 Plotting the solution $u(t,x)=\frac{1}{1+\left(xe^t\right)^2}$ as a function of $x$ for $t=1,2,3$, we get:
-```{r, warning=FALSE}
+
+```{r, warning=FALSE, echo=FALSE}
 
 x=seq(-10,10,length.out = 1000)
 ggplot() + 
@@ -197,4 +197,103 @@ ggplot() +
   ggtitle("Solution curves for Problem 4b")
 ```
 
-We can see that $u(t,x)$ will equal 1 at $x=0$ regardless of the value of $t$, but at all other values of $x$, $\lim\limits_{t \to \infty}u(t,x)=0$.
+We can see that $u(t,x)$ will equal 1 at $x=0$ regardless of the value of $t$, but at all other values of $x$, $\lim\limits_{t \to \infty}u(t,x)=0$. This can be written as
+\begin{equation}
+\lim\limits_{t \to \infty}u(t,x)=
+    \begin{cases}
+        1 & \text{if } x=0\\
+        0 & \text{if } x\neq0
+    \end{cases}
+\end{equation}
+
+#### (c)
+$u_x+xu_y=\left(y-\frac{x^2}{2}\right)^2, \, u(0,y)=e^y$
+
+$\frac{dy}{dx}=x$
+Solving this ODE yields the equation for the characteristic curves: $y=\frac{x^2}{2}+C$  
+
+```{r, warning = FALSE, echo=FALSE}
+curves_4c <- tibble(C=c(1:5), seq=list(x)) %>% 
+  rowwise() %>% 
+  mutate(y=list(0.5*(seq)^2+C)) %>% 
+  unnest(c(seq,y))
+
+ggplot(data=curves_4c)+
+  geom_line(aes(x=seq, y=y, color=as.factor(C)))+
+  coord_cartesian(ylim=c(NA, 45), xlim=c(-9.5, 9.5))+
+  labs(x="x", y="y", color="C")+
+  theme_light()+
+  ggtitle("Characteristic curves for Problem 4c")
+```
+
+Now we define our new coordinate system as $\xi=y-\frac{x^2}{2}, \, \eta=x$  
+
+Then by the chain rule,
+$$u_x= \pdv{u}{x}=\pdv{u}{\eta}\pdv{\eta}{x}+\pdv{u}{\xi}\pdv{\xi}{x}=$$
+$$\pdv{u}{\eta}-x\pdv{u}{\xi}$$
+
+and similarly
+$$u_y= \pdv{u}{y}=\pdv{u}{\eta}\pdv{\eta}{y}+\pdv{u}{\xi}\pdv{\xi}{y}=$$
+$$\pdv{u}{\xi}$$
+
+$$u_x+xu_y=\pdv{u}{\eta}-x\pdv{u}{\xi}+x\pdv{u}{\xi}=\pdv{u}{\eta}$$
+
+And since we know $u_x+xu_y=\left(y-\frac{x^2}{2}\right)^2$, this means we have
+$$\pdv{u}{\eta}=\left(y-\frac{x^2}{2}\right)^2=\xi^2$$
+Now we integrate with respect to $\eta$ to find
+$$u=\eta\xi^2+F(\xi)$$
+
+At $u(0,y)$, this becomes $u=0y^2+F(y)$, or $u(0,y)=F(y)$.
+On the other hand, we are told that $u(0,y)=e^y$, which means that $F(y)=e^y$.
+$$u=\eta\xi^2+e^\xi$$
+Substitute back in $x$ and $y$:
+$$u(x,y)=x\left(y-\frac{x^2}{2}\right)^2+\exp{\left(y-\frac{x^2}{2}\right)}$$
+
+We can check by differentiating:
+$$u_x=-2x^2\left(y-\frac{x^2}{2}\right)+\left(y-\frac{x^2}{2}\right)^2+\exp{\left(y-\frac{x^2}{2}\right)}(-x)$$
+$$u_y=2x\left(y-\frac{x^2}{2}\right)+\exp{\left(y-\frac{x^2}{2}\right)}$$
+
+Which means that $u_x+xu_y=\left(y-\frac{x^2}{2}\right)^2$, as we wanted.
+
+
+#### (d)
+$2xu_x+(x+1)u_y=y$, for $x>0, u=2y$ on $x=1$
+
+$$\frac{dx}{dy}=\frac{x+1}{2x}=\frac{1}{2}+\frac{1}{2x}$$
+Solving this ODE yields the characteristic curves:
+$$y=\frac{x}{2}+\frac{\ln(x)}{2}+C$$
+$$C=2y-x-\ln(x)$$
+
+```{r, warning = FALSE, echo=FALSE}
+curves_4d <- tibble(C=c(1:5), seq=list(x)) %>% 
+  rowwise() %>% 
+  mutate(y=list((seq/2)+(log(seq)/2)+C)) %>% 
+  unnest(c(seq,y))
+
+ggplot(data=curves_4d)+
+  geom_line(aes(x=seq, y=y, color=as.factor(C)))+
+  coord_cartesian(ylim=c(-1, 12), xlim=c(-1, 9.5))+
+  labs(x="x", y="y", color="C")+
+  theme_light()+
+  ggtitle("Characteristic curves for Problem 4d")
+```
+
+
+
+
+
+
+Now we define our new coordinate system as $2y-x-\ln(x), \, \eta=x$  
+
+Then by the chain rule,
+$$u_x= \pdv{u}{x}=\pdv{u}{\eta}\pdv{\eta}{x}+\pdv{u}{\xi}\pdv{\xi}{x}=$$
+
+$$\pdv{u}{\eta}+\pdv{u}{\xi}\left(-1-\frac{1}{x}\right) $$
+
+Similarly, $$u_y=\pdv{u}{y}=2\pdv{u}{\xi}$$
+
+Plugging into our initial PDE,
+$$2xu_x+(x+1)u_y=2x\pdv{u}{\eta}+\pdv{u}{\xi}2x\left(-1-\frac{1}{x}\right)+2(x+1)\pdv{u}{\xi}=2x\pdv{u}{\eta}$$
+
+And since we know $2xu_x+(x+1)u_y=y$, this means $y=2x\pdv{u}{\eta}$ or
+$$\frac{\eta}{2}+\frac{\ln(\eta)}{2}+\xi=2\eta \pdv{u}{\eta}$$
