@@ -1,10 +1,10 @@
 ---
 title: "MATH 245 Homework 1"
 author: "Ruby Krasnow and Tommy Thach"
-date: "2024-01-29"
+date: "2024-01-30"
 output:
   pdf_document:
-    extra_dependencies: ["derivative"]
+    extra_dependencies: ["derivative", "tcolorbox", "xcolor"]
 ---
 
 ```{r setup, include=FALSE}
@@ -71,15 +71,94 @@ Use separation of variables to solve the following problems:
 
 #### (a)
 $u_x+u=u_y, \, u(x,0)=4x^{-3x}$, use $u(x,y)=f(x)g(y)$
+$$u_x=f'g, \, u_y=fg'$$
+$$u_x+u-u_y=f'g+fg-fg'=f'g+(g-g')f=0$$
+$$f'g=-(g-g')f$$
+$$\frac{f'}{f}=\frac{g'-g}{g}=\lambda$$
+$$\frac{f'}{f}=\lambda, \,\frac{g'}{g}-1=\lambda $$
+Integrating the first ODE with respect to $x$,
+$$\ln(f)=\lambda x+C_1, \, f(x)=C_2e^{\lambda x}$$
+$$\frac{g'}{g}=\lambda+1 $$
+$$\ln(g)=\lambda y+y+C_3,\, g(y)=C_4e^{y(\lambda +1)}$$
+$$u(x,y)=f(x)g(y)=C_2e^{\lambda x}C_4e^{y(\lambda +1)}$$
+$$u(x,y)=Ce^{\lambda x+y(\lambda +1)}$$
+$$u(x,0)=4e^{-3x}=Ce^{\lambda x}$$
+
+Which means $C=4, \lambda=-3$ and our final solution is
+\begin{tcolorbox}[colback=white, title=Solution]
+$$u(x,y)=4e^{-3x-2y}$$
+\end{tcolorbox}
+
+\begin{tcolorbox}[colback=blue!5!white,colframe=blue!75!black,title=Check solution]
+$$u_x+u=-12e^{-3x-2y}+4e^{-3x-2y}=-8e^{-3x-2y}=u_y$$
+\end{tcolorbox}
+
 
 #### (b)
 $x^2u_{xy}+9y^2u=0, \, u(x,0)=\exp{\left(\frac{1}{x}\right)}$, use $u(x,y)=f(x)g(y)$
 
+$$u_{xy}=f'g'$$
+$$x^2f'g'+9y^2fg=0$$
+
+$$x^2f'g'=-9y^2fg$$
+$$x^2\frac{f'}{f}=-9y^2\frac{g}{g'}=\lambda$$
+$$x^2\frac{f'}{f}=\lambda, \, -9y^2\frac{g}{g'}=\lambda$$
+$$x^2\frac{f'}{f}=\lambda \quad \longrightarrow \quad 
+\frac{f'}{f}=\lambda x^{-2} \quad \longrightarrow \quad
+\ln(f)=\frac{-\lambda}{x}+C_1 \quad \longrightarrow \quad 
+f(x)=C_2e^{\frac{-\lambda}{x}}$$
+
+$$-9y^2\frac{g}{g'}=\lambda \quad \longrightarrow \quad
+\frac{g}{g'}= \frac{\lambda}{-9y^2} \quad \longrightarrow \quad 
+\frac{g'}{g}= \frac{-9y^2}{\lambda} \quad \longrightarrow \quad 
+\ln(g)=\frac{-3y^3}{\lambda}+C_3 \quad \longrightarrow \quad 
+g(y)=C_4e^{\frac{-3}{\lambda}y^3}$$
+
+$$u(x,y)=f(x)g(y)=C_2e^{\frac{-\lambda}{x}}C_4e^{\frac{-3}{\lambda}y^3}=Ce^{\frac{-\lambda}{x}+\frac{-3}{\lambda}y^3}$$
+$$u(x,0)=e^{\frac{1}{x}}=Ce^{\frac{-\lambda}{x}}$$
+Which means $C=1, \lambda=-1$, and our final solution is
+\begin{tcolorbox}[colback=white, title=Solution]
+$$u(x,y)=e^{\frac{1}{x}+3y^3}$$
+\end{tcolorbox}
+\begin{tcolorbox}[colback=blue!5!white,colframe=blue!75!black,title=Check solution]
+$$x^2u_{xy}+9y^2u=x^2e^{\frac{1}{x}+3y^3}\left(-x^{-2} \right) \left(9y^2 \right)+9y^2e^{\frac{1}{x}+y^3}=0$$
+\end{tcolorbox}
+
+
 #### (c)
 $u_x^2+u_y^2=1$, use $u(x,y)=f(x)+g(y)$
+$$u_x=f', u_y=g'$$
+$$(f')^2+(g')^2=1\quad \longrightarrow \quad (f')^2=1-(g')^2=\lambda^2$$
+$$(f')^2=\lambda^2\quad \longrightarrow \quad f'=\lambda\quad \longrightarrow \quad f(x)=\lambda x+C_1$$
+$$(g')^2=1-\lambda^2 \quad \longrightarrow \quad g'=\pm\sqrt{1-\lambda^2}\quad \longrightarrow \quad g(y)=\pm y\sqrt{1-\lambda^2} + C_2$$
+\begin{tcolorbox}[colback=white, title=Solution]
+$$u(x,y)=f(x)+g(y)=\lambda x \pm y\sqrt{1-\lambda^2}+C$$
+\end{tcolorbox}
+\begin{tcolorbox}[colback=blue!5!white,colframe=blue!75!black,title=Check solution]
+$$u_x=\lambda, u_y=\pm \sqrt{1-\lambda^2},\quad u_x^2+u_y^2= \lambda ^2 + 1 - \lambda^2 = 1$$
+\end{tcolorbox}
 
 #### (d)
 $x^2u_x^2+y^2u_y^2=u^2$, use $u(x,y)=e^{f(x)}e^{g(y)}$
+
+$$u_x= f'e^{f+g}, u_y= g'e^{f+g}$$
+$$x^2u_x^2+y^2u_y^2-u^2=x^2(f')^2e^{2f+2g}+y^2(g')^2e^{2f+2g}-e^{2f+2g}=0$$
+$$x^2(f')^2+y^2(g')^2-1=0 \quad \longrightarrow \quad x^2(f')^2=1-y^2(g')^2=\lambda^2$$
+$$x^2(f')^2= \lambda^2 \quad \longrightarrow \quad f'=\frac{\lambda}{x} \quad \longrightarrow \quad f(x)=\lambda \ln(x)+C_1$$
+$$y^2(g')^2= 1-\lambda^2 \quad \longrightarrow \quad g'=\frac{\sqrt{1-\lambda^2}}{y} \quad \longrightarrow \quad g(y)=\sqrt{1-\lambda^2}\ln(y) +C_2$$
+
+$$u(x,y)=e^{f(x)}e^{g(y)}=C_3e^{\lambda \ln(x)}C_4e^{\sqrt{1-\lambda^2}\ln(y)}$$
+
+\begin{tcolorbox}[colback=white, title=Solution]
+$$u(x,y)=C x^\lambda y^{\sqrt{1-\lambda^2}}$$
+\end{tcolorbox}
+\begin{tcolorbox}[colback=blue!5!white,colframe=blue!75!black,title=Check solution]
+$$u_x=\lambda C x^{\lambda-1} y^{\sqrt{1-\lambda^2}},u_y= \sqrt{1-\lambda^2} C x^\lambda y^{\sqrt{1-\lambda^2}-1}$$
+$$x^2u_x^2+y^2u_y^2=x^2\left(\lambda C x^{\lambda-1} y^{\sqrt{1-\lambda^2}} \right)^2+y^2 \left(\sqrt{1-\lambda^2} C x^\lambda y^{\sqrt{1-\lambda^2}-1}\right)^2 =$$
+
+$$x^2\lambda^2C^2 x^{2\lambda-2}y^{2\sqrt{1-\lambda^2}}+y^2(1-\lambda^2)C^2x^{2\lambda} y^{2\sqrt{1-\lambda^2}-2}=$$
+$$\lambda^2 C^2 x^{2\lambda}y^{2\sqrt{1-\lambda^2}}+(1-\lambda^2)C^2x^{2\lambda} y^{2\sqrt{1-\lambda^2}} = C^2x^{2\lambda} y^{2\sqrt{1-\lambda^2}}=u^2$$
+\end{tcolorbox}
 
 
 ### Question 4
@@ -102,7 +181,10 @@ Putting $x=\tan{(t+C)}$ and $C=\arctan{(x)}-t$, we have
 $$u(t, x)=u(0,\arctan{(x)}-t)$$
 It follows that $u(t,x)=f(\arctan{(x)}-t)$.  
 And since we are given that $u(0,x)=\arctan{(x)}$, we have $f(\arctan{(x)}-0)=\arctan{(x)}$ so that $f(w)=w$ for any $w$, yielding our solution of 
+
+\begin{tcolorbox}[colback=white, title=Solution]
 $$u(t,x)=\arctan{(x)}-t$$
+\end{tcolorbox}
 
 ```{r, echo=FALSE}
 C=1
@@ -132,7 +214,9 @@ ggplot() +
   ggtitle("Solution curves for Problem 4a")
 ```
 
-We can check our solution of $u(t,x)=\arctan{(x)}-t$ by differentiating, since $u_t=-1, u_x=\frac{1}{1+x^2}$, that means $u_t+\left(1+x^2\right)u_x=-1+1=0$.
+\begin{tcolorbox}[colback=blue!5!white,colframe=blue!75!black,title=Check solution]
+Since $u_t=-1, u_x=\frac{1}{1+x^2}$, that means $u_t+\left(1+x^2\right)u_x=-1+1=0$
+\end{tcolorbox}
 
 #### (b)
 $u_t-xu_x=0, \, u(0,x)=\frac{1}{1+x^2}, \, t=1,2,3$, and
@@ -176,12 +260,17 @@ Assuming $x\neq0$, this means
 $$u_\eta=0$$
 $$u=\int u_\eta \, d\eta \> + f(\xi)=0+ f(\xi)$$
 
-So we have $u(t,x)=f(\xi)=f(xe^t)$ and we know that $u(0,x)=\frac{1}{1+x^2}$, which means $f(xe^0)=f(x)=\frac{1}{1+x^2}$ and therefore $u(t,x)=\frac{1}{1+\left(xe^t\right)^2}$.
+So we have $u(t,x)=f(\xi)=f(xe^t)$ and we know that $u(0,x)=\frac{1}{1+x^2}$, which means $f(xe^0)=f(x)=\frac{1}{1+x^2}$ and therefore
+\begin{tcolorbox}[colback=white, title=Solution]
+$$u(t,x)=\frac{1}{1+\left(xe^t\right)^2}$$
+\end{tcolorbox}
 
-We check by differentiating:
+\begin{tcolorbox}[colback=blue!5!white,colframe=blue!75!black,title=Check solution]
 $$u_t=-\left(1+\left(xe^t\right)^2\right)^{-2}\left(2xe^t\right)xe^t$$
 $$u_x=-\left(1+\left(xe^t\right)^2\right)^{-2}\left(2xe^t\right)e^t$$
 And we see that $u_t-xe_t$ indeed equals zero.
+\end{tcolorbox}
+
 Plotting the solution $u(t,x)=\frac{1}{1+\left(xe^t\right)^2}$ as a function of $x$ for $t=1,2,3$, we get:
 
 ```{r, warning=FALSE, echo=FALSE}
@@ -247,14 +336,15 @@ At $u(0,y)$, this becomes $u=0y^2+F(y)$, or $u(0,y)=F(y)$.
 On the other hand, we are told that $u(0,y)=e^y$, which means that $F(y)=e^y$.
 $$u=\eta\xi^2+e^\xi$$
 Substitute back in $x$ and $y$:
+\begin{tcolorbox}[colback=white, title=Solution]
 $$u(x,y)=x\left(y-\frac{x^2}{2}\right)^2+\exp{\left(y-\frac{x^2}{2}\right)}$$
+\end{tcolorbox}
 
-We can check by differentiating:
+\begin{tcolorbox}[colback=blue!5!white,colframe=blue!75!black,title=Check solution]
 $$u_x=-2x^2\left(y-\frac{x^2}{2}\right)+\left(y-\frac{x^2}{2}\right)^2+\exp{\left(y-\frac{x^2}{2}\right)}(-x)$$
 $$u_y=2x\left(y-\frac{x^2}{2}\right)+\exp{\left(y-\frac{x^2}{2}\right)}$$
-
 Which means that $u_x+xu_y=\left(y-\frac{x^2}{2}\right)^2$, as we wanted.
-
+\end{tcolorbox}
 
 #### (d)
 $2xu_x+(x+1)u_y=y$, for $x>0, u=2y$ on $x=1$
@@ -278,22 +368,3 @@ ggplot(data=curves_4d)+
   ggtitle("Characteristic curves for Problem 4d")
 ```
 
-
-
-
-
-
-Now we define our new coordinate system as $2y-x-\ln(x), \, \eta=x$  
-
-Then by the chain rule,
-$$u_x= \pdv{u}{x}=\pdv{u}{\eta}\pdv{\eta}{x}+\pdv{u}{\xi}\pdv{\xi}{x}=$$
-
-$$\pdv{u}{\eta}+\pdv{u}{\xi}\left(-1-\frac{1}{x}\right) $$
-
-Similarly, $$u_y=\pdv{u}{y}=2\pdv{u}{\xi}$$
-
-Plugging into our initial PDE,
-$$2xu_x+(x+1)u_y=2x\pdv{u}{\eta}+\pdv{u}{\xi}2x\left(-1-\frac{1}{x}\right)+2(x+1)\pdv{u}{\xi}=2x\pdv{u}{\eta}$$
-
-And since we know $2xu_x+(x+1)u_y=y$, this means $y=2x\pdv{u}{\eta}$ or
-$$\frac{\eta}{2}+\frac{\ln(\eta)}{2}+\xi=2\eta \pdv{u}{\eta}$$
