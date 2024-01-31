@@ -1,8 +1,10 @@
 ---
 title: "BIOL 274 Homework 2"
 author: "Ruby Krasnow"
-date: "2024-01-27"
-output: pdf_document
+date: "2024-01-31"
+output:
+  pdf_document:
+    extra_dependencies: ["derivative", "tcolorbox", "xcolor"]
 ---
 
 ```{r setup, include=FALSE}
@@ -29,9 +31,9 @@ We will assume that, in the absence of harvesting, the fish population at time t
     \end{cases}       
 \end{equation}
 
-Although since we are working in discrete time, it might be more accurate to write the change in population as a difference equation, $P_{n+1}-P_n=\Delta P= 0.3P \left( 1- \frac{P}{2500} \right)$. For now we will continue using differential equation notation and apologize to Leibniz.
+Note: Since we are working in discrete time, it might be more accurate to write the change in population as a difference equation, $P_{n+1}-P_n=\Delta P= 0.3P \left( 1- \frac{P}{2500} \right)$. For now we will continue using differential equation notation and apologize to Leibniz.
 
-The initial conditions will remain the same for each of the three situations, but we can adjust the differential equation for each scenario as follows:
+The initial conditions $P(0)=2500$ will remain the same for each of the three situations, but we can adjust the differential equation for each scenario as follows:
 
 > **a.** One hundred fish are harvested each year:
 
@@ -48,7 +50,7 @@ of fish in the lake:
 $$\frac{dP}{dt}=0.3P \left( 1- \frac{P}{2500} \right)-\alpha \sqrt{P}$$
 Where $\alpha$ is a constant of proportionality.
 
-Now we're going to have some fun and see how the population would change over a 100-year period if no harvesting occurred and under each of these three harvesting strategies! We will use the numerical ODE solver from the `deSolve` package.
+Let's see how the population would change over a 100-year period if no harvesting occurred and under each of these three harvesting strategies! We will use the numerical ODE solver from the `deSolve` package.
 
 ```{r}
 
@@ -102,7 +104,7 @@ fish_output <- ode_output_fish %>%
 ```
 
 Let's see what we got!
-```{r}
+```{r,   fig.height=3, fig.width=5, fig.width=5}
 ggplot()+
   geom_line(data=fish_output, aes(x=time, y=P, color=names_full))+
   theme_bw()+
@@ -172,7 +174,7 @@ $C_2-9=1$, so $C_2=10$
 Our final solution is therefore:
 \begin{equation}\label{solution}P(t)=\frac{2500}{10e^{\frac{t}{30}}-9}\end{equation}
 Here is what it looks like:
-```{r}
+```{r,   fig.height=3, fig.width=5  }
 t=c(1:250)
 y=2500/(10*exp(t/30)-9)
 
@@ -219,7 +221,7 @@ And checking the initial conditions:
 $$P(0)=\frac{2500}{10e^{0}-9}=\frac{2500}{1}=2500$$
 We can also confirm by using R to calculate the derivative of our solution and plotting it alongside the original expression for $\frac{dP}{dt}$:
 
-```{r}
+```{r,   fig.height=3, fig.width=5  }
 dy=D(expression(2500/(10*exp(t/30)-9)), "t")
 
 ggplot()+
@@ -277,7 +279,7 @@ when $p(0) << N_0/a$. How would this curve change if $N_0 < aP(0)$?
 
 $$P(t)=\frac{N_0P_0}{aP_0+\left(N_0-aP_0\right)e^{-N_0t}}$$
 
-```{r}
+```{r,   fig.height=3, fig.width=5  }
 N0 = 0.1
 a=0.003
 p0_small=10
@@ -297,8 +299,179 @@ ggplot()+
 
 If $N_0 < aP(0)$, that means that $N_0/a < P(0)$, or equivalently, $P(0)>N_0/a$. This is saying that our initial population size $P(0)=P_0$ is greater than our carrying capacity $N_0/a$, so the population size will decrease until it reaches the asymptote at $K=N_0/a$.
 
-## Question 4 & 5
+## Euler's Method
 For problems 4 and 5, use Euler’s Method with the given step size, h, to approximate the solution
 to the given IVP over the time interval specified. Your answer should include a table of
 approximate values of the dependent variable. It should also include a sketch of the graph
 of the approximate solution.
+
+### Question 4
+$$\frac{dw}{dt}=(3-w)(w+1), \quad w(0)=4, \quad 0\leq t \leq 5, \quad h=1.0$$
+We start with a table that looks like this:
+```{r}
+data.frame(t=c(0:5), w=c(4, rep(NA, 5)))
+```
+
+**Manual computation**  
+At $t=1, \quad w=4+(3-4)(4+1)1 = 4+(-5)=-1$  
+But then for $t=2, \quad w=-1+(3--1)(-1+1)1= -1+0 = -1$  
+For $t=3, w=-1+(3--1)(-1+1)1= -1+0 = -1$  
+So once we hit $t=2$, the slope is always 0, making $y(t_n+1) = y(t_n) = -1$. The same thing will happen each time we compute $w$, so using Euler's method with a step size of h=1 has gotten us stuck!
+
+**Using a function**  
+Let's define a function to compute Euler's method and see if we can do better with smaller step sizes.  
+
+Here we will write our own function, but note that the `deSolve` package includes a function `euler` that can do the same thing with many options for additional customization. There is also a simpler `euler` function in the package `demodelr` that takes fewer parameters.
+
+```{r}
+euler_fun <- function(slope_fun, x0, y0, h, N) {
+    x <- x0
+    y <- y0
+    num_steps <- N/h
+
+    for(i in 1:num_steps) {
+        y0 <- y0 + h * slope_fun(x0, y0)
+        x0 <- x0 + h
+        x <- c(x, x0)
+        y <- c(y, y0)
+    }
+    
+    return(data.frame(x = x, y = y, h=h))
+}
+
+f <- function(x_n, y_n){
+  slope=(3-y_n)*(y_n+1)
+  slope
+}
+
+euler_fun(slope_fun=f, x0=0, y0=4, h=1, N=5) %>% rename(w=y, t=x)
+euler_fun(slope_fun=f, x0=0, y0=4, h=0.5, N=5) %>% rename(w=y, t=x)
+euler_fun(slope_fun=f, x0=0, y0=4, h=0.1, N=5)%>% rename(w=y, t=x)
+
+euler_output<- c(1, 0.5, 0.1) %>% 
+  map(\(x) euler_fun(f, x0=0, y0=4, h=x, N=5)) %>% 
+  bind_rows()
+
+```
+
+```{r,   fig.height=3, fig.width=5  }
+ggplot(data = euler_output)+
+  geom_point(aes(x=x, y=y, color=as.factor(h)))+
+  geom_line(aes(x=x, y=y, color=as.factor(h)), alpha=0.5)+
+  theme_light()+
+  labs(x="t", y="w", color="h")
+```
+
+Since this is a separable ODE and we are given initial conditions, we can also find the particular solution explicitly:
+$$\frac{dw}{dt}=(3-w)(w+1)=-w^2+2w+3$$
+
+$$\int \frac{dw}{w^2-2w-3}=\int -dt$$
+
+Using partial fraction decomposition for the left-hand side, we can rewrite the integral as:
+$$\frac{1}{4}\int \frac{1}{w-3}-\frac{1}{w+1}\>dw=\int -dt$$
+
+$$\frac{1}{4}\left( \ln(w-3)-\ln(w+1) \right)=-t+C_1$$
+$$ \ln\left(\frac{w-3}{w+1}\right) =-4t+C_2$$
+
+
+$$\frac{w-3}{w+1}=\frac{w+1-4}{w+1}=1+\frac{-4}{w+1}=C_3e^{-4t}$$
+$$\frac{-4}{w+1}=C_3e^{-4t}-1$$
+Plugging in our initial conditions, 
+$$\frac{-4}{5}=C_3-1 \quad \longrightarrow \quad C_3=\frac{1}{5}$$
+
+$$\frac{-4}{w+1}=\frac{1}{5}e^{-4t}-1$$
+\begin{tcolorbox}[colback=white, title=Solution]
+$$w(t)=\frac{4}{1-\frac{1}{5}e^{-4t}}-1$$
+\end{tcolorbox}
+\begin{tcolorbox}[colback=blue!5!white,colframe=blue!75!black,title=Check solution by differentiating]
+
+Direct differentiation of solution
+$$\frac{dw}{dt}= -4\left ( 1-\frac{1}{5}e^{-4t} \right)^{-2}\left(\frac{-1}{5}e^{-4t}\right)(-4) = \frac{16 \left(- \frac{1}{5} e^{-4t} \right)}{ \left(1 -\frac{1}{5}e^{-4t} \right)^2}$$
+Plugging solution into original ODE
+
+$$\frac{dw}{dt}=(3-w)(w+1)=\left(3-\frac{4}{1-\frac{1}{5}e^{-4t}}+1 \right) \left(\frac{4}{1-\frac{1}{5}e^{-4t}}-1+1 \right) =$$
+
+$$\left(4-\frac{4}{1-\frac{1}{5}e^{-4t}}\right)\left(\frac{4}{1-\frac{1}{5}e^{-4t}}\right) = $$
+
+$$\frac{16}{1-\frac{1}{5}e^{-4t}}-\frac{16}{\left(1-\frac{1}{5}e^{-4t}\right)^2} =
+\frac{16 \left( 1 - \frac{1}{5} e^{-4t} \right) -16}{ \left(1 -\frac{1}{5}e^{-4t} \right)^2}=$$
+$$\frac{16 \left(- \frac{1}{5} e^{-4t} \right)}{ \left(1 -\frac{1}{5}e^{-4t} \right)^2}$$
+
+\end{tcolorbox}
+
+So now we can add to our graph the actual solution:
+```{r}
+actual_eqn <- data.frame(t=seq(from=0, to=5, by=0.0001)) %>% mutate(
+w=4/((1-(1/5)*exp(-4*t)))-1)
+
+ggplot()+
+  geom_line(data=actual_eqn, aes(x=t, y=w, color="Actual solution"), linewidth=1.5)+
+  geom_point(data = euler_output, aes(x=x, y=y, color=as.factor(h)), size=1)+
+  geom_line(data = euler_output, aes(x=x, y=y, color=as.factor(h)), alpha=0.5, linewidth=1)+
+  theme_light()+
+  labs(x="t", y="w", color="h")+
+  scale_color_manual(values=c( "#e69b99","#89689d","#015b58", "black"))
+#Credit: hex codes are from Jake Lawlor's R package PNWcolors
+```
+
+We can also see that $\lim\limits_{t \to \infty}w(t)=3$ by looking at our expression for the actual solution, because $e^{-4t}$ will approach zero, so the denominator will approach $1-0$ and the overall solution will approach $\frac{4}{1}-1=3$. Clearly, the step size of $h=0.1$ very closely approximated the actual solution after around 30 time steps.
+
+### Question 5
+$$\frac{dy}{dt}=e^{2/y}, \quad y(0)=2, \quad 0\leq t \leq 2, \quad h=0.5$$
+
+**Manual computation**  
+
+$(t_0=0, y_0=2) \quad \longrightarrow \quad$ slope $=e^{2/2}=e, y_1=2+\frac{e}{2} \approx$ `r exp(2+exp(1)/2)`
+```{r}
+y_1=round(2+exp(1)/2, 4)
+y_1
+```
+
+$(t_1=0.5, y_1 \approx 3.3591)\quad \longrightarrow \quad$ slope $=\exp{\left(\frac{2}{3.3591}\right)} \approx$ `r exp(2/3.3591)`
+```{r}
+y_2=round(3.3591+exp(2/3.3591)/2, 4)
+y_2
+```
+
+$(t_2=1, y_2 \approx 4.266)\quad \longrightarrow \quad$ slope $=\exp{\left(\frac{2}{4.266}\right)} \approx$ `r exp(2/4.266)`
+```{r}
+y_3=round(4.266+exp(2/4.266)/2, 4)
+y_3
+```
+
+$(t_3=1.5, y_3 \approx 5.0651)\quad \longrightarrow \quad$ slope $=\exp{\left(\frac{2}{5.0651}\right)} \approx$ `r exp(2/5.0651)`
+
+```{r}
+y_4=round(5.0651+exp(2/5.0651)/2, 4)
+y_4
+```
+
+$(t_4=2, y_4\approx 5.8072)$
+
+Using our function from earlier,
+```{r}
+new_f = function(x_n, y_n) {
+  slope = exp(2/y_n)
+  slope
+}
+
+euler_fun(slope_fun = new_f, h=0.5, N=2, x0=0, y0=2)
+```
+
+And we get the same result as our manual computation.
+
+```{r}
+library(PNWColors)
+
+euler_output_2<- c(1, 0.5, 0.1, 0.05) %>% 
+  map(\(x) euler_fun(new_f, x0=0, y0=2, h=x, N=2)) %>% 
+  bind_rows()
+
+ggplot()+
+  geom_point(data = euler_output_2, aes(x=x, y=y, color=as.factor(h)))+
+  geom_line(data = euler_output_2, aes(x=x, y=y, color=as.factor(h)), alpha=0.8)+
+  theme_light()+
+  labs(x="t", y="y", color="h")+
+  scale_color_manual(values=pnw_palette(name="Starfish",n=4,type="discrete"))
+```
+
