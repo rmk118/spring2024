@@ -1,0 +1,222 @@
+---
+title: "MATH 245 old and unused content"
+author: "Ruby Krasnow"
+date: "2024-01-31"
+output:
+  pdf_document:
+    extra_dependencies: ["derivative", "tcolorbox", "xcolor"]
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+```
+
+
+### Homework 2 Question 4 - old version
+For each of the following IVPs, (i) find and plot the characteristic lines (curves), (ii) solve the IVP, and (iii) plot the solution of (a)-(b) for indicated time.  
+
+#### (a)
+$u_t+\left(1+x^2\right)u_x=0, \, u(0,x)=\arctan{(x)}, \, t=1,2,3$, and
+what is $\lim\limits_{t \to \infty}u(t,x)$?
+
+$$\frac{dx}{dt}=1+x^2$$
+$$\frac{1}{1+x^2}dx=dt$$
+
+$$\arctan{(x)}=t+C$$
+So $x=\tan{(t+C)}$ are the characteristic curves of $u_t+\left(1+x^2\right)u_x=0$.  
+On each of the curves, $u(x,t)$ is constant because $$\frac{d}{dt}u(t,\tan{(t+C)}) = \pdv {u}{t}+\pdv{u}{x} \sec^2{(t+c)}$$  
+And since $1+\tan^2\theta=\sec^2\theta$, this means $\frac{d}{dt}u(t,\tan{(t+C)}) = \pdv {u}{t}+\pdv{u}{x}\left( 1+\tan^2{(t+c)}\right)=u_t+\left(1+x^2\right)u_x$, which we know is 0.
+
+Thus $u(t, \tan{(t+C)})=u(0, \tan{(0+C)})=u(0, C)$ is independent of $t$.  
+Putting $x=\tan{(t+C)}$ and $C=\arctan{(x)}-t$, we have
+$$u(t, x)=u(0,\arctan{(x)}-t)$$
+It follows that $u(t,x)=f(\arctan{(x)}-t)$.  
+And since we are given that $u(0,x)=\arctan{(x)}$, we have $f(\arctan{(x)}-0)=\arctan{(x)}$ so that $f(w)=w$ for any $w$, yielding our solution of 
+
+\begin{tcolorbox}[colback=white, title=Solution]
+$$u(t,x)=\arctan{(x)}-t$$
+\end{tcolorbox}
+
+```{r, echo=FALSE}
+C=1
+df_4a <- tibble(x = seq(-2*pi, 2*pi, length.out = 1000),
+                y=tan(x+C)) %>% 
+  mutate(y = ifelse(abs(y) < 20, y, NA))
+                      
+ggplot(df_4a, aes(x=x, y=y)) + 
+  geom_line()+
+  coord_cartesian(ylim=c(-10,10), xlim = c(-5,5))+
+  theme_bw()+
+  labs(x="t", y="x")+
+  ggtitle("Characteristic curves for Problem 4a", subtitle = "with C=1")
+```
+
+Since the range of $\arctan$ is limited to $\left(\frac{-\pi}{2},\frac{\pi}{2}\right)$, as $\lim\limits_{t \to \infty}$ that means $u(t,x)=\arctan(x)-t$ will go to $-\infty$.
+
+```{r, echo=FALSE}
+
+x=seq(-10,10,length.out = 1000)
+ggplot() + 
+  geom_line(aes(x=x, y=atan(x)-1, color="1"))+
+  geom_line(aes(x=x, y=atan(x)-2, color="2"))+
+  geom_line(aes(x=x, y=atan(x)-3, color="3"))+
+  theme_bw()+
+  labs(x="x", y="u(x,t)", color="Value of t")+
+  ggtitle("Solution curves for Problem 4a")
+```
+
+\begin{tcolorbox}[colback=blue!5!white,colframe=blue!75!black,title=Check solution]
+Since $u_t=-1, u_x=\frac{1}{1+x^2}$, that means $u_t+\left(1+x^2\right)u_x=-1+1=0$
+\end{tcolorbox}
+
+#### (b)
+$u_t-xu_x=0, \, u(0,x)=\frac{1}{1+x^2}, \, t=1,2,3$, and
+what is $\lim\limits_{t \to \infty}u(t,x)$?
+
+The directional derivative of $u$ in the direction of the vector $(1, -x)$ is zero. The curves in the $tx$ plane with $(1, -x)$ as a tangent vector have slopes $-x$:
+
+$$\frac{dx}{dt}=-x$$
+$$\frac{1}{x}dx=-dt$$
+Solving this ODE gives the equations for the characteristic lines:
+$$x=Ce^{-t}$$
+
+```{r, warning = FALSE, echo=FALSE}
+curves_4b <- tibble(C=c(1:5), seq=list(x)) %>% 
+  rowwise() %>% 
+  mutate(y=list(C*exp(-seq))) %>% 
+  unnest(c(seq,y))
+
+ggplot(data=curves_4b)+
+  geom_line(aes(x=seq, y=y, color=as.factor(C)))+
+  coord_cartesian(ylim=c(NA, 100), xlim=c(-5, 9))+
+  labs(x="t", y="x", color="C")+
+  theme_light()+
+  ggtitle("Characteristic curves for Problem 4b")
+```
+
+On each of the curves, $u(x,t)$ is constant because $$\frac{d}{dt}u(t,Ce^{-t}) = \pdv {u}{t}-Ce^{-t}\pdv{u}{x}=u_t-xu_x$$  
+and we know that $u_t-xu_x=0$.  
+
+
+Set $\xi=xe^t$ and $\eta=x$. Then by the chain rule,
+$$u_x= \pdv{u}{x}=\pdv{u}{\eta}\pdv{\eta}{x}+\pdv{u}{\xi}\pdv{\xi}{x}=$$
+$$\pdv{u}{\eta}+\pdv{u}{\xi}e^t $$
+
+and similarly
+$$u_t= \pdv{u}{t}=\pdv{u}{\eta}\pdv{\eta}{t}+\pdv{u}{\xi}\pdv{\xi}{t}=\pdv{u}{\xi}xe^t $$
+
+Which means that 
+$$u_t-xu_x=\pdv{u}{\xi}xe^t -x\left(\pdv{u}{\eta}+\pdv{u}{\xi}e^t \right)=0$$
+Assuming $x\neq0$, this means
+$$u_\eta=0$$
+$$u=\int u_\eta \, d\eta \> + f(\xi)=0+ f(\xi)$$
+
+So we have $u(t,x)=f(\xi)=f(xe^t)$ and we know that $u(0,x)=\frac{1}{1+x^2}$, which means $f(xe^0)=f(x)=\frac{1}{1+x^2}$ and therefore
+\begin{tcolorbox}[colback=white, title=Solution]
+$$u(t,x)=\frac{1}{1+\left(xe^t\right)^2}$$
+\end{tcolorbox}
+
+\begin{tcolorbox}[colback=blue!5!white,colframe=blue!75!black,title=Check solution]
+$$u_t=-\left(1+\left(xe^t\right)^2\right)^{-2}\left(2xe^t\right)xe^t$$
+$$u_x=-\left(1+\left(xe^t\right)^2\right)^{-2}\left(2xe^t\right)e^t$$
+And we see that $u_t-xe_t$ indeed equals zero.
+\end{tcolorbox}
+
+Plotting the solution $u(t,x)=\frac{1}{1+\left(xe^t\right)^2}$ as a function of $x$ for $t=1,2,3$, we get:
+
+```{r, warning=FALSE, echo=FALSE}
+
+x=seq(-10,10,length.out = 1000)
+ggplot() + 
+  geom_line(aes(x=x, y=1/(1+(exp(1)*x)^2), color="1"))+
+  geom_line(aes(x=x, y=1/(1+(exp(2)*x)^2), color="2"))+
+  geom_line(aes(x=x, y=1/(1+(exp(3)*x)^2), color="3"))+
+  theme_bw()+
+  labs(x="x", y="u(x,t)", color="Value of t")+
+  xlim(-5,5)+
+  ggtitle("Solution curves for Problem 4b")
+```
+
+We can see that $u(t,x)$ will equal 1 at $x=0$ regardless of the value of $t$, but at all other values of $x$, $\lim\limits_{t \to \infty}u(t,x)=0$. This can be written as
+\begin{equation}
+\lim\limits_{t \to \infty}u(t,x)=
+    \begin{cases}
+        1 & \text{if } x=0\\
+        0 & \text{if } x\neq0
+    \end{cases}
+\end{equation}
+
+#### (c)
+$u_x+xu_y=\left(y-\frac{x^2}{2}\right)^2, \, u(0,y)=e^y$
+
+$\frac{dy}{dx}=x$
+Solving this ODE yields the equation for the characteristic curves: $y=\frac{x^2}{2}+C$  
+
+```{r, warning = FALSE, echo=FALSE}
+curves_4c <- tibble(C=c(1:5), seq=list(x)) %>% 
+  rowwise() %>% 
+  mutate(y=list(0.5*(seq)^2+C)) %>% 
+  unnest(c(seq,y))
+
+ggplot(data=curves_4c)+
+  geom_line(aes(x=seq, y=y, color=as.factor(C)))+
+  coord_cartesian(ylim=c(NA, 45), xlim=c(-9.5, 9.5))+
+  labs(x="x", y="y", color="C")+
+  theme_light()+
+  ggtitle("Characteristic curves for Problem 4c")
+```
+
+Now we define our new coordinate system as $\xi=y-\frac{x^2}{2}, \, \eta=x$  
+
+Then by the chain rule,
+$$u_x= \pdv{u}{x}=\pdv{u}{\eta}\pdv{\eta}{x}+\pdv{u}{\xi}\pdv{\xi}{x}=$$
+$$\pdv{u}{\eta}-x\pdv{u}{\xi}$$
+
+and similarly
+$$u_y= \pdv{u}{y}=\pdv{u}{\eta}\pdv{\eta}{y}+\pdv{u}{\xi}\pdv{\xi}{y}=$$
+$$\pdv{u}{\xi}$$
+
+$$u_x+xu_y=\pdv{u}{\eta}-x\pdv{u}{\xi}+x\pdv{u}{\xi}=\pdv{u}{\eta}$$
+
+And since we know $u_x+xu_y=\left(y-\frac{x^2}{2}\right)^2$, this means we have
+$$\pdv{u}{\eta}=\left(y-\frac{x^2}{2}\right)^2=\xi^2$$
+Now we integrate with respect to $\eta$ to find
+$$u=\eta\xi^2+F(\xi)$$
+
+At $u(0,y)$, this becomes $u=0y^2+F(y)$, or $u(0,y)=F(y)$.
+On the other hand, we are told that $u(0,y)=e^y$, which means that $F(y)=e^y$.
+$$u=\eta\xi^2+e^\xi$$
+Substitute back in $x$ and $y$:
+\begin{tcolorbox}[colback=white, title=Solution]
+$$u(x,y)=x\left(y-\frac{x^2}{2}\right)^2+\exp{\left(y-\frac{x^2}{2}\right)}$$
+\end{tcolorbox}
+
+\begin{tcolorbox}[colback=blue!5!white,colframe=blue!75!black,title=Check solution]
+$$u_x=-2x^2\left(y-\frac{x^2}{2}\right)+\left(y-\frac{x^2}{2}\right)^2+\exp{\left(y-\frac{x^2}{2}\right)}(-x)$$
+$$u_y=2x\left(y-\frac{x^2}{2}\right)+\exp{\left(y-\frac{x^2}{2}\right)}$$
+Which means that $u_x+xu_y=\left(y-\frac{x^2}{2}\right)^2$, as we wanted.
+\end{tcolorbox}
+
+#### (d)
+$2xu_x+(x+1)u_y=y$, for $x>0, u=2y$ on $x=1$
+
+$$\frac{dx}{dy}=\frac{x+1}{2x}=\frac{1}{2}+\frac{1}{2x}$$
+Solving this ODE yields the characteristic curves:
+$$y=\frac{x}{2}+\frac{\ln(x)}{2}+C$$
+$$C=2y-x-\ln(x)$$
+
+```{r, warning = FALSE, echo=FALSE}
+curves_4d <- tibble(C=c(1:5), seq=list(x)) %>% 
+  rowwise() %>% 
+  mutate(y=list((seq/2)+(log(seq)/2)+C)) %>% 
+  unnest(c(seq,y))
+
+ggplot(data=curves_4d)+
+  geom_line(aes(x=seq, y=y, color=as.factor(C)))+
+  coord_cartesian(ylim=c(-1, 12), xlim=c(-1, 9.5))+
+  labs(x="x", y="y", color="C")+
+  theme_light()+
+  ggtitle("Characteristic curves for Problem 4d")
+```
+

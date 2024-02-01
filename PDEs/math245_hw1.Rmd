@@ -1,7 +1,7 @@
 ---
 title: "MATH 245 Homework 1"
 author: "Ruby Krasnow and Tommy Thach"
-date: "2024-01-30"
+date: "2024-02-01"
 output:
   pdf_document:
     extra_dependencies: ["derivative", "tcolorbox", "xcolor"]
@@ -186,6 +186,10 @@ And since we are given that $u(0,x)=\arctan{(x)}$, we have $f(\arctan{(x)}-0)=\a
 $$u(t,x)=\arctan{(x)}-t$$
 \end{tcolorbox}
 
+\begin{tcolorbox}[colback=blue!5!white,colframe=blue!75!black,title=Check solution]
+Since $u_t=-1, u_x=\frac{1}{1+x^2}$, that means $u_t+\left(1+x^2\right)u_x=-1+1=0$
+\end{tcolorbox}
+
 ```{r, echo=FALSE}
 C=1
 df_4a <- tibble(x = seq(-2*pi, 2*pi, length.out = 1000),
@@ -214,9 +218,6 @@ ggplot() +
   ggtitle("Solution curves for Problem 4a")
 ```
 
-\begin{tcolorbox}[colback=blue!5!white,colframe=blue!75!black,title=Check solution]
-Since $u_t=-1, u_x=\frac{1}{1+x^2}$, that means $u_t+\left(1+x^2\right)u_x=-1+1=0$
-\end{tcolorbox}
 
 #### (b)
 $u_t-xu_x=0, \, u(0,x)=\frac{1}{1+x^2}, \, t=1,2,3$, and
@@ -347,12 +348,18 @@ Which means that $u_x+xu_y=\left(y-\frac{x^2}{2}\right)^2$, as we wanted.
 \end{tcolorbox}
 
 #### (d)
-$2xu_x+(x+1)u_y=y$, for $x>0, u=2y$ on $x=1$
+$2x u_x+ (x+1)u_y=y$, for $x>0, u=2y$ on $x=1$
 
-$$\frac{dx}{dy}=\frac{x+1}{2x}=\frac{1}{2}+\frac{1}{2x}$$
+$$\frac{dx}{a}=\frac{dy}{b}=\frac{du}{c} \quad \longrightarrow \quad 
+\frac{dx}{2x}=\frac{dy}{x+1}=\frac{du}{y}$$
+
+$$\frac{dx}{2x}=\frac{dy}{x+1}$$
+$$\frac{x+1}{2x}\, dx=dy$$
+$$\int \frac{1}{2}+\frac{1}{2x}\, dx=\int dy$$
+
 Solving this ODE yields the characteristic curves:
-$$y=\frac{x}{2}+\frac{\ln(x)}{2}+C$$
-$$C=2y-x-\ln(x)$$
+$$y=\frac{x}{2}+\frac{\ln x}{2}-C$$
+$$C=\frac{x}{2}+\frac{\ln x}{2}-y$$
 
 ```{r, warning = FALSE, echo=FALSE}
 curves_4d <- tibble(C=c(1:5), seq=list(x)) %>% 
@@ -362,9 +369,100 @@ curves_4d <- tibble(C=c(1:5), seq=list(x)) %>%
 
 ggplot(data=curves_4d)+
   geom_line(aes(x=seq, y=y, color=as.factor(C)))+
-  coord_cartesian(ylim=c(-1, 12), xlim=c(-1, 9.5))+
+  coord_cartesian( xlim=c(-1, 9.5))+
   labs(x="x", y="y", color="C")+
   theme_light()+
   ggtitle("Characteristic curves for Problem 4d")
 ```
 
+Now define our new coordinate system as $xi=\frac{x}{2}+\frac{\ln x}{2}-y, \quad \eta=x$.  
+Then by the chain rule,
+$$u_x= \pdv{u}{x}=\pdv{u}{\eta}\pdv{\eta}{x}+\pdv{u}{\xi}\pdv{\xi}{x}=$$
+$$\pdv{u}{\xi}\left(\frac{1}{2}+ \frac{1}{2x}\right) +\pdv{u}{\eta}$$
+$$u_y= \pdv{u}{y}=\pdv{u}{\eta}\pdv{\eta}{y}+\pdv{u}{\xi}\pdv{\xi}{y}= -\pdv{u}{\xi}$$
+Plugging these into our original PDE,
+$$2x\left( \pdv{u}{\xi}\left(\frac{1}{2}+ \frac{1}{2x}\right) +\pdv{u}{\eta} \right)+\left(x+1\right)\left(-\pdv{u}{\xi}\right)=$$
+$$\pdv{u}{\xi}\left(x+1\right)+2x \pdv{u}{\eta}-\pdv{u}{\xi}\left(x+1\right)=2x \pdv{u}{\eta}$$
+So we must have $2x\pdv{u}{\eta}=y$. Now replace $\eta$ and $\xi$ by $x$ and $y$:
+$$2\eta\pdv{u}{\eta}=\frac{\eta}{2}+\frac{\ln\eta}{2}-\xi$$
+
+$$\pdv{u}{\eta}=\frac{1}{4}+\frac{\ln\eta}{4\eta}-\frac{\xi}{2n}$$
+
+Now integrate with respect to $\eta$:
+$$u=\frac{\eta}{4}+\frac{(\ln\eta)^2}{8}-\frac{\xi \ln\eta}{2}+F(\xi)$$
+$$u(x,y)=\frac{x}{4}+\frac{(\ln x)^2}{8}-\frac{\ln x}{2}\left(\frac{x}{2}+\frac{\ln x}{2}-y \right)+F\left(\frac{x}{2}+\frac{\ln x}{2}-y\right)$$
+Now we use the fact that $u(1,y)=2y$:
+$$u(1,y)=\frac{1}{4}+F\left(\frac{1}{2}-y\right)=2y$$
+$$F\left(\frac{1}{2}-y\right)=2y-\frac{1}{4}$$
+So $F(\alpha)=-2\alpha+\frac{3}{4}$ for arbitrary $\alpha$. Then
+$$u(x,y)=\frac{x}{4}+\frac{(\ln x)^2}{8}-\frac{\ln x}{2}\left(\frac{x}{2}+\frac{\ln x}{2}-y \right)-x-\ln x +2y+\frac{3}{4}$$
+Which can be simplified to
+$$u(x,y)=\frac{-3x}{4}-\frac{(\ln x)^2}{8}-\frac{x\ln x}{4}+\frac{y\ln x}{2}-\ln x+2y+\frac{3}{4}$$
+\begin{tcolorbox}[colback=white, title=Solution]
+$$u(x,y)=-\ln x\left(\frac{x}{4} +\frac{\ln x}{8}+ \frac{y}{2} +1 \right)-\frac{3x}{4}+2y+\frac{3}{4} $$
+\end{tcolorbox}
+
+\begin{tcolorbox}[colback=blue!5!white,colframe=blue!75!black,title=Check solution]
+$$u_y=\frac{\ln x}{2}+2$$
+$$u_x=\frac{-1}{x} \left(\frac{x}{4} +\frac{\ln x}{8}- \frac{y}{2} +1 \right)+(-\ln x) \left(\frac{1}{4} +\frac{1}{8x}\right)-\frac{3}{4}$$
+Which means
+$$2xu_x+(x+1)u_y=\left( \frac{-x}{2}-\frac{\ln x}{4}+y-2-\frac {x \ln x}{2}-\frac{\ln x}{4}-\frac{3x}{2}\right)+ \left(\frac {x \ln x}{2}+\frac { \ln x}{2}+2x+2 \right)=$$
+$$\left(-\frac {x \ln x}{2}-\frac{\ln x}{2} -2x+-2+y\right)+ \left(\frac {x \ln x}{2}+\frac { \ln x}{2}+2x+2 \right)=y$$
+Which matches our original PDE.
+\end{tcolorbox}  
+
+#### (e)
+$yu_x+xu_y=xy$, for $x,y \geq 0$ with $u(0,y)=\exp(-y^2)$
+
+$$\frac{dx}{a}=\frac{dy}{b}=\frac{du}{c} \quad \longrightarrow \quad 
+\frac{dx}{y}=\frac{dy}{x}=\frac{du}{xy}$$
+
+
+$$\frac{dx}{y}=\frac{dy}{x}\quad \longrightarrow \quad x\;dx=y\;dy\quad \longrightarrow \quad y^2=x^2+C$$
+
+$$y=\sqrt{x^2+C}, \quad C=y^2-x^2$$
+Where we kept the positive root for $y$ because it was given that $x,y \geq 0$.
+
+```{r, warning = FALSE, echo=FALSE}
+x=seq(-10,10,length.out = 1000)
+
+curves_4e <- tibble(C=c(1:5), seq=list(x)) %>% 
+  rowwise() %>% 
+  mutate(y=list(sqrt(seq^2+C))) %>% 
+  unnest(c(seq,y))
+
+ggplot(data=curves_4e)+
+  geom_line(aes(x=seq, y=y, color=as.factor(C)))+
+  labs(x="x", y="y", color="C")+
+  theme_light()+
+  ggtitle("Characteristic curves for Problem 4e")
+```
+
+$$\frac{dx}{y}=\frac{du}{xy} \quad\longrightarrow\quad du=x\;dx$$
+
+$$\frac{dy}{x}=\frac{du}{xy} \quad\longrightarrow\quad du=y\;dy$$
+
+$$2\,du= x\,dx+y\,dy=d\left(\frac{x^2+y^2}{2} \right)$$
+
+$$\int du= \frac{1}{4} \int d(x^2+y^2)$$
+
+$$u=\frac{x^2+y^2}{4}+f(C)\quad\longrightarrow\quad u=\frac{x^2+y^2}{4}+f(y^2-x^2)$$
+
+$$u(0,y)=\frac{y^2}{4}+f(y^2)=e^{-y^2}$$
+
+
+$$f(y^2)=e^{-y^2}-\frac{y^2}{4}$$
+
+$$f(\alpha)=e^{-\alpha}-\frac{\alpha}{4}$$
+
+$$u(x,y)=\frac{x^2+y^2}{4}+ e^{x^2-y^2}+\frac{x^2-y^2}{4}$$
+
+\begin{tcolorbox}[colback=white, title=Solution]
+$$u(x,y)=\frac{x^2}{2}+ e^{x^2-y^2}$$
+\end{tcolorbox}
+
+\begin{tcolorbox}[colback=blue!5!white,colframe=blue!75!black,title=Check solution]
+$$u_x=x+2xe^{x^2-y^2}, \; u_y=-2ye^{x^2-y^2}$$
+$$yu_x+xu_y=xy+2xye^{x^2-y^2}-2xye^{x^2-y^2}=xy$$
+Which matches our original PDE.
+\end{tcolorbox} 
