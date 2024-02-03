@@ -1,0 +1,146 @@
+---
+title: "BIOL 274 Homework 3"
+author: "Ruby Krasnow"
+date: "2024-02-03"
+output:
+  pdf_document:
+    extra_dependencies: ["derivative", "tcolorbox", "xcolor"]
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(PNWColors)
+```
+
+## Question 1
+For each of the following DEs, state the order of the DE and whether it is linear or nonlinear. If it is linear, state whether the coefficients are constant or not:
+
+
+## Question 2
+A certain drug is being administered intravenously to a hospital patient who has had no prior drug treatments. Fluid containing 5 mg/cm^3^ of the drug enters the patient’s bloodstream at a rate of 100 cm^3^/hr. The drug is absorbed by tissues or otherwise leaves the bloodstream at a rate proportional to the amount present, with a rate constant of 0.4 (hr)^-1^.  
+
+(a) Assuming that the drug is always uniformly distributed throughout the bloodstream, write a differential equation for the amount of the drug that is present in the bloodstream at any time and state the initial condition.  
+
+Let $y(t)$ be the amount of the drug in the bloodstream at any time $t$. 
+Then the rate of change of the drug, $\frac{dy}{dt}$, is equal to the rate of the drug entering the bloodstream minus the rate of the drug leaving the bloodstream:
+
+$$\frac{dy}{dt}= \text{rate entering - rate leaving} = $$
+$$\left(\frac{5 \text{ mg}}{\text{cm}^3}\right) \left( \frac{100 \text{ cm}^3}{\text{hr}}\right)-(y \text{ mg}) \left( \frac{0.4}{\text{hr}}   \right)=500-0.4y \;\text{mg hr}^{-1}$$
+
+So $$\frac{dy}{dt}=500-0.4y$$  
+
+(b) Using the method of integrating factor find the solution to this initial value problem. 
+
+$$\frac{dy}{dt}=500-0.4y \quad\longrightarrow \quad \frac{dy}{dt}+0.4y=500$$
+$$h(t)=e^{\int 0.4\,dt}=e^{0.4t} $$
+$$y(t)= \frac{1}{h(t)}\int h(t)g(t)dt =$$
+$$e^{-0.4t} \int 500e^{0.4t} = 500e^{-0.4t} \left( \frac{1}{0.4}e^{0.4t}+C_1\right)=1250+C_2e^{-0.4t}$$ where $C_2=500C_1$.
+
+$$y(t)= 1250+C_2e^{-0.4t}$$
+
+Check by differentiating:
+$$y'(t)=-0.4\left(C_2e^{-0.4t}\right)$$
+$$500-0.4y=500-0.4 \left(1250+C_2e^{-0.4t}\right)=$$
+$$500-500-0.4\left(C_2e^{-0.4t}\right)=-0.4\left(C_2e^{-0.4t}\right)=y'(t)$$
+So we have confirmed that out solution satisfies the original differential equation.
+
+(c) How much of the drug is present in the bloodstream after a long time (i.e., as $t \rightarrow \infty$)?
+
+$\lim\limits_{t \to \infty}e^{-0.4t}=0$, which means that $\lim\limits_{t \to \infty}y(t)=1250+0=1250$. Thus, 1250 mg of the drug is present in the bloodstream after a long time.
+
+For problems 3 and 4, find the solution to each of the following IVPs:
+## Question 3
+$$ \frac{dy}{dx}= \frac{-y}{x}+2, \quad y(1)=3 $$
+
+$$ \frac{dy}{dx}+ \frac{1}{x}y=2$$
+$$h(x)=e^{\int \frac{1}{x}\,dx}=e^{\ln x}=x $$
+
+$$y(x)= \frac{1}{h(x)}\int h(x)g(x)dx =$$
+$$y(x)= \frac{1}{x}\int 2x\;dx =\frac{1}{x} \left(x^2+C\right) \quad\longrightarrow\quad y(x)=x+\frac{C}{x}$$
+
+Plugging in our initial conditions, we get $y(1)=3=1+C$, which means $C=2$ and our final solution to the IVP is:
+$$y(x)=x+\frac{2}{x} $$
+
+Checking our solution by differentiating:
+$$y'(x)=1- \frac{2}{x^2} $$
+If we rewrite our original DE, we can see that it is equivalent:
+$$ \frac{dy}{dx}= \frac{-y}{x}+2 = \frac{-x-\frac{2}{x}}{x}+2=-1- \frac{2}{x^2}+2=1- \frac{2}{x^2}$$
+
+## Question 4
+$$ \frac{dp}{dt}= \frac{1}{t+1}p+4t^2+4t, \quad p(1)=10$$
+$$\frac{dp}{dt}-\frac{1}{t+1}p= 4t^2+4t$$
+
+$$h(t)=e^{\int \frac{-1}{t+1}\,dx}=e^{-\ln (t+1)}= e^{\ln  \left(\frac{1}{t+1}\right)}=\frac{1}{t+1}$$
+
+$$p(t)= \frac{1}{h(t)}\int h(t)g(t)dt =$$
+
+$$(t+1) \int\frac{4t^2+4t}{t+1}dt= $$
+
+$$(t+1) \int\frac{4t(t+1)}{t+1}dt = 4(t+1) \int t\;dt =$$
+
+$$ 4(t+1) \left(\frac{t^2}{2} + C_1\right) = 2t^2(t+1)+ C_2(t+1) $$
+
+Where $C_2=4C_1$. Therefore, our general solution is:
+$$p(t)=(t+1)(2t^2+C_2) $$
+
+Now plugging in our initial conditions $p(1)=10$, we get:
+$$10=(2)(2+C_2) \quad\longrightarrow\quad 5=2+C_2 \quad\longrightarrow\quad C_2=3$$
+
+So our final solution to the IVP is:
+$$p(t)=(t+1)(2t^2+3) $$
+
+Check by differentiating:
+$$p'(t)=(t+1)(4t)+(2t^2+3)=4t^2+4t+2t^2+3 $$
+And since 
+$$ 2t^2+3 =\frac{(t+1)(2t^2+3)}{t+1} = \frac{p(t)}{t+1}$$,
+
+This means our solution indeed satisfies the IVP.
+
+## Question 5
+A 400-gallon tank initially contains 200 gallons of water containing 2 parts per billion by weight of dioxin, an extremely potent carcinogen. Suppose water containing 5 parts per billion of dioxin flows into the top of the tank at a rate of 4 gallons per minute. The water in the tank is kept well mixed, and 2 gallons per minute are removed from the bottom of the tank. How much dioxin is in the tank when the tank is full?
+
+```{r}
+l_per_g <- 0.2641720524 # 1 L = 0.2641720524 gal
+c <- 1/l_per_g
+c
+ppb5 <- 5*c
+
+print(paste("1 part per billion = 1 µg per liter = 1 µg per", l_per_g,"gal = ", c, "µg/gal"))
+print(paste("5 ppb =", ppb5, "µg/gal"))
+```
+
+<!-- $1 \text{ ppb} = \frac{1 \mu \text{g}} {\text{L}} = \frac{1 \mu\text{g}}{0.2641720524 \text{ gal}}= `r c` \mu \text{g/gal}$ -->
+
+The volume of water at any time $t$ is
+$$200\text{ gal}+\left( \frac{4 \text{ gal}}{\text{min}} -\frac{2 \text{ gal}}{\text{min}}\right)(t \text{ min})  = 200+2t$$
+
+Let $y(t)$ be the amount of dioxin in the tank at any time $t$. 
+
+$$\frac{dy}{dt}= \text{rate entering - rate leaving} = $$
+
+$$\left(\frac{18.927 \text{ µg}}{\text{gal}}\right) \left( \frac{4 \text{ gal}}{\text{min}}\right)-
+\left(\frac{y \text{ µg}}{200+2t \text{ gal}}\right)\left( \frac{2 \text{ gal}}{\text{min}}\right)$$
+
+$$\frac{dy}{dt}=4(18.927)- \frac{y}{100+t}= 75.708-\frac{y}{100+t}$$
+
+$$\frac{dy}{dt}+\frac{1}{100+t}y= 75.708$$
+
+$$h(t)=e^{\int \frac{1}{t+100}\,dx}=e^{\ln (t+100)}= t+100$$
+
+
+$$y(t)= \frac{1}{h(t)}\int h(t)g(t)dt =$$
+
+
+$$\frac{1}{t+100}\int 75.708(t+100)dt = \frac{75.708}{t+100} \left( \frac{t^2}{2}+100t+C_1\right)= \frac{75.708}{t+100}\left( \frac{t^2}{2}+100t+C_1\right) $$
+
+
+$$y(t)=\frac{37.854t^2+7570.8t+C_2}{t+100}$$
+
+$$y(0)=\frac{C_2}{100}$$
+```{r}
+200*2*c #200 gallons * 2 ppb * ~3.785 (µg/gal)/(1 ppb) = initial amount of dioxin, in µg = y_0
+200*2*c*100 #C_2
+```
+
+$$y(t)=\frac{37.9t^2+7570.8t+151416.5}{t+100}$$

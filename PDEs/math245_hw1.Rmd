@@ -248,20 +248,20 @@ On each of the curves, $u(x,t)$ is constant because $$\frac{d}{dt}u(t,Ce^{-t}) =
 and we know that $u_t-xu_x=0$.  
 
 
-Set $\xi=xe^t$ and $\eta=x$. Then by the chain rule,
-$$u_x= \pdv{u}{x}=\pdv{u}{\eta}\pdv{\eta}{x}+\pdv{u}{\xi}\pdv{\xi}{x}=$$
-$$\pdv{u}{\eta}+\pdv{u}{\xi}e^t $$
+Set $\eta=xe^t$ and $\xi=x$. Then by the chain rule,
+$$u_x= \pdv{u}{x}=\pdv{u}{\xi}\pdv{\xi}{x}+\pdv{u}{\eta}\pdv{\eta}{x}=$$
+$$\pdv{u}{\xi}+\pdv{u}{\eta}e^t $$
 
 and similarly
-$$u_t= \pdv{u}{t}=\pdv{u}{\eta}\pdv{\eta}{t}+\pdv{u}{\xi}\pdv{\xi}{t}=\pdv{u}{\xi}xe^t $$
+$$u_t= \pdv{u}{t}=\pdv{u}{\xi}\pdv{\xi}{t}+\pdv{u}{\eta}\pdv{\eta}{t}=\pdv{u}{\eta}xe^t $$
 
 Which means that 
-$$u_t-xu_x=\pdv{u}{\xi}xe^t -x\left(\pdv{u}{\eta}+\pdv{u}{\xi}e^t \right)=0$$
+$$u_t-xu_x=\pdv{u}{\eta}xe^t -x\left(\pdv{u}{\xi}+\pdv{u}{\eta}e^t \right)=0$$
 Assuming $x\neq0$, this means
-$$u_\eta=0$$
-$$u=\int u_\eta \, d\eta \> + f(\xi)=0+ f(\xi)$$
+$$u_\xi=0$$
+$$u=\int u_\xi \, d\xi \> + f(\eta)=0+ f(\eta)$$
 
-So we have $u(t,x)=f(\xi)=f(xe^t)$ and we know that $u(0,x)=\frac{1}{1+x^2}$, which means $f(xe^0)=f(x)=\frac{1}{1+x^2}$ and therefore
+So we have $u(t,x)=f(\eta)=f(xe^t)$ and we know that $u(0,x)=\frac{1}{1+x^2}$, which means $f(xe^0)=f(x)=\frac{1}{1+x^2}$ and therefore
 \begin{tcolorbox}[colback=white, title=Solution]
 $$u(t,x)=\frac{1}{1+\left(xe^t\right)^2}$$
 \end{tcolorbox}
@@ -316,26 +316,26 @@ ggplot(data=curves_4c)+
   ggtitle("Characteristic curves for Problem 4c")
 ```
 
-Now we define our new coordinate system as $\xi=y-\frac{x^2}{2}, \, \eta=x$  
+Now we define our new coordinate system as $\eta=y-\frac{x^2}{2}, \, \xi=x$  
 
 Then by the chain rule,
-$$u_x= \pdv{u}{x}=\pdv{u}{\eta}\pdv{\eta}{x}+\pdv{u}{\xi}\pdv{\xi}{x}=$$
-$$\pdv{u}{\eta}-x\pdv{u}{\xi}$$
+$$u_x= \pdv{u}{x}=\pdv{u}{\xi}\pdv{\xi}{x}+\pdv{u}{\eta}\pdv{\eta}{x}=$$
+$$\pdv{u}{\xi}-x\pdv{u}{\eta}$$
 
 and similarly
-$$u_y= \pdv{u}{y}=\pdv{u}{\eta}\pdv{\eta}{y}+\pdv{u}{\xi}\pdv{\xi}{y}=$$
-$$\pdv{u}{\xi}$$
+$$u_y= \pdv{u}{y}=\pdv{u}{\xi}\pdv{\xi}{y}+\pdv{u}{\eta}\pdv{\eta}{y}=$$
+$$\pdv{u}{\eta}$$
 
-$$u_x+xu_y=\pdv{u}{\eta}-x\pdv{u}{\xi}+x\pdv{u}{\xi}=\pdv{u}{\eta}$$
+$$u_x+xu_y=\pdv{u}{\xi}-x\pdv{u}{\eta}+x\pdv{u}{\eta}=\pdv{u}{\xi}$$
 
 And since we know $u_x+xu_y=\left(y-\frac{x^2}{2}\right)^2$, this means we have
-$$\pdv{u}{\eta}=\left(y-\frac{x^2}{2}\right)^2=\xi^2$$
-Now we integrate with respect to $\eta$ to find
-$$u=\eta\xi^2+F(\xi)$$
+$$\pdv{u}{\xi}=\left(y-\frac{x^2}{2}\right)^2=\eta^2$$
+Now we integrate with respect to $\xi$ to find
+$$u=\xi\eta^2+F(\eta)$$
 
 At $u(0,y)$, this becomes $u=0y^2+F(y)$, or $u(0,y)=F(y)$.
 On the other hand, we are told that $u(0,y)=e^y$, which means that $F(y)=e^y$.
-$$u=\eta\xi^2+e^\xi$$
+$$u=\xi\eta^2+e^\eta$$
 Substitute back in $x$ and $y$:
 \begin{tcolorbox}[colback=white, title=Solution]
 $$u(x,y)=x\left(y-\frac{x^2}{2}\right)^2+\exp{\left(y-\frac{x^2}{2}\right)}$$
@@ -375,21 +375,21 @@ ggplot(data=curves_4d)+
   ggtitle("Characteristic curves for Problem 4d")
 ```
 
-Now define our new coordinate system as $xi=\frac{x}{2}+\frac{\ln x}{2}-y, \quad \eta=x$.  
+Now define our new coordinate system as $xi=\frac{x}{2}+\frac{\ln x}{2}-y, \quad \xi=x$.  
 Then by the chain rule,
-$$u_x= \pdv{u}{x}=\pdv{u}{\eta}\pdv{\eta}{x}+\pdv{u}{\xi}\pdv{\xi}{x}=$$
-$$\pdv{u}{\xi}\left(\frac{1}{2}+ \frac{1}{2x}\right) +\pdv{u}{\eta}$$
-$$u_y= \pdv{u}{y}=\pdv{u}{\eta}\pdv{\eta}{y}+\pdv{u}{\xi}\pdv{\xi}{y}= -\pdv{u}{\xi}$$
+$$u_x= \pdv{u}{x}=\pdv{u}{\xi}\pdv{\xi}{x}+\pdv{u}{\eta}\pdv{\eta}{x}=$$
+$$\pdv{u}{\eta}\left(\frac{1}{2}+ \frac{1}{2x}\right) +\pdv{u}{\xi}$$
+$$u_y= \pdv{u}{y}=\pdv{u}{\xi}\pdv{\xi}{y}+\pdv{u}{\eta}\pdv{\eta}{y}= -\pdv{u}{\eta}$$
 Plugging these into our original PDE,
-$$2x\left( \pdv{u}{\xi}\left(\frac{1}{2}+ \frac{1}{2x}\right) +\pdv{u}{\eta} \right)+\left(x+1\right)\left(-\pdv{u}{\xi}\right)=$$
-$$\pdv{u}{\xi}\left(x+1\right)+2x \pdv{u}{\eta}-\pdv{u}{\xi}\left(x+1\right)=2x \pdv{u}{\eta}$$
-So we must have $2x\pdv{u}{\eta}=y$. Now replace $\eta$ and $\xi$ by $x$ and $y$:
-$$2\eta\pdv{u}{\eta}=\frac{\eta}{2}+\frac{\ln\eta}{2}-\xi$$
+$$2x\left( \pdv{u}{\eta}\left(\frac{1}{2}+ \frac{1}{2x}\right) +\pdv{u}{\xi} \right)+\left(x+1\right)\left(-\pdv{u}{\eta}\right)=$$
+$$\pdv{u}{\eta}\left(x+1\right)+2x \pdv{u}{\xi}-\pdv{u}{\eta}\left(x+1\right)=2x \pdv{u}{\xi}$$
+So we must have $2x\pdv{u}{\xi}=y$. Now replace $\xi$ and $\eta$ by $x$ and $y$:
+$$2\xi\pdv{u}{\xi}=\frac{\xi}{2}+\frac{\ln\xi}{2}-\eta$$
 
-$$\pdv{u}{\eta}=\frac{1}{4}+\frac{\ln\eta}{4\eta}-\frac{\xi}{2n}$$
+$$\pdv{u}{\xi}=\frac{1}{4}+\frac{\ln\xi}{4\xi}-\frac{\eta}{2n}$$
 
-Now integrate with respect to $\eta$:
-$$u=\frac{\eta}{4}+\frac{(\ln\eta)^2}{8}-\frac{\xi \ln\eta}{2}+F(\xi)$$
+Now integrate with respect to $\xi$:
+$$u=\frac{\xi}{4}+\frac{(\ln\xi)^2}{8}-\frac{\eta \ln\xi}{2}+F(\eta)$$
 $$u(x,y)=\frac{x}{4}+\frac{(\ln x)^2}{8}-\frac{\ln x}{2}\left(\frac{x}{2}+\frac{\ln x}{2}-y \right)+F\left(\frac{x}{2}+\frac{\ln x}{2}-y\right)$$
 Now we use the fact that $u(1,y)=2y$:
 $$u(1,y)=\frac{1}{4}+F\left(\frac{1}{2}-y\right)=2y$$
