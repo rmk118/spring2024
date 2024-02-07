@@ -1,8 +1,9 @@
 #Kelp microbiome review
 
 library(metagear)
-library(RefManageR)
+#library(RefManageR)
 library(PRISMAstatement)
+library(bib2df)
 
 prisma(found = 5933,
        found_other = 106,
@@ -15,7 +16,4 @@ prisma(found = 5933,
        quantitative = 319,
        width = 800, height = 800)
 
-
-
-ReadZotero(user = "8204423", .params=list(q = "kelp", key = "QJbKC91HmGH0hwnxNXOZHOFH",
-                                          collection = "LMELYQTG", limit=5))
+all_refs <- bib2df("retrieved_biome.bib")
