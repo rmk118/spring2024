@@ -220,3 +220,16 @@ ggplot(data=curves_4d)+
   ggtitle("Characteristic curves for Problem 4d")
 ```
 
+
+
+Then set $\xi=x+3y, \; \eta=x-y$, giving us 
+
+$$\partial_x= \pdv{}{\xi} \pdv{\xi}{x}+\pdv{}{\eta} \pdv{\eta}{x}=\partial_{\xi}+\partial_{\eta}$$
+$$\partial_y= \pdv{}{\xi} \pdv{\xi}{y}+\pdv{}{\eta} \pdv{\eta}{y}= 3\partial_{\xi}-\partial_{\eta}$$
+Which means that 
+$$\partial_{x}+3 \partial_{y}= 10 \partial_{\xi}-2\partial_{\eta}$$
+
+$$\partial_{x}-\partial_{y}=-2\partial_{\xi}+2\partial_{\eta} $$
+
+Which means we can rewrite the original equation as 
+$$\left( \partial_{x}+3\partial_{y}\right) \left(\partial_{x}-\partial_{y}\right)u=0 \quad\longrightarrow\quad -8\partial$$

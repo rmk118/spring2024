@@ -1,0 +1,118 @@
+---
+title: "MATH 245 Homework 2"
+author: "Ruby Krasnow and Tommy Thach"
+date: "2024-02-09"
+output:
+  pdf_document:
+    extra_dependencies: ["derivative", "tcolorbox", "xcolor"]
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+```
+
+## Question 1
+Determine the region in which the given equation is hyperbolic, parabolic, elliptic, or
+singular.  
+
+a) $$u_{xx}+y^2u_{yy}+u_x-u+x^2=0 $$  
+
+b) $$u_{xx}-yu_{yy}+xu_x+yu_y+u=0 $$
+
+
+## Question 2
+Using a factorization similar to the wave equation, solve the following IVP:
+\begin{equation}
+    \begin{cases}
+      u_{xx}+2u_{xy}-3u_{yy}=0 & x\subset \mathbb{R},\; y> 0\\
+      u(0,x)=\sin{x} & x\subset \mathbb{R}\\
+      u_y(0,x) = x & x\subset \mathbb{R}
+    \end{cases}       
+\end{equation}
+
+First, we can factor the equation as follows:
+$$\left( \pdv{}{x}+3\pdv{}{y}\right) \left(\pdv{}{x}-\pdv{}{y}\right)u=0$$
+or $$\left( \partial_{x}+3\partial_{y}\right) \left(\partial_{x}-\partial_{y}\right)u=0$$
+
+
+
+Then set $\left(\pdv{}{x}-\pdv{}{y}\right)u=v$, giving us
+
+$\left( \pdv{}{x}+3\pdv{}{y}\right)v= v_x+3v_t=0$
+
+which we know has the solution $v(x,y)=f(3x-y)$, so
+$$u_x-u_y=f(3x-y)$$
+
+On (characteristic) lines with the slope $y=-x+c$, or $y+x=\text{constant}$, we must have $u_x-u_y=f(3x-y)=0$.
+Set $\eta=x+y$ and $\xi=x$. 
+Then by the chain rule,
+$$u_x= u_{\eta}+u_{\xi}, \; u_y=u_{\eta}$$
+And let's rewrite $y$ as $y=\eta-x=\eta-\xi$.
+
+So
+$$u_x-u_y=f(3x-y) \quad\longrightarrow\quad u_{\xi}=f(3\xi-\eta+\xi)$$
+
+$$u_{\xi}=f(4\xi-\eta)$$
+Now integrate with respect to $\xi$:
+$$u(\eta, \xi)=F(4\xi-\eta)+G(\eta)$$
+where $F$ is the antiderivative of $f$ with respect to $\xi$.
+
+Now convert back to our original variables:
+$$u(x,y)=F(3x-y)+G(x+y)$$
+
+Using the fact that $u(0,x)=\sin{x}$, 
+
+ \begin{equation} \label{eq:1} u(0,x)=\sin{x}=F(3x)+G(x) \end{equation}
+now replace $x$ with a new neutral variable, $\alpha$ and differentiate:
+ $$\sin{\alpha}=F(3\alpha)+G(\alpha) $$
+\begin{equation} \label{eq:2} \cos{\alpha}=3F'(3\alpha)+G'(\alpha) \end{equation}
+
+But we can also differentiate $u(x,y)=F(3x-y)+G(x+y)$ with respect to $y$ to get
+$$u_y(x,y)=-F'(3x-y)+G'(x+y)$$
+but from our initial conditions, we know
+$$u_y(0,x)=-F'(3x-0)+G'(x+0)=x$$
+
+Let's replace $x$ by our neutral variable $\alpha$ and solve for $F'$:
+$$F'(\alpha)=G'(3\alpha)-\alpha$$
+Now plug this into \ref{eq:2}:
+$$\cos{\alpha}=3G'(\alpha)-3\alpha+G'(\alpha)$$
+
+$$G(\alpha)= \frac{1}{4} \int {\cos{\alpha}+3\alpha} = \frac{\sin{\alpha}}{4}+ \frac{3 \alpha^2}{8} $$
+So that means \ref{eq:1} becomes:
+$$\sin{\alpha}=F(3\alpha)+\frac{\sin{\alpha}}{4}+ \frac{3 \alpha^2}{8}$$
+
+$$F(\alpha)=\frac{3\sin{(\frac{\alpha}{3})}}{4}- \frac{\alpha^2}{24}$$
+
+
+Which means $u(x,y)=F(3x-y)+G(x+y)$ becomes
+
+$$u(x,y)=\frac{3}{4}\sin{\left(x-\frac{y}{3}\right)}- \frac{(3x-y)^2}{24}+  \frac{\sin{(x+y)}}{4}+ \frac{3(x+y)^2}{8}=$$
+
+\begin{tcolorbox}[colback=white, title=Solution]
+$$u(x,y)=\frac{3}{4}\sin{\left(x-\frac{y}{3}\right)}+\frac{\sin{(x+y)}}{4}+ xy+  \frac{y^2}{3} $$
+\end{tcolorbox}
+
+
+\begin{tcolorbox}[colback=blue!5!white,colframe=blue!75!black,title=Check solution]
+
+ $$u_y=\frac{-1}{4}\cos{\left(x-\frac{y}{3}\right)}+\frac{\cos{(x+y)}}{4}+ x+  \frac{2y}{3} $$
+  $$u_{yy}=\frac{-1}{12}\sin{\left(x-\frac{y}{3}\right)}-\frac{\sin{(x+y)}}{4}+ \frac{2}{3} $$
+ 
+$$u_x=\frac{3}{4}\cos{\left(x-\frac{y}{3}\right)}+\frac{\cos{(x+y)}}{4}+y$$
+ 
+$$u_{xx}=\frac{-3}{4} \sin{\left( x-\frac{y}{3} \right)} - \frac{\sin{(x+y)}}{4}$$
+  
+  
+$$u_{xy}=\frac{1}{4}\sin{\left(x-\frac{y}{3}\right)}-\frac{\sin{(x+y)}}{4}+1$$
+
+
+Check that $u_{xx}+2u_{xy}-3u_{yy}=0$
+$$
+\left(\frac{-3}{4}+ \frac{2}{4}+\frac{1}{4}\right)\sin{\left(x-\frac{y}{3}\right)}+
+\left(\frac{-1}{4}+ \frac{-2}{4}+\frac{3}{4}\right)\sin{(x+y)}+(0+2-3)=0
+$$
+
+\end{tcolorbox}
+
+## Question 3

@@ -6,14 +6,12 @@ library(tidyverse)
 prisma(found = 1448,
        found_other = 106,
        no_dupes = 1483, 
-       screened = 776, 
-       screen_exclusions = 13, 
-       full_text = 763,
-       full_text_exclusions = 17, 
-       qualitative = 746, 
-       quantitative = 319,
+       screened = 1483, 
+       screen_exclusions = 1308, 
+       full_text = 175,
+       full_text_exclusions = 125, 
+       qualitative = 50, 
+       quantitative = 50,
        width = 800, height = 800)
 
-
-screened_refs <- read_csv()
 
