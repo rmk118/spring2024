@@ -1,0 +1,300 @@
+---
+title: "BIOL 274 Homework 4"
+author: "Ruby Krasnow"
+date: "2024-02-09"
+output:
+  pdf_document:
+    extra_dependencies: ["derivative", "tcolorbox", "xcolor"]
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+```
+
+## Question 1
+Solve each of the following IVPs:
+
+(a)
+\begin{equation}
+    \begin{cases}
+      y'' + 6y' + 8y = 0\\
+      y(0)=3\\
+      y'(0)=-16
+    \end{cases}       
+\end{equation}
+
+The characteristic equation is
+$$\lambda^2+6\lambda+8=0 \quad\longrightarrow\quad (\lambda+4)(\lambda+2)=0 $$
+
+Which means we have two distinct real roots, $\lambda_1=-4$ and $\lambda_1=-2$.
+
+Thus, our general solution is 
+$$y=C_1e^{-4x}+C_2e^{-2x}$$
+
+We differentiate to find that
+$$y'=-4C_1e^{-4x}-2C_2e^{-2x}$$
+
+Now we plug in our initial conditions:
+$$3=C_1+C_2$$
+$$-16=-4C_1-2C_2$$
+
+Multiply both sides of the first equation by 2 and add to the second equation:  
+
+$-10=-2C_1 \quad\longrightarrow\quad C_1=5$, so $C_2=3-5=-2$.
+Which means the solution to the IVP is
+
+\begin{tcolorbox}[colback=white, title=Solution]
+$$y(x)= 5e^{-4x}-2e^{-2x}$$
+\end{tcolorbox}
+
+\begin{tcolorbox}[colback=blue!5!white,colframe=blue!75!black,title=Check solution]
+$$y'(x)= -20e^{-4x}+4e^{-2x}$$
+
+$$y''(x)= 80e^{-4x}-8e^{-2x}$$
+
+$$y'' + 6y' + 8y = (80-120+40)e^{-4x}+(-8+24-16)e^{-2x}=0$$
+
+\end{tcolorbox}
+
+(b)
+\begin{equation}
+    \begin{cases}
+      y'' + 6y' + 9y = 0\\
+      y(0)=\frac{1}{3}\\
+      y'(0)=\frac{1}{2}
+    \end{cases}       
+\end{equation}
+
+The characteristic equation is
+$$\lambda^2+6\lambda+9=0 \quad\longrightarrow\quad (\lambda+3)(\lambda+3)=0 $$
+So we have a repeated real root, $\lambda_1=\lambda_2=-3$.
+Thus, our general solution is 
+$$y=C_1e^{-3x}+C_2xe^{-3x}$$
+We differentiate to find that
+$$y'=-3C_1e^{-3x}+C_2e^{-3x}-3C_2xe^{-3x}$$
+
+Now we plug in our initial conditions:
+$$\frac{1}{3}=C_1$$
+
+$$\frac{1}{2}=-3C_1+C_2 \quad\longrightarrow\quad C_2=\frac{3}{2}$$
+Which means the solution to the IVP is
+
+\begin{tcolorbox}[colback=white, title=Solution]
+$$y(x)= \frac{1}{3}e^{-3x}+\frac{3}{2}xe^{-3x}$$
+\end{tcolorbox}
+\begin{tcolorbox}[colback=blue!5!white,colframe=blue!75!black,title=Check solution]
+
+$$y'(x)= -e^{-3x}-\frac{9}{2}xe^{-3x}+\frac{3}{2}e^{-3x}=\frac{1}{2}e^{-3x}-\frac{9}{2}xe^{-3x}$$
+$$y''(x)=-\frac{3}{2}e^{-3x}+\frac{27}{2}xe^{-3x}-\frac{9}{2}e^{-3x}=\frac{27}{2}xe^{-3x}-6e^{-3x}$$
+Plugging these expressions into our original ODE, we see that
+$$y'' + 6y' + 9y =
+\left(\frac{27}{2} -\frac{54}{2}+\frac{27}{2} \right)xe^{-3x} + \left(-6 +3 +3\right)e^{-3x}=0 $$
+\end{tcolorbox}
+
+## Question 2
+Consider the equation
+$$ \frac{d^2y}{dt^2}+ \frac{k}{m}y=0 $$
+for the motion of a single (undamped) harmonic oscillator.
+
+(a)  
+Consider the function $y(t)=\cos{(\beta t)}$. Under what conditions on $\beta$ is $y(t)$ a solution?
+
+$\lambda^2+\frac{k}{m}=0$
+
+$$\frac{-b\pm\sqrt{b^2-4ac}}{2a} $$
+
+$$\frac{0\pm\sqrt{0-4\frac{k}{m}}}{2} $$
+
+$$0\pm\sqrt{\frac{k}{m}}\:i $$
+$y(t)=\cos{(\beta t)}$ is only a solution if $\beta=\sqrt{\frac{k}{m}}$.
+
+(b)  
+What initial conditions $(t=0)$ correspond to this solution?
+
+
+(c)
+In terms of $k$ and $m$, what is the period of this solution?
+
+$y(t)=\cos{(\sqrt{\frac{k}{m}} t)}$
+$y'(t)=-\sqrt{\frac{k}{m}}\sin{(\sqrt{\frac{k}{m}} t)}$
+$y''(t)=-\frac{k}{m}\cos{(\sqrt{\frac{k}{m}} t)}$
+
+Then $y''+\frac{k}{m}y=-\frac{k}{m}\cos{(\sqrt{\frac{k}{m}} t)}+\frac{k}{m}\cos{(\sqrt{\frac{k}{m}} t)}=0$
+
+## Question 3  
+Find the general solution for each of the following.  
+(a)
+\begin{equation}\label{eq:1} y''+3y'+2y=4t^2 -2t \end{equation}
+
+The characteristic equation is
+$$\lambda^2+3\lambda+2=0 \quad\longrightarrow\quad (\lambda+2)(\lambda+1)=0 $$
+
+Which means we have two distinct real roots, $\lambda_1=-2$ and $\lambda_1=-1$.
+
+Thus, our complementary function (solution) is 
+$$y_c=C_1e^{-2t}+C_2e^{-t}$$
+
+
+Let's assume our solution takes the form $y=At^2+Bt+C$.
+Then $y'=2At+B$ and $y''=2A$, so the left-hand side of \ref{eq:1} becomes
+
+$$2A+6At+3B+2At^2+2Bt+2C=4t^2-2t$$
+
+We can split this up by coefficients of $t$ into
+$$2At^2=4t^2$$
+$$6At+2Bt=-2t $$
+$$2A+3B+2C=0$$
+
+Which means that $A=2,\; B=-7,\; C= \frac{17}{2}$ and so 
+$$y_p=2t^2-7t+ \frac{17}{2}$$
+
+Combine $y_p$ with $y_c$ to find our general solution:
+\begin{tcolorbox}[colback=white, title=Solution]
+$$y(t)=C_1e^{-2t}+C_2e^{-t}+2t^2-7t+ \frac{17}{2}$$
+\end{tcolorbox}
+
+\begin{tcolorbox}[colback=blue!5!white,colframe=blue!75!black,title=Check solution]
+
+$$y'(t)=-2C_1e^{-2t}-C_2e^{-t}+4t-7$$
+
+$$y''(t)=4C_1e^{-2t}+C_2e^{-t}+4$$
+
+$$y''+3y'+2y=\left(4C_1-6C_1+2C_1 \right)e^{-2t}+
+\left(C_2-3C_1+2C_1 \right)e^{-t}+4+12t-21+4t^2-14t+17=4t^2-2t $$
+\end{tcolorbox}
+
+(b)
+\begin{equation}\label{eq:2} y''-y'-2y=15e^2t \end{equation}
+
+The characteristic equation is
+$$\lambda^2-\lambda-2=0 \quad\longrightarrow\quad (\lambda-2)(\lambda+1)=0 $$
+
+Which means we have two distinct real roots, $\lambda_1=2$ and $\lambda_1=-1$.
+
+Thus, our complementary function (solution) is 
+$$y_c=C_1e^{2t}+C_2e^{-t}$$
+
+Let's first assume our solution takes the form $y=Ae^{2t}$.
+Then $y'=2Ae^{2t}$ and $y''=4Ae^{2t}$, so the left-hand side of \ref{eq:2} becomes
+
+$$4Ae^{2t}-2Ae^{2t}-2Ae^{2t}=0 \neq 15e^2t $$
+
+Oh no! What happened? Well, $e^{2t}$ satisfies the associated homogenous DE and so is part of the complementary solution. Instead, we will try $y=Ate^{2t}$. Then $y'=2Ate^{2t}+Ae^{2t}$ and $y''=4Ate^{2t}+4Ae^{2t}$, so the left-hand side of \ref{eq:2} becomes
+
+$$y''-y'-2y= \left(4A-2A-2A\right)te^{2t}+ \left(4A-A\right)e^{2t} $$
+
+Which gives us $3Ae^{2t}=15e^{2t}$, meaning $A=5$ and we have
+$$y_p=5te^{2t}$$
+
+Combine $y_p$ with $y_c$ to find our general solution:
+\begin{tcolorbox}[colback=white, title=Solution]
+$$y(t)=C_1e^{2t}+C_2e^{-t}+5te^{2t}$$ or
+$$y(t)=(C_1+5t)e^{2t}+C_2e^{-t}$$
+\end{tcolorbox}
+
+\begin{tcolorbox}[colback=blue!5!white,colframe=blue!75!black,title=Check solution]
+$$y'(t)=(2C_1+10t+5)e^{2t}-C_2e^{-t}$$
+
+$$y''(t)=(4C_1+20t+20)e^{2t}+C_2e^{-t}$$
+
+$$y''-y'-2y= (4C_1+20t+20-2C_1-10t-5-2C_1-10t)e^{2t}+(C_2+C_2-2C_2)e^{-t}=15e^{2t}$$
+
+\end{tcolorbox}
+
+(c)
+\begin{equation}\label{eq:3} y''-2y'-3y= \cos{(2t)}\end{equation}
+
+The characteristic equation is
+$$\lambda^2-2\lambda-3=0 \quad\longrightarrow\quad (\lambda-3)(\lambda+1)=0 $$
+
+Which means we have two distinct real roots, $\lambda_1=3$ and $\lambda_1=-1$.
+
+Thus, our complementary function (solution) is 
+$$y_c=C_1e^{3t}+C_2e^{-t}$$
+
+Let's assume our solution takes the form $y=A\sin{(2t)}+B\cos{(2t)}$. Then 
+$$y'=2A\cos{(2t)}-2B\sin{(2t)} $$
+
+$$y''=-4A\sin{(2t)}-4B\cos{(2t)} $$
+
+So the left-hand side of \ref{eq:3} becomes
+$$y''-2y'-3y=(-4A+4B-3A)\sin{(2t)}+(-4B-4A-3B)\cos{(2t)} $$
+Compare the coefficients of the $\sin$ and $\cos$ terms to the original DE:
+$$-7A+4B=0 $$
+$$-4A-7B=1 $$
+
+$A= \frac{4B}{7}$
+$$-\frac{16B}{7}-\frac{49B}{7}=1 $$
+Which gives us that $B=\frac{-7}{65}, \; A= \frac{-4}{65}$.
+Thus, our particular solution is 
+$$y_p=-\frac{4}{65} \sin{(2t)}-\frac{7}{65}\cos{(2t)}$$
+
+
+Combine $y_p$ with $y_c$ to find our general solution:
+\begin{tcolorbox}[colback=white, title=Solution]
+
+$$y(t)=C_1e^{3t}+C_2e^{-t}-\frac{4}{65} \sin{(2t)}-\frac{7}{65}\cos{(2t)}$$
+
+\end{tcolorbox}
+\begin{tcolorbox}[colback=blue!5!white,colframe=blue!75!black,title=Check solution]
+
+$$y'(t)=3C_1e^{3t}-C_2e^{-t}+\frac{14}{65} \sin{(2t)}-\frac{8}{65}\cos{(2t)}$$
+
+$$y''(t)=9C_1e^{3t}+C_2e^{-t}+\frac{16}{65} \sin{(2t)}+\frac{28}{65}\cos{(2t)}$$
+
+$$
+y''-2y'-3y=(9-6-3)C_1e^{3t}+(1+2-3)C_2e^{-t}+ \\
+\left(\frac{16}{65}-\frac{28}{65}+\frac{12}{65}\right)\sin{(2t)}+ \\
+\left(\frac{28}{65}+\frac{16}{65}+\frac{21}{65}\right)\cos{(2t)}=
+$$
+$$\cos{(2t)}$$
+\end{tcolorbox}
+
+(d)
+\begin{equation}\label{eq:4} y''+4y= e^t+\sin{(2t)}\end{equation}
+
+The characteristic equation is
+$$\lambda^2+4=0 \quad\longrightarrow\quad \lambda=0\pm2i $$
+Thus, our complementary function (solution) is 
+$$y_c=C_1\sin{(2t)}+C_2\cos{(2t)}$$
+Let's break up our right hand side to find $y_{p_1}$ and $y_{p_2}$. 
+
+For $y_{p_1}$, we assume our solution takes the form $y=Ae^t$. Then 
+$Ae^t+4Ae^t=e^t$, so $A= \frac{1}{5}$ and we have 
+$$y_{p_1}=\frac{e^t}{5}$$
+
+For $y_{p_2}$, we cannot assume our solution takes the form $y=A\sin{(2t)}+B\cos{(2t)}$ because we had complex roots $\pm2i$ for our characteristic equation. Instead, we try
+
+$$y=At\sin{(2t)}+Bt\cos{(2t)}$$
+
+$$y'=2At\cos{(2t)}+A\sin{(2t)}+B\cos{(2t)}-2Bt\sin{(2t)}=$$
+$$(2At+B)\cos{(2t)}+(-2Bt+A)\sin{(2t)}$$
+
+$$y''= (-4At-2B)\sin{(2t)}+2A\cos{(2t)}+(-4Bt+2A)\cos{(2t)}-2B\sin{(2t)}=$$
+
+$$ (-4At-4B)\sin{(2t)}+(-4Bt+4A)\cos{(2t)}$$
+
+$$ (-4At-4B+4At)\sin{(2t)}+(-4Bt+4A+4Bt)\cos{(2t)}=\sin{(2t)}$$
+
+
+$$ -4B\sin{(2t)}+4A\cos{(2t)}=\sin{(2t)}$$
+$$A=0, B= -\frac{1}{4}$$
+$$y_{p_2}=-t\frac{\cos{(2t)}}{4}$$
+$$y_p=\frac{e^t}{5}-\frac{t\cos{(2t)}}{4} $$
+Now adding this to our complementary function, we get
+
+\begin{tcolorbox}[colback=white, title=Solution]
+
+$$y(t)=C_1\sin{(2t)}+C_2\cos{(2t)}+\frac{e^t}{5}-\frac{t\cos{(2t)}}{4}$$
+\end{tcolorbox}
+\begin{tcolorbox}[colback=blue!5!white,colframe=blue!75!black,title=Check solution]
+
+$$y'(t)=2C_1\cos{(2t)}-2C_2\sin{(2t)}+\frac{e^t}{5}-\frac{\cos{(2t)}}{4}+\frac{t\sin{(2t)}}{2}$$
+
+
+$$y''(t)=-4C_1\sin{(2t)}-4C_2\cos{(2t)}+\frac{e^t}{5}+\frac{\sin{(2t)}}{2}+\frac{\sin{(2t)}}{2}+t\cos{(2t)}$$
+
+$$ y''+4y= \left(-4C_1+1+4C_1 \right)\sin{(2t)}+ \left(-4C_2+t+4C_2-t\right)\cos{(2t)}+\frac{e^t}{5}++\frac{4e^t}{5}= $$
+$$ e^t+\sin{(2t)} $$
+\end{tcolorbox}
