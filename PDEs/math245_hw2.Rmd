@@ -1,7 +1,7 @@
 ---
 title: "MATH 245 Homework 2"
 author: "Ruby Krasnow and Tommy Thach"
-date: "2024-02-12"
+date: "2024-02-13"
 output:
   pdf_document:
     extra_dependencies: ["derivative", "tcolorbox", "xcolor"]
@@ -11,6 +11,12 @@ output:
 knitr::opts_chunk$set(echo = TRUE)
 library(tidyverse)
 ```
+
+
+## Done, feel OK: 1, 2
+## Done, very low confidence: 4, 6
+## Mostly done: 7
+## Not started: 3, 5, 8
 
 ## Question 1
 Determine the region in which the given equation is hyperbolic, parabolic, elliptic, or
@@ -266,6 +272,50 @@ $$E(t) \leq e^{2mt}E(0) \quad \text{for all } t \geq 0$$
 Does the D’Alembert method work for the wave equation $u_{tt} = c(x)^2u_{xx}$? What about $u_{tt} = c(t)^2u_{xx}$? Why?
 
 
+Let's try the factorization method if $c=c(x)$:
+$$\left( \partial_{t}+c(x)\partial_{x}\right) \left(\partial_{t}-c(x)\partial_{x}\right)u=0$$
+Set $\xi=x+c(x)t$ and $\eta=x-c(x)t$.
+
+By the chain rule,
+
+$$\frac{\partial}{\partial x} = \frac{\partial}{\partial \xi} \frac{\partial \xi}{\partial x}+\frac{\partial}{\partial\eta}\frac{\partial\eta}{\partial x}$$
+
+$$=\partial_{\xi}(1+c')+\partial_{\eta}\,(1-c')$$
+
+$$\frac{\partial}{\partial t} = \frac{\partial}{\partial \xi} \frac{\partial \xi}{\partial t}+\frac{\partial }{\partial\eta}\frac{\partial\eta}{\partial t}$$
+$$=c\partial_{\xi}-c\partial_{\eta}$$
+When we plug these back into
+$$\left( \partial_{t}+c\partial_{x}\right) \left(\partial_{t}-c\partial_{x}\right)u=0$$
+we get
+
+$$ \left(c\partial_{\xi}-c\partial_{\eta}+c\partial_{\xi}(1+c')+c\partial_{\eta}\,(1-c')\right)
+\left(c\partial_{\xi}-c\partial_{\eta} -c\partial_{\xi}(1+c')-c\partial_{\eta}\,(1-c')\right)u=0$$
+
+When $c$ is constant, $c'=0$ and this simplifies to $-4c^2 u_{\xi\eta}=0$, allowing us to integrate to find $u(x,t)=F(x+ct)+G(x-ct)$. But we cannot do the same simplification when we have the $c'$ terms, meaning we cannot solve the wave equation by the same method when the wave speed is not constant.
+
+Similarly,
+
+Let's try the factorization method if $c=c(t)$:
+$$\left( \partial_{t}+c(t)\partial_{x}\right) \left(\partial_{t}-c(t)\partial_{x}\right)u=0$$
+Set $\xi=x+c(t)t$ and $\eta=x-c(t)t$.
+
+By the chain rule,
+
+$$\frac{\partial}{\partial x} = \frac{\partial}{\partial \xi} \frac{\partial \xi}{\partial x}+\frac{\partial}{\partial\eta}\frac{\partial\eta}{\partial x}=
+\partial_{\xi}+\partial_{\eta}$$
+
+$$\frac{\partial}{\partial t} = \frac{\partial}{\partial \xi} \frac{\partial \xi}{\partial t}+\frac{\partial }{\partial\eta}\frac{\partial\eta}{\partial t}=\partial_{\xi}(c't+c)-\partial_{\eta}(c't+c)
+$$
+
+
+When we plug these back into
+$$\left( \partial_{t}+c\partial_{x}\right) \left(\partial_{t}-c\partial_{x}\right)u=0$$
+we get
+
+$$\left( \partial_{\xi}(c't+c)-\partial_{\eta}(c't+c)+c\partial_{\xi}+c\partial_{\eta} \right)
+\left(\partial_{\xi}(c't+c)-\partial_{\eta}(c't+c)-c\partial_{\xi}-c\partial_{\eta}\right)u=0$$
+Where again we cannot cancel terms to simplify our equation as we could with constant $c$.
+
 ## Problem 7 (The Poisson-Darboux Equation)   
 Solve the initial value problem
 
@@ -277,15 +327,31 @@ Solve the initial value problem
 \end{cases}
 \end{equation}
 
-where $g(x)=-g(x)$ is an even function. Hint: set $w=xu$.
+where $g(x)=g(-x)$ is an even function. Hint: set $w=xu$.
+
+
+Using the results from when we set $w=ru$ in Problem 4,
+$$u_t=\frac{w_t}{x}, u_{tt}=\frac{w_{tt}}{x} $$
+$$u_x= \frac{w_x}{x}- \frac{w}{x^2} $$
+
+$$u_{xx}=  \frac{w_{xx}}{x}-\frac{2w_x}{x^2}+\frac{2w}{x^3}$$
+So $u_{tt}-u_{xx}- \frac{2}{x}u_x=0$ becomes
+
+$$\frac{w_{tt}}{x} -\frac{w_{xx}}{x}+\frac{2w_x}{x^2}- \frac{2w}{x^3}- \frac{2}{x} \left(\frac{w_x}{x}- \frac{w}{x^2}\right)=0 $$
+Which simplifies to $w_{tt}-w_{xx}=0$, the wave equation with $c=1$.
+By the D'Alembert formula, since we have $\varphi=0$,
+$$w(t,x)=\frac{1}{2c} \int_{x-t}^{x+t}{\psi(s)ds}$$
+$w_t=xu_t$
+Since $y=x$ is an odd function and $u_t(0,x)=g(x)$ is an even function, $w_t=xg(x)=h(x)$ must be an odd function.
+
 
 ## Problem 8   
 Solve the following characteristic initial value problem:
 \begin{equation} 
 \begin{cases}
   y^3u_{xx}-yu_{yy}+u_y=0 & 0<x<4, \quad \lvert y \rvert \leq 2 \sqrt{2} \\
-  u(x,y)= f(x) & x+ \frac{y^2}{2}=4 \text{for} 2 \leq x \leq 4 \\
-  u(x,y)=g(x) & x- \frac{y^2}{2}=0 \text{for} 0 \leq x \leq 2 \\
+  u(x,y)= f(x) & x+ \frac{y^2}{2}=4 \text{ for } 2 \leq x \leq 4 \\
+  u(x,y)=g(x) & x- \frac{y^2}{2}=0 \text{ for } 0 \leq x \leq 2 \\
 \end{cases}
 \end{equation}
 

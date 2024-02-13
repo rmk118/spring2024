@@ -260,3 +260,7 @@ $$\frac{\partial u_x}{\partial x} = \frac{\partial u_x}{\partial r} \frac{\parti
 
 
 $$u_{rr}\sin^2(\theta)\cos^2(\phi)+ \frac{u_r}{r} \cos^2(\theta)\cos^2(\phi)- $$
+
+
+$$u(x,t)= \frac{\varphi(x+ct)+\varphi(x-ct)}{2}+\frac{1}{2c} \int_{x-ct}^{x+ct}{\psi(s)ds}$$
+Assume $c$ is not a constant, but instead a function of $x$.
