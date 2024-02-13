@@ -14,4 +14,6 @@ prisma(found = 1448,
        quantitative = 50,
        width = 800, height = 800)
 
+#files for full-text screening
+inital_screen <- read_csv("./kelp_sysrev/initial_screen.csv")
 

@@ -233,3 +233,30 @@ $$\partial_{x}-\partial_{y}=-2\partial_{\xi}+2\partial_{\eta} $$
 
 Which means we can rewrite the original equation as 
 $$\left( \partial_{x}+3\partial_{y}\right) \left(\partial_{x}-\partial_{y}\right)u=0 \quad\longrightarrow\quad -8\partial$$
+\begin{equation}\label{eq:sphere1}
+x=r \sin{\theta} \cos{\phi}, \quad y=r \sin{\theta} \sin{\phi}, \quad z=r \cos{\theta}
+\end{equation}
+
+\begin{equation}\label{eq:sphere2}
+r=\sqrt{x^2+y^2+z^2}, \quad \theta=\arccos{(\frac{z}{r})}, \quad \phi=\arctan{(\frac{y}{x})} \end{equation}
+
+$$\theta=\arccos{(\frac{z}{r})}$$
+
+Using the chain rule:
+$$\Delta u= \frac{{\partial}^{2}f}{\partial x^{2}}+\frac{{\partial}^{2}f}{\partial y^{2}}+\frac{{\partial}^{2}f}{\partial z^{2}}$$
+
+
+Now we find the following values from (\ref{eq:sphere1}):
+$$\frac{\partial r}{\partial x}=\sin(\theta)\cos(\phi),
+\qquad\frac{\partial\theta}{\partial x}=\frac{1}{r}\cos(\theta)\cos(\phi),
+\qquad\frac{\partial\phi}{\partial x}=-\frac{1}{r}\frac{\sin(\phi)}{\sin(\theta)}$$
+$$\frac{\partial r}{\partial y}=\sin(\theta)\sin(\phi),\qquad\frac{ \partial\theta}{\partial y}=\frac{1}{r}\cos(\theta)\sin(\phi),\qquad\frac{\partial\phi}{\partial y}=\frac{1}{r}\frac{\cos(\phi)}{\sin(\theta)} $$
+
+$$\frac{\partial r}{\partial z}=\cos(\theta),\qquad\frac{\partial \theta}{\partial z}=-\frac{1}{r}\sin(\theta),\qquad\frac{\partial\phi}{\partial z}=0$$
+$$ \frac{\partial u}{\partial x} = \frac{\partial u}{\partial r} \frac{\partial r}{\partial x}+\frac{\partial u}{\partial\theta}\frac{\partial\theta}{\partial x}+\frac{\partial u}
+{\partial\phi}\frac{\partial\phi}{\partial x}=u_r\sin(\theta)\cos(\phi)$$
+
+$$\frac{\partial u_x}{\partial x} = \frac{\partial u_x}{\partial r} \frac{\partial r}{\partial x}+\frac{\partial u_x}{\partial\theta}\frac{\partial\theta}{\partial x}+\frac{\partial u_x}{\partial\phi}\frac{\partial\phi}{\partial x}= $$
+
+
+$$u_{rr}\sin^2(\theta)\cos^2(\phi)+ \frac{u_r}{r} \cos^2(\theta)\cos^2(\phi)- $$

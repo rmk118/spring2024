@@ -1,7 +1,7 @@
 ---
 title: "MATH 245 Homework 2"
 author: "Ruby Krasnow and Tommy Thach"
-date: "2024-02-09"
+date: "2024-02-12"
 output:
   pdf_document:
     extra_dependencies: ["derivative", "tcolorbox", "xcolor"]
@@ -18,7 +18,11 @@ singular.
 
 a) $$u_{xx}+y^2u_{yy}+u_x-u+x^2=0 $$  
 
+$a=1, b=0, c=-y^2$, so we have $b^2-ac=0-(-y^2)=y^2$. This will be positive everywhere except for $y=0$, so the equation is hyperbolic where $y \neq 0$ and parabolic for $y=0$.
+
 b) $$u_{xx}-yu_{yy}+xu_x+yu_y+u=0 $$
+
+$a=1, b=0, c=-y$, so we have $b^2-ac=0-(-y)=y$. Thus, the equation will be hyperbolic where $y>0$, parabolic where $y=0$, and elliptic where $y<0$.
 
 
 ## Question 2
@@ -115,4 +119,174 @@ $$
 
 \end{tcolorbox}
 
-## Question 3
+## Question 3 
+
+Solve the Neumann boundary value problem for the wave equation on half line:
+\begin{equation}
+    \begin{cases}
+      u_{tt}=c^2u_{xx}+f(t,x) & 0<x<\infty\\
+      u(0,x)=\phi{x} & 0<x<\infty\\
+      u_t(0,x) = \psi{x} & 0<x<\infty\\
+      u_x(t,0) = h(t) & t>0
+    \end{cases}       
+\end{equation}
+
+## Question 4  
+
+Consider the 3D wave equation for $u(t,x,y,z)$:
+
+$$u_{tt}=c^2\Delta u \quad\quad (x,y,z) \in \mathbb{R}^3, \quad t>0$$
+
+Change the coordinates to spherical coordinates. Assume the solution is spherically symmetric, so that $u(t,x,y,z)=u(t,r)$ and does not depend on $\theta$ and $\phi$. Find the solution for $u(0,r)=0$ and
+
+\begin{equation} u_t(0,r) = \begin{cases}
+  1  & \lvert{r}\rvert \leq 1 \\
+  0 &  \lvert{r}\rvert > 1
+\end{cases}
+\end{equation}
+
+Hint: use the substitution $u(t,r)= \frac{1}{r} w(t,r)$.
+
+
+First, we need to derive the formula for the Laplacian in spherical coordinates.
+
+
+We know the equation for the Laplacian in polar coordinates is:
+
+$$\frac{\partial^2}{\partial r^2}+\frac{1}{r}\frac{\partial}{\partial r}+ \frac{1}{r^2}\frac{\partial^2}{\partial \theta^2}$$
+
+Now let's convert to spherical coordinates:
+
+$$r=\sqrt{x^2+y^2+z^2}=\sqrt{s^2+z^2}$$
+
+$$x=s \cos{\phi}$$
+$$y=s \sin{\phi}$$
+$$z=r \cos{\theta}$$
+$$s=r \sin{\theta}$$
+
+By the two-dimensional Laplacian, we have
+
+$$u_{zz}+u_{ss}=u_{rr}+\frac{1}{r}u_r+\frac{1}{r^2}u_{\theta\theta}$$ and
+
+$$u_{xx}+u_{yy}=u_{ss}+\frac{1}{s}u_s+\frac{1}{s^2}u_{\phi\phi}$$
+We add these two equations and cancel $u_s$ to get
+
+$$\Delta u = u_{rr}+\frac{1}{r}u_r+\frac{1}{r^2}u_{\theta\theta}+\frac{1}{s}u_s+\frac{1}{s^2}u_{\phi\phi}$$
+
+Now since $u$ doesn't depend on $\theta$ or $\phi$, we have
+$$\Delta u = u_{rr}+\frac{1}{r}u_r+\frac{1}{s}u_s=u_{rr}+\frac{1}{r}u_r+\frac{1}{r \sin{\theta}}u_s$$
+
+$$ \frac{\partial u}{\partial s} = \frac{\partial u}{\partial r} \frac{\partial r}{\partial s}+\frac{\partial u}{\partial\theta}\frac{\partial\theta}{\partial s}+\frac{\partial u}
+{\partial\phi}\frac{\partial\phi}{\partial s}=u_r\frac{1}{ \sin{\theta}}+0+0=u_r\frac{s}{ r}$$
+
+So with our change of variables, we have
+
+$$u_{tt}=c^2 \left(u_{rr} + \frac{2}{r}u_r \right)$$
+
+Now set $w=ru$, or $u= \frac{w}{r}$. Then 
+$$w_t=ru_t, \quad w_{tt}=ru_{tt}, \quad u_{tt}= \frac{w_{tt}}{r} $$
+$$w_t=ru_t, \quad w_{tt}=ru_{tt}, \quad u_{tt}= \frac{w_{tt}}{r} $$
+$$u_r = \frac{w_r}{r}-\frac{w}{r^2} $$
+
+$$u_{rr} = \frac{w_{rr}}{r}-\frac{2w_r}{r^2}+\frac{2w}{r^3} $$
+So $$u_{tt}=c^2 \left(u_{rr} + \frac{2}{r}u_r \right)$$ becomes
+
+$$\frac{w_{tt}}{r} =c^2 \left(\frac{w_{rr}}{r}-\frac{2w_r}{r^2}+\frac{2w}{r^3} + \frac{2}{r} \left(\frac{w_r}{r}-\frac{w}{r^2} \right) \right)$$
+which simplifies to
+$$w_{tt}=c^2 w_{rr}$$
+but this is just the wave equation, which we know has the solution
+ $$w(t,r)= \frac{\varphi(r+ct)+\varphi(r-ct)}{2}+\frac{1}{2c} \int_{r-ct}^{r+ct}{\psi(s)ds}$$
+ Since $\varphi=0$, 
+ $$w(t,r)= \frac{1}{2c} \int_{r-ct}^{r+ct}{\psi(s)ds}$$
+
+Now we have 4 cases:
+
+Case 1: $r-ct \geq -1, r+ct \leq 1$
+$$w(t,r)= \frac{1}{2c} \int_{r-ct}^{r+ct}{s\;ds}$$
+
+Case 2:$r-ct < -1, r+ct>1$
+$$w(t,r)= \frac{1}{2c} \int_{-1}^{1}{s\;ds}$$
+
+Case 3:$r-ct < -1, r+ct \leq 1$
+$$w(t,r)= \frac{1}{2c} \int_{-1}^{r+ct}{s\;ds}$$
+
+Case 4:$r-ct \geq -1, r+ct>1$
+$$w(t,r)= \frac{1}{2c} \int_{r-ct}^{1}{s\;ds}$$
+
+Since $u=\frac{w}{r}$, this means we have
+\begin{equation}u(t,r)=
+    \begin{cases} 
+      \frac{1}{2c} \int_{r-ct}^{r+ct}{s\;ds} & r-ct \geq -1, r+ct \leq 1\\
+      \\
+      \frac{1}{2c} \int_{-1}^{1}{s\;ds} & r-ct < -1, r+ct > 1\\
+      \\
+      \frac{1}{2c} \int_{-1}^{r+ct}{s\;ds} & r-ct < -1, r+ct \leq 1\\
+      \\
+      \frac{1}{2c} \int_{r-ct}^{1}{s\;ds} & r-ct \geq -1, r+ct > 1\\
+      
+    \end{cases}       
+\end{equation}
+
+
+## Question 5
+Consider the following Dirichlet boundary value problem:
+\begin{equation} 
+\begin{cases}
+  u_{tt}+x(t,x)u_t=u_{xx} & 0<x<1 \\
+  u(0,x)=\phi(x) & 0<x<1 \\
+  u_t(0,x)=\psi(x) & 0<x<1 \\
+  u(t,0) = u(t,1)=0 & t \geq 0 \\
+\end{cases}
+\end{equation}
+
+Assume that $\lvert a(t,x)\rvert \leq m$ for some constant $m$ and all $0<x<1$ and $t\geq 0$. Let 
+$$E(t)= \frac{1}{2} \int_{0}^{1}{ \left(u_t(t,x)^2+u_x(t,x)^2\right)}\:dx $$
+
+(1) Show that $\frac{dE(t)}{dt} \leq 2mE(t)$ for $t \geq 0$.
+(2) Use part (a) and show that $\frac{d}{dt} \left(e^{-2mE(t)}\right) \leq0$ for 
+all $t \geq 0$. Hence, by integration from $[0,t]$, we get that
+
+$$E(t) \leq e^{2mt}E(0) \quad \text{for all } t \geq 0$$
+
+(3) If $\phi(x)=\psi(x)=0$ for all $0<x<1$, what does this say about $E(t)$ for $t \geq 0$ and hence about $u(t,x)$ for $t \geq 0$?
+
+(4) Use the previous part to prove uniqueness of the following problem:
+\begin{equation} 
+\begin{cases}
+  u_{tt}+a(t,x)u_t=u_{xx} & 0<x<1, t>0 \\
+  u(0,x)=\phi(x) & 0<x<1 \\
+  u_t(0,x)=\psi(x) & 0<x<1 \\
+  u(t,0) = f(t) & t \geq 0 \\
+  u(t,1) = g(t) & t \geq 0 \\
+\end{cases}
+\end{equation}
+
+## Problem 6
+
+Does the D’Alembert method work for the wave equation $u_{tt} = c(x)^2u_{xx}$? What about $u_{tt} = c(t)^2u_{xx}$? Why?
+
+
+## Problem 7 (The Poisson-Darboux Equation)   
+Solve the initial value problem
+
+\begin{equation} 
+\begin{cases}
+  u_{tt}-u_{xx}- \frac{2}{x}u_x=0 & -\infty <x<\infty, t>0 \\
+  u(0,x)=0 & -\infty <x<\infty \\
+  u_t(0,x)=g(x) & -\infty <x<\infty \\
+\end{cases}
+\end{equation}
+
+where $g(x)=-g(x)$ is an even function. Hint: set $w=xu$.
+
+## Problem 8   
+Solve the following characteristic initial value problem:
+\begin{equation} 
+\begin{cases}
+  y^3u_{xx}-yu_{yy}+u_y=0 & 0<x<4, \quad \lvert y \rvert \leq 2 \sqrt{2} \\
+  u(x,y)= f(x) & x+ \frac{y^2}{2}=4 \text{for} 2 \leq x \leq 4 \\
+  u(x,y)=g(x) & x- \frac{y^2}{2}=0 \text{for} 0 \leq x \leq 2 \\
+\end{cases}
+\end{equation}
+
+where $f(2)=g(2)$. Hint: Use the transformation $\eta=x-\frac{y^2}{2}$ and $\xi=x+\frac{y^2}{2}$ and express the PDE in the coordinates $(\xi, \eta)$.
