@@ -264,3 +264,18 @@ $$u_{rr}\sin^2(\theta)\cos^2(\phi)+ \frac{u_r}{r} \cos^2(\theta)\cos^2(\phi)- $$
 
 $$u(x,t)= \frac{\varphi(x+ct)+\varphi(x-ct)}{2}+\frac{1}{2c} \int_{x-ct}^{x+ct}{\psi(s)ds}$$
 Assume $c$ is not a constant, but instead a function of $x$.
+
+
+Since $u=\frac{w}{r}$, this means we have
+\begin{equation}u(t,r)=
+    \begin{cases} 
+      \frac{1}{2cr} \int_{r-ct}^{r+ct}{s\;ds} & r-ct \geq -1, r+ct \leq 1\\
+      \\
+      \frac{1}{2cr} \int_{-1}^{1}{s\;ds} & r-ct < -1, r+ct > 1\\
+      \\
+      \frac{1}{2cr} \int_{-1}^{r+ct}{s\;ds} & r-ct < -1, r+ct \leq 1\\
+      \\
+      \frac{1}{2cr} \int_{r-ct}^{1}{s\;ds} & r-ct \geq -1, r+ct > 1\\
+      
+    \end{cases}       
+\end{equation}

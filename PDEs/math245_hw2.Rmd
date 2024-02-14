@@ -13,10 +13,9 @@ library(tidyverse)
 ```
 
 
-## Done, feel OK: 1, 2
+## Done, feel OK: 1, 2, 5, 7
 ## Done, very low confidence: 4, 6
-## Mostly done: 7
-## Not started: 3, 5, 8
+## Not started: 3, 8
 
 ## Question 1
 Determine the region in which the given equation is hyperbolic, parabolic, elliptic, or
@@ -85,11 +84,11 @@ $$u_y(0,x)=-F'(3x-0)+G'(x+0)=x$$
 
 Let's replace $x$ by our neutral variable $\alpha$ and solve for $F'$:
 $$F'(\alpha)=G'(3\alpha)-\alpha$$
-Now plug this into \ref{eq:2}:
+Now plug this into (\ref{eq:2}):
 $$\cos{\alpha}=3G'(\alpha)-3\alpha+G'(\alpha)$$
 
 $$G(\alpha)= \frac{1}{4} \int {\cos{\alpha}+3\alpha} = \frac{\sin{\alpha}}{4}+ \frac{3 \alpha^2}{8} $$
-So that means \ref{eq:1} becomes:
+So that means (\ref{eq:1}) becomes:
 $$\sin{\alpha}=F(3\alpha)+\frac{\sin{\alpha}}{4}+ \frac{3 \alpha^2}{8}$$
 
 $$F(\alpha)=\frac{3\sin{(\frac{\alpha}{3})}}{4}- \frac{\alpha^2}{24}$$
@@ -165,14 +164,12 @@ Now let's convert to spherical coordinates:
 
 $$r=\sqrt{x^2+y^2+z^2}=\sqrt{s^2+z^2}$$
 
-$$x=s \cos{\phi}$$
-$$y=s \sin{\phi}$$
-$$z=r \cos{\theta}$$
+$$x=s \cos{\phi}, \quad y=s \sin{\phi}, \quad z=r \cos{\theta}$$
 $$s=r \sin{\theta}$$
 
 By the two-dimensional Laplacian, we have
 
-$$u_{zz}+u_{ss}=u_{rr}+\frac{1}{r}u_r+\frac{1}{r^2}u_{\theta\theta}$$ and
+$$u_{zz}+u_{ss}=u_{rr}+\frac{1}{r}u_r+\frac{1}{r^2}u_{\theta\theta},$$
 
 $$u_{xx}+u_{yy}=u_{ss}+\frac{1}{s}u_s+\frac{1}{s^2}u_{\phi\phi}$$
 We add these two equations and cancel $u_s$ to get
@@ -195,12 +192,12 @@ $$w_t=ru_t, \quad w_{tt}=ru_{tt}, \quad u_{tt}= \frac{w_{tt}}{r} $$
 $$u_r = \frac{w_r}{r}-\frac{w}{r^2} $$
 
 $$u_{rr} = \frac{w_{rr}}{r}-\frac{2w_r}{r^2}+\frac{2w}{r^3} $$
-So $$u_{tt}=c^2 \left(u_{rr} + \frac{2}{r}u_r \right)$$ becomes
+So $u_{tt}=c^2 \left(u_{rr} + \frac{2}{r}u_r \right)$ becomes
 
-$$\frac{w_{tt}}{r} =c^2 \left(\frac{w_{rr}}{r}-\frac{2w_r}{r^2}+\frac{2w}{r^3} + \frac{2}{r} \left(\frac{w_r}{r}-\frac{w}{r^2} \right) \right)$$
+$$\frac{w_{tt}}{r} =c^2 \left(\frac{w_{rr}}{r}-\frac{2w_r}{r^2}+\frac{2w}{r^3} + \frac{2}{r} \left(\frac{w_r}{r}-\frac{w}{r^2} \right) \right),$$
 which simplifies to
-$$w_{tt}=c^2 w_{rr}$$
-but this is just the wave equation, which we know has the solution
+$$w_{tt}=c^2 w_{rr}.$$
+But this is just the wave equation, and we can use d'Alembert's formula to find the solution:
  $$w(t,r)= \frac{\varphi(r+ct)+\varphi(r-ct)}{2}+\frac{1}{2c} \int_{r-ct}^{r+ct}{\psi(s)ds}$$
  Since $\varphi=0$, 
  $$w(t,r)= \frac{1}{2c} \int_{r-ct}^{r+ct}{\psi(s)ds}$$
@@ -210,29 +207,35 @@ Now we have 4 cases:
 Case 1: $r-ct \geq -1, r+ct \leq 1$
 $$w(t,r)= \frac{1}{2c} \int_{r-ct}^{r+ct}{s\;ds}$$
 
+$$= \frac{1}{4c} ((r+ct)^2-(r-ct)^2)$$
+$$= \frac{1}{4c}(r^2+2crt+c^2t^2-r^2+2crt-c^2t^2)= \frac{4crt}{4c}=rt  $$
+
+
 Case 2:$r-ct < -1, r+ct>1$
-$$w(t,r)= \frac{1}{2c} \int_{-1}^{1}{s\;ds}$$
+$$w(t,r)= \frac{1}{2c} \int_{-1}^{1}{s\;ds}=$$
+$$w(t,r)= \frac{1}{4c} (1-1)=0$$
+
 
 Case 3:$r-ct < -1, r+ct \leq 1$
 $$w(t,r)= \frac{1}{2c} \int_{-1}^{r+ct}{s\;ds}$$
 
+$$= \frac{1}{4c} ((r+ct)^2-1)$$
+
 Case 4:$r-ct \geq -1, r+ct>1$
 $$w(t,r)= \frac{1}{2c} \int_{r-ct}^{1}{s\;ds}$$
+$$= \frac{1}{4c} (1-(r-ct)^2)$$
 
 Since $u=\frac{w}{r}$, this means we have
+\begin{tcolorbox}[colback=white, title=Solution]
 \begin{equation}u(t,r)=
     \begin{cases} 
-      \frac{1}{2c} \int_{r-ct}^{r+ct}{s\;ds} & r-ct \geq -1, r+ct \leq 1\\
-      \\
-      \frac{1}{2c} \int_{-1}^{1}{s\;ds} & r-ct < -1, r+ct > 1\\
-      \\
-      \frac{1}{2c} \int_{-1}^{r+ct}{s\;ds} & r-ct < -1, r+ct \leq 1\\
-      \\
-      \frac{1}{2c} \int_{r-ct}^{1}{s\;ds} & r-ct \geq -1, r+ct > 1\\
-      
+      t & \text{ if } r-ct \geq -1, r+ct \leq 1\\
+      0 & \text{ if } r-ct < -1, r+ct > 1\\
+      \frac{1}{4rc} ((r+ct)^2-1) & \text{ if } r-ct < -1, r+ct \leq 1\\
+      \frac{1}{4rc} (1-(r-ct)^2) &\text{ if }  r-ct \geq -1, r+ct > 1\\
     \end{cases}       
 \end{equation}
-
+\end{tcolorbox}
 
 ## Question 5
 Consider the following Dirichlet boundary value problem:
@@ -248,13 +251,85 @@ Consider the following Dirichlet boundary value problem:
 Assume that $\lvert a(t,x)\rvert \leq m$ for some constant $m$ and all $0<x<1$ and $t\geq 0$. Let 
 $$E(t)= \frac{1}{2} \int_{0}^{1}{ \left(u_t(t,x)^2+u_x(t,x)^2\right)}\:dx $$
 
-(1) Show that $\frac{dE(t)}{dt} \leq 2mE(t)$ for $t \geq 0$.
-(2) Use part (a) and show that $\frac{d}{dt} \left(e^{-2mE(t)}\right) \leq0$ for 
-all $t \geq 0$. Hence, by integration from $[0,t]$, we get that
+(1) Show that 
+\begin{equation}\label{eqn:E} 
+\frac{dE(t)}{dt} \leq 2mE(t)
+\end{equation}
+for $t \geq 0$.
 
-$$E(t) \leq e^{2mt}E(0) \quad \text{for all } t \geq 0$$
+
+First differentiate $E(t)$:
+
+$$ \frac{dE}{dt}= \frac{d}{dt} \left[\frac{1}{2} \int_{0}^{1}{ \left(u_t^2+u_x^2\right)}\:dx \right]$$ 
+\begin{equation} \label{eqn:prob5a}
+=\frac{1}{2} \int_{0}^{1}{ \frac{\partial}{\partial t} \left(u_t^2+u_x^2\right)} \:dx
+\end{equation}
+
+\begin{equation} \label{eqn:prob5b}
+=\frac{1}{2} \int_{0}^{1}{ 2u_t u_{tt}+ 2u_x u_{xt}}\:dx
+\end{equation}
+
+\begin{equation}\label{eqn:prob5c}
+=\int_{0}^{1}{ u_t u_{tt}}\: dx + \int_{0}^{1}{2u_x u_{xt}}\:dx =: I+J.
+\end{equation}
+
+The equality (\ref{eqn:prob5a}) follows from differentiation under the integral sign, while (\ref{eqn:prob5b}) follows from the chain rule for partial derivatives.  
+
+Consider the integral $J$ in (\ref{eqn:prob5c}). By integrating by parts, we can move one of the partials $\frac{\partial}{\partial x}$ to the other factor, at the cost of introducing a minus sign and a boundary term. Hence $J$ becomes
+
+\begin{equation} \label{eqn:J}
+J=\int_{0}^{1}{ u_x u_{xt}}\: dx =- \int_{0}^{1}{u_xx u_t}\:dx + 
+\left[ u_x u_t \right]_{x=0}^{x=1}.
+\end{equation}
+
+The boundary term vanishes, since $u(t,0) \equiv u(t,1)  \equiv 0$ for $t>0$ implies that $u_t$ is identically zero at $x=0,1$. So, substituting (\ref{eqn:J}) for $J$, equation (\ref{eqn:prob5c}) becomes
+ $$ I+J=\int_{0}^{1}{u_t u_{tt}} \;dx - \int_{0}^{1}{u_{xx} u_t} \;dx$$
+ $$= \int_{0}^{1} {u_t (u_{tt}-u_{xx})} \;dx$$
+\begin{equation} \label{eqn:J2}
+=\int_{0}^{1}{ u_t(-au_t) }\:dx
+\end{equation}
+
+\begin{equation} \label{eqn:J3}
+=\int_{0}^{1}{ (-a)u_t^2 }\: dx.
+\end{equation}
+
+Here, equality (\ref{eqn:J2}) just uses the PDE. Since $u_t^2 \geq 0$ and $-a \leq \lvert -a \rvert \leq m$, we see that $(-a)u_t^2 \leq mu_t^2$. Hence, the expression in (\ref{eqn:J3}) satisfies the inequality
+
+\begin{equation} \label{eqn:IJ}
+I+J= \int_{0}^{1}{ (-a)u_t^2 }\:dx \leq \int_{0}^{1}{ mu_t^2 }\:dx \leq m \int_{0}^{1}{ u_t^2 + u_x^2 }\:dx =2mE.
+\end{equation}
+
+Where we also used the fact that $u_x^2 \geq 0$ means that $m\int_{0}^{1}{ u_t^2 }\:dx \leq m\int_{0}^{1}{ (u_t^2 + u_x^2) }\:dx$.  
+
+The desired inequality (\ref{eqn:E}) follows from (\ref{eqn:IJ}) and the fact that $\frac{dE}{dt}=I+J.$
+
+(2) Use part (1) and show that $\frac{d}{dt} \left( e^{-2mE(t)} \right) \leq 0$ for 
+all $t \geq 0$. Hence, by integration from $[0,t]$, we get that 
+
+\begin{equation}\label{eqn:leq}
+E(t) \leq e^{2mt} E(0) \text{ for all } t \geq 0.
+\end{equation}
+
+
+By the product rule, 
+$$ \frac{d}{dt} \left(e^{-2mt}E\right)=-2me^{-2mt}E+e^{-2mt}\frac{dE}{dt} $$
+$$=e^{-2mt}\left(\frac{dE}{dt}-2mE\right) $$
+$$\leq e^{-2mt} \cdot 0=0. $$
+
+
 
 (3) If $\phi(x)=\psi(x)=0$ for all $0<x<1$, what does this say about $E(t)$ for $t \geq 0$ and hence about $u(t,x)$ for $t \geq 0$?
+
+Since $u(0,x) \equiv \varphi(x) \equiv 0$ for $0<x<1$, we see that $u_x$ is identically zero at time $t=0$. Similarly, $u_t(0,x) \equiv \psi(x) \equiv 0$ for $0<x<1$. Thus at $t=0$,
+
+\begin{equation}\label{eqn:E0}
+E(0)= \frac{1}{2} \int_{0}^{1}{ \left(u_t(t,0)^2+u_x(t,0)^2\right)}\:dx =\frac{1}{2} \int_{0}^{1}{0^2+0^2 \:dx=0.}
+\end{equation}
+
+But (\ref{eqn:E0}) together with the inequality (\ref{eqn:leq}) implies that 
+
+$$0 \leq E(t)  \leq e^{2mt}E(0) \leq 0$$
+for all $t \geq 0$. Hence the energy $E$ is identically zero. Since the integrand $u_t^2+u_x^2$ is nonnegative, this is only possible if $u_t \equiv u_x \equiv 0$ for $t>0, 0<x<1$, meaning that $u$ varies with neither time nor position. But this implies that $u$ must be identically zero everywhere.
 
 (4) Use the previous part to prove uniqueness of the following problem:
 \begin{equation} 
@@ -266,6 +341,10 @@ $$E(t) \leq e^{2mt}E(0) \quad \text{for all } t \geq 0$$
   u(t,1) = g(t) & t \geq 0 \\
 \end{cases}
 \end{equation}
+
+
+
+Let $u$ and $v$ be two solutions, and define $w:=u-v$. Observe that $w$ satisfies the original boundary value problem along with the conditions specified in part (3), implying that $w \equiv 0$.  Hence $u-v\equiv 0$ and so any solution $u$ must be unique. $\square$
 
 ## Problem 6
 
@@ -323,7 +402,7 @@ Solve the initial value problem
 \begin{cases}
   u_{tt}-u_{xx}- \frac{2}{x}u_x=0 & -\infty <x<\infty, t>0 \\
   u(0,x)=0 & -\infty <x<\infty \\
-  u_t(0,x)=g(x) & -\infty <x<\infty \\
+  u_t(0,x)=g(x) & -\infty <x< \infty \\
 \end{cases}
 \end{equation}
 
@@ -338,11 +417,52 @@ $$u_{xx}=  \frac{w_{xx}}{x}-\frac{2w_x}{x^2}+\frac{2w}{x^3}$$
 So $u_{tt}-u_{xx}- \frac{2}{x}u_x=0$ becomes
 
 $$\frac{w_{tt}}{x} -\frac{w_{xx}}{x}+\frac{2w_x}{x^2}- \frac{2w}{x^3}- \frac{2}{x} \left(\frac{w_x}{x}- \frac{w}{x^2}\right)=0 $$
-Which simplifies to $w_{tt}-w_{xx}=0$, the wave equation with $c=1$.
-By the D'Alembert formula, since we have $\varphi=0$,
-$$w(t,x)=\frac{1}{2c} \int_{x-t}^{x+t}{\psi(s)ds}$$
-$w_t=xu_t$
-Since $y=x$ is an odd function and $u_t(0,x)=g(x)$ is an even function, $w_t=xg(x)=h(x)$ must be an odd function.
+Which simplifies to $w_{tt}-w_{xx}=0$, and so $w$ solves the wave equation when $-\infty <x<\infty, t>0$. 
+
+Now observe that $w(0,x)=xu(0,x)=0$ and $w_t(0,x)=xu_t(0,x)=xg(x)$. Hence, $w$ solves the initial value problem:
+
+\begin{equation} \label{eqn:prob7}
+    \begin{cases}
+      w_{tt}-w_{xx} & -\infty <x<\infty, t>0 \\
+      w(0,x)=0 & -\infty <x<\infty, t>0 \\
+      w_t(0,x) = xg(x) & -\infty <x<\infty, t>0
+    \end{cases}       
+\end{equation}
+
+whre $g(x)$ is an even function.
+
+By d'Alembert's formula, the solution to (\ref{eqn:prob7}) is given by:
+$$w(t,x)=\frac{1}{2} \int_{x-t}^{x+t}{sg(s)ds}$$
+Hence since $w_t=xu_t$, 
+\begin{equation} \label{eqn:prob7a}
+w(t,x)=\frac{1}{2x} \int_{x-t}^{x+t}{sg(s)ds,}
+\end{equation}
+assuming $x \neq 0$.
+
+To handle the case when $x=0$, assume that $u$ is continuous in $x$, so that $u(t,0)=\lim_{x\to 0} u(t,x)$. Define
+
+$$I(y)=\int_{0}^{y}sg(s)\;ds. $$
+
+This allows us to rewrite (\ref{eqn:prob7a}) as
+
+$$u(t,x)=\frac{I(x+t)-I(x-t)}{2x}= \frac{I(x+t)-I(t-x)}{2x},$$
+Noting that the evenness of $g(s)$ means that $sg(s)$ is odd, and so $I(y)$ is even (one can check by substitution that $I(y)=I(-y)$). Hence, letting $x \rightarrow 0$, we see that 
+
+\begin{equation}\label{eqn:prob7b}
+u(t,0)= \lim_{x\to 0} \frac{I(t+x)-I(t-x)}{2x}.
+\end{equation}
+
+But this is just the form of a derivative, namely the symmetric derivative of $I$ at $t$. By the Fundamental Theorem of Calculus, assuming $g$ is continuous, we know the limit (\ref{eqn:prob7b}) exists and is necessarily equal to $I'(t)=tg(t)$.
+
+Thus $u(t,x)$ is given for any $t \geq 0, x \in \mathbb{R}$ by
+
+\begin{equation} \label{eqn:prob7c} 
+u(t,x)=
+\begin{cases}
+      \frac{1}{2x} \int_{x-t}^{x+t}{sg(s)ds,} & x \neq 0, \\
+      tg(t), & x=0 \\
+    \end{cases} 
+\end{equation}
 
 
 ## Problem 8   
