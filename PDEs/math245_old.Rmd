@@ -279,3 +279,20 @@ Since $u=\frac{w}{r}$, this means we have
       
     \end{cases}       
 \end{equation}
+
+
+
+
+On (characteristic) lines with the slope $y=-x+c$, or $y+x=\text{constant}$, we must have $u_x-u_y=f(3x-y)=0$.
+Set $\eta=x+y$ and $\xi=x$. 
+Then by the chain rule,
+$$u_x= u_{\eta}+u_{\xi}, \; u_y=u_{\eta}$$
+And let's rewrite $y$ as $y=\eta-x=\eta-\xi$.
+
+So
+$$u_x-u_y=f(3x-y) \quad\longrightarrow\quad u_{\xi}=f(3\xi-\eta+\xi)$$
+
+$$u_{\xi}=f(4\xi-\eta)$$
+Now integrate with respect to $\xi$:
+$$u(\eta, \xi)=F(4\xi-\eta)+G(\eta)$$
+where $F$ is the antiderivative of $f$ with respect to $\xi$.

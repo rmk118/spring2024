@@ -1,7 +1,7 @@
 ---
 title: "MATH 245 Homework 2"
 author: "Ruby Krasnow and Tommy Thach"
-date: "2024-02-13"
+date: "2024-02-15"
 output:
   pdf_document:
     extra_dependencies: ["derivative", "tcolorbox", "xcolor"]
@@ -14,7 +14,8 @@ library(tidyverse)
 
 
 ## Done, feel OK: 1, 2, 5, 7
-## Done, very low confidence: 4, 6
+## Done, very low confidence: 4
+## Redo: 6
 ## Not started: 3, 8
 
 ## Question 1
@@ -52,23 +53,28 @@ $\left( \pdv{}{x}+3\pdv{}{y}\right)v= v_x+3v_t=0$
 
 which we know has the solution $v(x,y)=f(3x-y)$, so
 $$u_x-u_y=f(3x-y)$$
+Now we can reorder our equation as $$\left(\partial_{x}-\partial_{y}\right)
+\left( \partial_{x}+3\partial_{y}\right)u=0$$
+and set $w=\left( \partial_{x}+3\partial_{y}\right)u$
 
-On (characteristic) lines with the slope $y=-x+c$, or $y+x=\text{constant}$, we must have $u_x-u_y=f(3x-y)=0$.
-Set $\eta=x+y$ and $\xi=x$. 
-Then by the chain rule,
-$$u_x= u_{\eta}+u_{\xi}, \; u_y=u_{\eta}$$
-And let's rewrite $y$ as $y=\eta-x=\eta-\xi$.
+Then $$w_x-w_y=0 $$
 
-So
-$$u_x-u_y=f(3x-y) \quad\longrightarrow\quad u_{\xi}=f(3\xi-\eta+\xi)$$
+Which we know has the solution $w(x,y)=g(x+y)$. So $u_x+3u_y=g(x+y)$, which gives us a system of two equations:
 
-$$u_{\xi}=f(4\xi-\eta)$$
-Now integrate with respect to $\xi$:
-$$u(\eta, \xi)=F(4\xi-\eta)+G(\eta)$$
-where $F$ is the antiderivative of $f$ with respect to $\xi$.
+\begin{equation}
+\begin{cases}
+u_x-u_y=f(3x-y)
+u_x+3u_y=g(x+y)
+\end{cases}
+\end{equation}
 
-Now convert back to our original variables:
+Subtract the first equation from the second:
+$$4u_y=-f(3x-y)+g(x+y) $$
+
+Now we can integrate with respect to $y$ to find that:
 $$u(x,y)=F(3x-y)+G(x+y)$$
+where $F$ is the antiderivative of $-f$ with respect to $y$ and $G$ is the antiderivative of $g$ with respect to $y$.
+
 
 Using the fact that $u(0,x)=\sin{x}$, 
 
@@ -476,3 +482,95 @@ Solve the following characteristic initial value problem:
 \end{equation}
 
 where $f(2)=g(2)$. Hint: Use the transformation $\eta=x-\frac{y^2}{2}$ and $\xi=x+\frac{y^2}{2}$ and express the PDE in the coordinates $(\xi, \eta)$.
+
+
+Set $\eta=x-\frac{y^2}{2}$ and $\xi=x+\frac{y^2}{2}$. Then
+
+$$\frac{\partial u}{\partial x} = \frac{\partial u}{\partial \xi} \frac{\partial \xi}{\partial x}+\frac{\partial u}{\partial\eta}\frac{\partial\eta}{\partial x} = \frac{\partial u}{\partial \xi}+\frac{\partial u}{\partial\eta}$$
+
+
+$$\frac{\partial^2 u}{\partial x^2} = \frac{\partial }{\partial x} \left(\frac{\partial u}{\partial \xi}\right) +\frac{\partial }{\partial x} \left(\frac{\partial u}{\partial \eta}\right)$$
+
+
+$$=\frac{\partial^2 u}{\partial \xi^2} \frac{\partial \xi}{\partial x}+
+\frac{\partial^2 u}{\partial\eta \partial \xi}\frac{\partial \xi}{\partial x} +
+\frac{\partial^2 u}{\partial\eta \partial \xi}\frac{\partial\eta}{\partial x}+
+\frac{\partial^2 u}{\partial \eta^2}\frac{\partial \eta}{\partial x}  $$
+
+Which we can simplify to
+
+$$u_{xx}= u_{\xi \xi}+2 u_{\xi \eta}+u_{\eta \eta}$$
+
+Now we do the same for $y$:
+
+$$\frac{\partial u}{\partial y} = \frac{\partial u}{\partial \xi} \frac{\partial \xi}{\partial y}+\frac{\partial u}{\partial\eta}\frac{\partial\eta}{\partial y} = y\frac{\partial u}{\partial \xi}-y\frac{\partial u}{\partial\eta}$$
+
+But since $\eta=x-\frac{y^2}{2}$ and $\xi=x+\frac{y^2}{2}$, we can rewrite $y$ as $\sqrt{\xi-\eta}$.
+
+$$\frac{\partial u}{\partial y} = \sqrt{\xi-\eta} \left(\frac{\partial u}{\partial \xi}-\frac{\partial u}{\partial\eta}\right)$$
+
+Now using the product rule,
+$$\frac{\partial^2 u}{\partial y^2} = \sqrt{\xi-\eta}\; \frac{\partial}{\partial y}\left(\frac{\partial u}{\partial \xi}-\frac{\partial u}{\partial\eta}\right)+\left(\frac{\partial u}{\partial \xi}-\frac{\partial u}{\partial\eta}\right)$$
+
+Where the second term has been simplified because $\frac{\partial}{\partial y}$ of $\sqrt{\xi-\eta}$ is simply $\frac{\partial}{\partial y}y=1$.
+
+Now we use the chain rule again for the first term:
+
+Now using the product rule,
+$$\frac{\partial^2 u}{\partial y^2} = \sqrt{\xi-\eta}\left(\frac{\partial^2 u}{\partial \xi^2} \frac{\partial \xi}{\partial y}+
+\frac{\partial^2 u}{\partial\eta \partial \xi}\frac{\partial\eta}{\partial y} -
+\frac{\partial^2 u}{\partial \eta^2}\frac{\partial \eta}{\partial y}-
+\frac{\partial^2 u}{\partial \eta \partial \xi}\frac{\partial \xi}{\partial y}\right)
++
+\left(\frac{\partial u}{\partial \xi}-\frac{\partial u}{\partial\eta}\right)$$
+
+Which simplifies to
+
+$$u_{yy}= \left(\xi-\eta \right)\left(u_{\xi \xi}+u_{\eta \eta} -2 u_{\xi \eta}\right) +u_\xi-u_\eta$$
+
+This means $y^3u_{xx}-yu_{yy}+u_y=0$ becomes
+
+$$\left(\xi-\eta \right)^{\frac{3}{2}} \left(u_{\xi \xi}+2 u_{\xi \eta}+u_{\eta \eta}\right) - \left(\xi-\eta \right)^{\frac{1}{2}} \left[\left(\xi-\eta \right)\left(u_{\xi \xi}-2 u_{\xi \eta}+u_{\eta \eta} \right) +u_\xi-u_\eta \right]+\left(\xi-\eta \right)^{\frac{1}{2}} \left(u_\xi-u_\eta\right)=0  $$
+
+$$\left(\xi-\eta \right)^{\frac{3}{2}} \left(u_{\xi \xi}+2 u_{\xi \eta}+
+u_{\eta \eta}\right) - \left(\xi-\eta \right)^{\frac{3}{2}} \left(u_{\xi \xi}-2 u_{\xi \eta}+
+u_{\eta \eta}\right)-
+\left(\xi-\eta \right)^{\frac{1}{2}} \left(u_\xi-u_\eta\right)+
+\left(\xi-\eta \right)^{\frac{1}{2}} \left(u_\xi-u_\eta\right)=0  $$
+
+$$\left(\xi-\eta \right)^{\frac{3}{2}} \left(4\, u_{\xi \eta}\right)=0$$
+
+But by integrating with respect to both variables, we recognize $u_{\xi \eta}=0$ as having the solution
+
+$$u(\xi, \eta)=h_1(\xi)+h_2(\eta),$$
+
+or in our original coordinates,
+
+$$u(x,y)=h_1\left(x+\frac{y^2}{2}\right)+h_2\left(x-\frac{y^2}{2}\right) $$
+
+
+When $x=2$,
+
+$f(x)=h_1(4)+h_2(2x-4)$
+
+$z=2x-4, \quad x=\frac{z}{2} + 2$
+
+$h_2(z)=f\left(\frac{z}{2}+2\right)-h_1(4)$
+
+and
+$g(x)=h_1(2x)+h_2(0)$
+
+$h_1(z)=g\left(\frac{z}{2}\right)-h_2(0)$
+
+$h_1+h_2=g\left(\frac{z}{2}\right)-h_2(0)+f(\frac{z}{2} + 2)-h_1(4)$
+
+But $h_2(0)+h_1(4)$ is just $g(x)$ when $x=2$ (or equivalently, $f(x)$ when $x=2$), 
+
+so after replacing $z$ by $x+\frac{y^2}{2}$ and $x-\frac{y^2}{2}$, we get
+
+\begin{tcolorbox}[colback=white, title=Solution]
+$$u(x,y)=g\left(\frac{x}{2}+\frac{y^2}{4}\right)+f\left(\frac{x}{2}+\frac{y^2}{4}+2\right)+f(2)$$
+\end{tcolorbox}
+
+
+
