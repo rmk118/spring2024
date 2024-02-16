@@ -1,7 +1,7 @@
 ---
 title: "MATH 245 Homework 2"
 author: "Ruby Krasnow and Tommy Thach"
-date: "2024-02-15"
+date: "2024-02-16"
 output:
   pdf_document:
     extra_dependencies: ["derivative", "tcolorbox", "xcolor"]
@@ -13,10 +13,10 @@ library(tidyverse)
 ```
 
 
-## Done, feel OK: 1, 2, 5, 7
-## Done, very low confidence: 4
+## Done, feel OK: 1, 2, 5, 7, 8
+## Done, low confidence: 4
 ## Redo: 6
-## Not started: 3, 8
+## Not started: 3
 
 ## Question 1
 Determine the region in which the given equation is hyperbolic, parabolic, elliptic, or
@@ -33,13 +33,13 @@ $a=1, b=0, c=-y$, so we have $b^2-ac=0-(-y)=y$. Thus, the equation will be hyper
 
 ## Question 2
 Using a factorization similar to the wave equation, solve the following IVP:
-\begin{equation}
+\begin{equation*}
     \begin{cases}
       u_{xx}+2u_{xy}-3u_{yy}=0 & x\subset \mathbb{R},\; y> 0\\
       u(0,x)=\sin{x} & x\subset \mathbb{R}\\
       u_y(0,x) = x & x\subset \mathbb{R}
     \end{cases}       
-\end{equation}
+\end{equation*}
 
 First, we can factor the equation as follows:
 $$\left( \pdv{}{x}+3\pdv{}{y}\right) \left(\pdv{}{x}-\pdv{}{y}\right)u=0$$
@@ -61,12 +61,12 @@ Then $$w_x-w_y=0 $$
 
 Which we know has the solution $w(x,y)=g(x+y)$. So $u_x+3u_y=g(x+y)$, which gives us a system of two equations:
 
-\begin{equation}
+\begin{equation*}
 \begin{cases}
 u_x-u_y=f(3x-y)
 u_x+3u_y=g(x+y)
 \end{cases}
-\end{equation}
+\end{equation*}
 
 Subtract the first equation from the second:
 $$4u_y=-f(3x-y)+g(x+y) $$
@@ -133,14 +133,14 @@ $$
 ## Question 3 
 
 Solve the Neumann boundary value problem for the wave equation on half line:
-\begin{equation}
+\begin{equation*}
     \begin{cases}
       u_{tt}=c^2u_{xx}+f(t,x) & 0<x<\infty\\
       u(0,x)=\phi{x} & 0<x<\infty\\
       u_t(0,x) = \psi{x} & 0<x<\infty\\
       u_x(t,0) = h(t) & t>0
     \end{cases}       
-\end{equation}
+\end{equation*}
 
 ## Question 4  
 
@@ -150,11 +150,11 @@ $$u_{tt}=c^2\Delta u \quad\quad (x,y,z) \in \mathbb{R}^3, \quad t>0$$
 
 Change the coordinates to spherical coordinates. Assume the solution is spherically symmetric, so that $u(t,x,y,z)=u(t,r)$ and does not depend on $\theta$ and $\phi$. Find the solution for $u(0,r)=0$ and
 
-\begin{equation} u_t(0,r) = \begin{cases}
+\begin{equation*} u_t(0,r) = \begin{cases}
   1  & \lvert{r}\rvert \leq 1 \\
   0 &  \lvert{r}\rvert > 1
 \end{cases}
-\end{equation}
+\end{equation*}
 
 Hint: use the substitution $u(t,r)= \frac{1}{r} w(t,r)$.
 
@@ -233,26 +233,26 @@ $$= \frac{1}{4c} (1-(r-ct)^2)$$
 
 Since $u=\frac{w}{r}$, this means we have
 \begin{tcolorbox}[colback=white, title=Solution]
-\begin{equation}u(t,r)=
+\begin{equation*}u(t,r)=
     \begin{cases} 
       t & \text{ if } r-ct \geq -1, r+ct \leq 1\\
       0 & \text{ if } r-ct < -1, r+ct > 1\\
       \frac{1}{4rc} ((r+ct)^2-1) & \text{ if } r-ct < -1, r+ct \leq 1\\
       \frac{1}{4rc} (1-(r-ct)^2) &\text{ if }  r-ct \geq -1, r+ct > 1\\
     \end{cases}       
-\end{equation}
+\end{equation*}
 \end{tcolorbox}
 
 ## Question 5
 Consider the following Dirichlet boundary value problem:
-\begin{equation} 
+\begin{equation*} 
 \begin{cases}
   u_{tt}+x(t,x)u_t=u_{xx} & 0<x<1 \\
   u(0,x)=\phi(x) & 0<x<1 \\
   u_t(0,x)=\psi(x) & 0<x<1 \\
   u(t,0) = u(t,1)=0 & t \geq 0 \\
 \end{cases}
-\end{equation}
+\end{equation*}
 
 Assume that $\lvert a(t,x)\rvert \leq m$ for some constant $m$ and all $0<x<1$ and $t\geq 0$. Let 
 $$E(t)= \frac{1}{2} \int_{0}^{1}{ \left(u_t(t,x)^2+u_x(t,x)^2\right)}\:dx $$
@@ -338,7 +338,7 @@ $$0 \leq E(t)  \leq e^{2mt}E(0) \leq 0$$
 for all $t \geq 0$. Hence the energy $E$ is identically zero. Since the integrand $u_t^2+u_x^2$ is nonnegative, this is only possible if $u_t \equiv u_x \equiv 0$ for $t>0, 0<x<1$, meaning that $u$ varies with neither time nor position. But this implies that $u$ must be identically zero everywhere.
 
 (4) Use the previous part to prove uniqueness of the following problem:
-\begin{equation} 
+\begin{equation*} 
 \begin{cases}
   u_{tt}+a(t,x)u_t=u_{xx} & 0<x<1, t>0 \\
   u(0,x)=\phi(x) & 0<x<1 \\
@@ -346,7 +346,7 @@ for all $t \geq 0$. Hence the energy $E$ is identically zero. Since the integran
   u(t,0) = f(t) & t \geq 0 \\
   u(t,1) = g(t) & t \geq 0 \\
 \end{cases}
-\end{equation}
+\end{equation*}
 
 
 
@@ -404,13 +404,13 @@ Where again we cannot cancel terms to simplify our equation as we could with con
 ## Problem 7 (The Poisson-Darboux Equation)   
 Solve the initial value problem
 
-\begin{equation} 
+\begin{equation*} 
 \begin{cases}
   u_{tt}-u_{xx}- \frac{2}{x}u_x=0 & -\infty <x<\infty, t>0 \\
   u(0,x)=0 & -\infty <x<\infty \\
   u_t(0,x)=g(x) & -\infty <x< \infty \\
 \end{cases}
-\end{equation}
+\end{equation*}
 
 where $g(x)=g(-x)$ is an even function. Hint: set $w=xu$.
 
@@ -473,13 +473,13 @@ u(t,x)=
 
 ## Problem 8   
 Solve the following characteristic initial value problem:
-\begin{equation} 
+\begin{equation*} 
 \begin{cases}
   y^3u_{xx}-yu_{yy}+u_y=0 & 0<x<4, \quad \lvert y \rvert \leq 2 \sqrt{2} \\
   u(x,y)= f(x) & x+ \frac{y^2}{2}=4 \text{ for } 2 \leq x \leq 4 \\
   u(x,y)=g(x) & x- \frac{y^2}{2}=0 \text{ for } 0 \leq x \leq 2 \\
 \end{cases}
-\end{equation}
+\end{equation*}
 
 where $f(2)=g(2)$. Hint: Use the transformation $\eta=x-\frac{y^2}{2}$ and $\xi=x+\frac{y^2}{2}$ and express the PDE in the coordinates $(\xi, \eta)$.
 
@@ -548,29 +548,47 @@ or in our original coordinates,
 
 $$u(x,y)=h_1\left(x+\frac{y^2}{2}\right)+h_2\left(x-\frac{y^2}{2}\right) $$
 
+Now we use our given conditions. When  $2 \leq x \leq 4$, we have $g(x)=h_1(2x)+h_2(0)$, which means $h_1(z_1)=g\left(\frac{z_1}{2}\right)-h_2(0)$. 
 
-When $x=2$,
+Similarly, when $0 \leq x \leq 2$, we have $f(x)=h_1(4)+h_2(2x-4)$, which means $h_2(z_2)=f\left(\frac{z_2}{2}+2\right)-h_1(4)$.
 
-$f(x)=h_1(4)+h_2(2x-4)$
 
-$z=2x-4, \quad x=\frac{z}{2} + 2$
-
-$h_2(z)=f\left(\frac{z}{2}+2\right)-h_1(4)$
-
-and
-$g(x)=h_1(2x)+h_2(0)$
-
-$h_1(z)=g\left(\frac{z}{2}\right)-h_2(0)$
-
-$h_1+h_2=g\left(\frac{z}{2}\right)-h_2(0)+f(\frac{z}{2} + 2)-h_1(4)$
+Thus,
+$$h_1(z_1)+h_2(z_2)=g\left(\frac{z_1}{2}\right)-h_2(0)+f\left(\frac{z_2}{2} + 2\right)-h_1(4)$$
 
 But $h_2(0)+h_1(4)$ is just $g(x)$ when $x=2$ (or equivalently, $f(x)$ when $x=2$), 
 
-so after replacing $z$ by $x+\frac{y^2}{2}$ and $x-\frac{y^2}{2}$, we get
+so after replacing $z_1$ by $x+\frac{y^2}{2}$ and $z_2$ by $x-\frac{y^2}{2}$, we get
 
 \begin{tcolorbox}[colback=white, title=Solution]
-$$u(x,y)=g\left(\frac{x}{2}+\frac{y^2}{4}\right)+f\left(\frac{x}{2}+\frac{y^2}{4}+2\right)+f(2)$$
+$$u(x,y)=g\left(\frac{x}{2}+\frac{y^2}{4}\right)+f\left(\frac{x}{2}+\frac{y^2}{4}+2\right)-f(2)$$
 \end{tcolorbox}
 
+\begin{tcolorbox}[colback=blue!5!white,colframe=blue!75!black,title=Check solution]
+$$u_y(x,y)=\frac{y}{2}g'\left(\frac{x}{2}+\frac{y^2}{4}\right)+\frac{y}{2}f'\left(\frac{x}{2}+\frac{y^2}{4}+2\right)$$
+
+$$u_{yy}(x,y)=\frac{y^2}{4}g''\left(\frac{x}{2}+\frac{y^2}{4}\right)+
+\frac{1}{2}g'\left(\frac{x}{2}+\frac{y^2}{4}\right)+
+\frac{y^2}{4}f''\left(\frac{x}{2}+\frac{y^2}{4}+2\right)+
+\frac{1}{2}f'\left(\frac{x}{2}+\frac{y^2}{4}+2\right)$$
+
+$$u_x(x,y)=\frac{1}{2}g'\left(\frac{x}{2}+\frac{y^2}{4}\right)+\frac{1}{2}f'\left(\frac{x}{2}+\frac{y^2}{4}+2\right)-f'(2)$$
 
 
+$$u_{xx}(x,y)=\frac{1}{4}g''\left(\frac{x}{2}+\frac{y^2}{4}\right)+\frac{1}{4}f''\left(\frac{x}{2}+\frac{y^2}{4}+2\right)-f''(2)$$
+
+
+This means $y^3u_{xx}-yu_{yy}+u_y=0$ becomes
+
+\begin{equation*}
+  \begin{aligned}
+  & \left[\frac{y^3}{4} g''\left(\frac{x}{2} +\frac{y^2}{4}\right) + \frac{y^3}{4} f''\left(\frac{x}{2}+\frac{y^2}{4}+2\right)\right]- \\
+  & \left[\frac{y^3}{4}g''\left(\frac{x}{2}+\frac{y^2}{4}\right)+
+\frac{y}{2} g' \left(\frac{x}{2}+\frac{y^2}{4} \right)+
+\frac{y^3}{4} f'' \left( \frac{x}{2}+ \frac{y^2}{4}+2 \right)+
+\frac{y}{2}f' \left( \frac{x}{2}+ \frac{y^2}{4}+2 \right) \right] + \\
+  & \left[ \frac{y}{2} g' \left( \frac{x}{2}+ \frac{y^2}{4} \right)+ \frac{y}{2}f' \left( \frac{x}{2}+ \frac{y^2}{4}+2 \right) \right]=0
+ \end{aligned}
+\end{equation*}
+
+\end{tcolorbox}
