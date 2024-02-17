@@ -1,7 +1,7 @@
 ---
 title: "MATH 245 Homework 2"
 author: "Ruby Krasnow and Tommy Thach"
-date: "2024-02-16"
+date: "2024-02-17"
 output:
   pdf_document:
     extra_dependencies: ["derivative", "tcolorbox", "xcolor"]
@@ -11,12 +11,6 @@ output:
 knitr::opts_chunk$set(echo = TRUE)
 library(tidyverse)
 ```
-
-
-## Done, feel OK: 1, 2, 5, 7, 8
-## Done, low confidence: 4
-## Redo: 6
-## Not started: 3
 
 ## Question 1
 Determine the region in which the given equation is hyperbolic, parabolic, elliptic, or
@@ -136,11 +130,339 @@ Solve the Neumann boundary value problem for the wave equation on half line:
 \begin{equation*}
     \begin{cases}
       u_{tt}=c^2u_{xx}+f(t,x) & 0<x<\infty\\
-      u(0,x)=\phi{x} & 0<x<\infty\\
-      u_t(0,x) = \psi{x} & 0<x<\infty\\
+      u(0,x)=\phi(x) & 0<x<\infty\\
+      u_t(0,x) = \psi(x) & 0<x<\infty\\
       u_x(t,0) = h(t) & t>0
     \end{cases}       
 \end{equation*}
+
+
+The method we will use is to first convert to homogenous Neumann boundary conditions, and then extend the equation to the entire line using the reflection method.
+
+First, define $w(t,x)=u(t,x)-H(t)$, where $H_x(t)=h(t)$.
+
+Then our IBVP becomes:
+\begin{equation*}
+    \begin{cases}
+      \square w= \square u - H''(t)=f(t,x)-H''(t) \equiv F(t,x) & x \geq 0, t>0\\
+      w(0,x)=u(0,x)-H(0)=\phi(x) - H(0) \equiv \Phi(x) & x \geq 0\\
+      w_t(0,x) =  u_t(0,x)  - H_t(0)= \psi(x) - H_t(0) \equiv \Psi(x) & x \geq 0\\
+      w_x(0,x) = u_x(t,0) - H_x(0)= u_x(t,0)-h(t) \equiv 0 & t \geq 0
+    \end{cases}       
+\end{equation*}
+
+Now, since we have homogeneous Neumann boundary conditions, we will use even extensions of the initial data to the whole line, namely:
+
+\begin{equation} 
+\Phi_{\text{even}}=
+    \begin{cases} 
+      \Phi(x) & \text{for } x \geq 0\\
+      \Phi(-x) & \text{for } x \leq 0\\
+    \end{cases}  
+    ,\quad
+\Psi_{\text{even}}=
+    \begin{cases}
+      \Psi(x) & \text{for } x \geq 0\\
+      \Psi(-x) & \text{for } x \leq 0\\
+    \end{cases}
+    ,\quad
+F_{\text{even}}=
+    \begin{cases} 
+      F(t,x) & \text{for } x \geq 0\\
+      F(t,-x) & \text{for } x \leq 0\\
+      \end{cases}
+\end{equation}
+
+Then we assume $U(t,x)$ is an extension of $w(t,x)$ to the whole line. Since the initial condition and non-homogeneous parts are both even, the solution $U$ is even, so we automatically have $U_x(t,0)=0$.
+
+Consider
+\begin{equation} 
+    \begin{cases} 
+      \square U(t,x)=F_{\text{even}}(t,x) & \text{for } x \in \mathbb{R}, t>0\\
+      U(0,x)=\Phi_{\text{even}}(x) & \text{for } x \in \mathbb{R} \\
+      U_t(0,x)=\Psi_{\text{even}}(x) & \text{for } x \in \mathbb{R}
+    \end{cases} 
+\end{equation}
+
+The solution at point $(t_0, x_0)$ is
+
+\begin{equation*}
+U(t_0,x_0)= \frac{\Phi_{\text{even}}(x_0+ct_0)+\Phi_{\text{even}}(x_0-ct_0)}{2} +
+\frac{1}{2c} \int_{x_0-ct_0}^{x_0+ct_0}\Psi_{\text{even}}(x)dx + \\
+\frac{1}{2c} \int_{0}^{t_0}  \int_{x_0-c(t_0-t)}^{x_0+c(t_0-t)} F_{\text{even}}(t,x) dx\,dt
+\end{equation*}
+
+Assume $t_0>0, x_0>0 \Rightarrow x_0+ct_0 >0$. Now assume $x_0>ct_0$, so the domain of dependence is entirely to the right of the line $x=ct$. This means $w(t_0, x_0)=U(t_0,x_0)$ and our solution is
+\begin{equation*}
+w(t_0,x_0)= \frac{\Phi(x_0+ct_0)+\Phi(x_0-ct_0)}{2} +
+\frac{1}{2c} \int_{x_0-ct_0}^{x_0+ct_0}\Psi(x)dx + \\
+\frac{1}{2c} \int_{0}^{t_0}  \int_{x_0-c(t_0-t)}^{x_0+c(t_0-t)} F(t,x) dx\,dt 
+\end{equation*}
+
+\begin{equation*}
+\frac{\phi(x_0+ct_0)-H(0)+\phi(x_0-ct_0)-H(0)}{2} +
+\frac{1}{2c} \int_{x_0-ct_0}^{x_0+ct_0}\psi(x)-H'(0)dx + \\
+\frac{1}{2c} \int_{0}^{t_0}  \int_{x_0-c(t_0-t)}^{x_0+c(t_0-t)} f(t,x)-H''(t) dx\,dt
+\end{equation*}
+
+\begin{align*}
+& w(t_0,x_0)=\frac{\phi(x_0+ct_0)+\phi(x_0-ct_0)}{2}- H(0) +
+\frac{1}{2c} \int_{x_0-ct_0}^{x_0+ct_0}\psi(x) dx - \frac{H'(0)}{2c}\left[(x_0+ct_0)-(x_0-ct_0)\right]+ \\
+& \frac{1}{2c} \int_{0}^{t_0}  \int_{x_0-c(t_0-t)}^{x_0+c(t_0-t)} f(t,x) dx\,dt -
+\frac{1}{2c} H''(t) \int_{0}^{t_0}  \int_{x_0-c(t_0-t)}^{x_0+c(t_0-t)} dx\,dt
+\end{align*}
+
+
+We can rewrite this as
+\begin{align*}
+& w(t_0,x_0)= \color{blue} \frac{\phi(x_0+ct_0)+\phi(x_0-ct_0)}{2} +
+\frac{1}{2c} \int_{x_0-ct_0}^{x_0+ct_0}\psi(x) dx +
+\frac{1}{2c} \int_{0}^{t_0}  \int_{x_0-c(t_0-t)}^{x_0+c(t_0-t)} f(t,x) dx\,dt \\
+\color{black}
+& -H(0)-H'(0)t_0- \frac{1}{2c}\int_{0}^{t_0} H''(t) 2c(t_0-t)dt.
+\end{align*}
+
+Call the section in blue "A".
+
+This means we have 
+\begin{equation}\label{eqn:w1} 
+w(t_0,x_0)=A-H(0)-H'(0)t_0- \int_{0}^{t_0} H''(t)(t_0-t)\,dt 
+\end{equation}
+
+Now we use integration by parts on the final integral in (\ref{eqn:w1}), setting
+$$u=(t_0-t), \quad du=dt, \quad dv=H''(t)dt, \quad v=H'(t)$$,
+
+so that 
+$$\int_{0}^{t_0} H''(t)(t_0-t)\,dt =H'(t)(t_0-t)\vert_{0}^{t_0}+\int_{0}^{t_0} H'(t)dt=-H'(0)t_0+H(t_0)-H(0) $$
+So (\ref{eqn:w1}) becomes
+
+$$w(t_0,x_0)=A-H(0)-H'(0)t_0+H'(0)t_0-H(t_0)+H(0)$$
+$$w(t_0,x_0)=A-H(t_0)$$
+
+Since $u(t,x)=u(t,x)+H(t)$, we get $u(t_0, x_0)=A$, or
+\begin{equation} \label{eqn:part1}
+u(t_0, x_0)=\frac{\phi(x_0+ct_0)+\phi(x_0-ct_0)}{2} +
+\frac{1}{2c} \int_{x_0-ct_0}^{x_0+ct_0}\psi(x) dx +
+\frac{1}{2c} \int_{0}^{t_0}  \int_{x_0-c(t_0-t)}^{x_0+c(t_0-t)} f(t,x) dx\,dt
+\end{equation}
+
+when $x_0>ct_0$.
+
+Now we must consider what happens when $x_0<ct_0$, such that $x_0-ct_0<0$. Then we have
+\begin{align*}
+&w(t_0,x_0)= \frac{\phi(x_0+ct_0)-H(0)+\phi(ct_0-x_0)-H(0)}{2} \;+ \\
+& \frac{1}{2c} \int_{x_0-ct_0}^{0} \psi(-x)-H'(0)\,dx\; + 
+\frac{1}{2c} \int_{0}^{x_0+ct_0} \psi(x) -H'(0)\,dx \;+ \\
+&\frac{1}{2c} \iint\limits_\Delta F_{\text{even}}(t,x) \, dx \, dt
+\end{align*}
+
+\begin{align*}
+&w(t_0,x_0)= \frac{\phi(x_0+ct_0)+\phi(ct_0-x_0)}{2}-H(0) +\\
+ & \color{violet} \frac{1}{2c} \int_{x_0-ct_0}^{0}\psi(-x)-H'(0)\,dx \;+ 
+\frac{1}{2c} \int_{0}^{x_0+ct_0}\psi(x) -H'(0)\,dx \; \color{black} + \\
+&\frac{1}{2c}\iint\limits_\Delta F_{\text{even}}(t,x)\,dx\,dt
+\end{align*}
+
+
+Violet section:
+\begin{align*}
+& \frac{1}{2c} \int_{x_0-ct_0}^{0}\psi(-x)\,dx \; + 
+\frac{1}{2c} \int_{0}^{x_0+ct_0}\psi(x)\,dx \; 
+-\frac{1}{2c} \left[ H'(0)(0-(x-ct_0))+H'(0)(x+ct_0-0) \right] = \\
+& \frac{1}{2c} \left[\int_{0}^{ct_0-x_0}\psi(x)\,dx +  \int_{0}^{x_0+ct_0}\psi(x)\,dx \right]-H'(0)t_0
+\end{align*}
+
+Now we investigate $\frac{1}{2c}\iint\limits_\Delta F_{\text{even}}(t,x)\,dx\,dt$.
+
+```{r, warning=FALSE, fig.height=3, fig.width=5, echo=FALSE}
+c=1
+t_0=5
+x_0=3
+x_1=seq(-20, 20, by=0.2)
+x_2=seq(-20, 3, by=0.2)
+x_3=seq(3, 20, by=0.2)
+rm(x)
+
+ggplot()+
+  geom_line(aes(x=x_2, y=t_0-(1/c)*(x_0-x_2)))+
+  geom_line(aes(x=x_3, y=t_0+(1/c)*(x_0-x_3)))+
+  lims(y=c(0, 10), x=c(-5, 10))+
+  geom_vline(xintercept=0, linetype="dashed")+
+  geom_hline(yintercept = t_0-x_0/c, linetype="dashed")+
+  geom_text(aes(x=-0.5, y=0.6, label="I"))+
+  geom_text(aes(x=3, y=0.6, label="II"))+
+  geom_text(aes(x=3, y=t_0-x_0/c+1, label="III"))+
+  annotate("text", label="'('* x[0]* ','* t[0] *')'", x=3, y=5.5, size=3, parse = TRUE)+
+  labs(x="x", y="t")+
+  theme_light()
+```
+
+<!-- \newcommand{\Int}{\int\limits} -->
+
+$$ \text{I}= \frac{1}{2c}\int_{0}^{t_0-\frac{x_0}{c}} \int_{x_0-c(t_0-t)}^{0} F(t,-x)\;dx\;dt , \quad
+\text{II}= \frac{1}{2c}\int_{0}^{t_0-\frac{x_0}{c}} \int_{0}^{x_0+c(t_0-t)} F(t,x)\;dx\;dt,$$
+$$\text{III}= \frac{1}{2c}\int_{t_0-\frac{x_0}{c}}^{t_0} \int_{x_0-c(t_0-t)}^{x_0+c(t_0-t)} F(t,x) \;dx\;dt $$
+
+Now we will evaluate each integral separately:
+
+$$ \text{I}= \frac{1}{2c}\int_{0}^{t_0-\frac{x_0}{c}} \int_{x_0-c(t_0-t)}^{0} f(t,-x)-H''(t)\;dx\;dt$$
+$$ = \frac{1}{2c}\int_{0}^{t_0-\frac{x_0}{c}} \int_{x_0-c(t_0-t)}^{0} f(t,-x)\;dx\;dt -\frac{1}{2c}\int_{0}^{t_0-\frac{x_0}{c}}H''(t) \int_{x_0-c(t_0-t)}^{0}dx\;dt$$
+$$ = -\frac{1}{2c}\int_{0}^{t_0-\frac{x_0}{c}} \int_{-x_0+c(t_0-t)}^{0} f(t,x)\;dx\;dt +\frac{1}{2c}\int_{0}^{t_0-\frac{x_0}{c}}H''(t) (x_0-c(t_0-t))\;dt$$
+$$ = \frac{1}{2c}\int_{0}^{t_0-\frac{x_0}{c}} \int_{0}^{c(t_0-t)-x_0} f(t,x)\;dx\;dt +\frac{1}{2c}\int_{0}^{t_0-\frac{x_0}{c}}H''(t) (x_0-c(t_0-t))\;dt$$
+
+
+
+$$\text{II}= \frac{1}{2c}\int_{0}^{t_0-\frac{x_0}{c}} \int_{0}^{x_0+c(t_0-t)} f(t,x)\;dx\;dt-
+\frac{1}{2c}\int_{0}^{t_0-\frac{x_0}{c}} H''(t)\int_{0}^{x_0+c(t_0-t)}dx\;dt$$ 
+
+$$= \frac{1}{2c}\int_{0}^{t_0-\frac{x_0}{c}} \int_{0}^{x_0+c(t_0-t)} f(t,x)\;dx\;dt-
+\frac{1}{2c}\int_{0}^{t_0-\frac{x_0}{c}} H''(t)(x_0+c(t_0-t))\;dt$$
+
+
+
+$$\text{III}= \frac{1}{2c}\int_{t_0-\frac{x_0}{c}}^{t_0} \int_{x_0-c(t_0-t)}^{x_0+c(t_0-t)} f(t,x) \;dx\;dt -\frac{1}{2c}\int_{t_0-\frac{x_0}{c}}^{t_0} H''(t) \int_{x_0-c(t_0-t)}^{x_0+c(t_0-t)} dx\;dt $$
+$$ = \frac{1}{2c}\int_{t_0-\frac{x_0}{c}}^{t_0} \int_{x_0-c(t_0-t)}^{x_0+c(t_0-t)} f(t,x) \;dx\;dt -\frac{1}{2c}\int_{t_0-\frac{x_0}{c}}^{t_0} H''(t) \;2c(t_0-t)\;dt $$
+$$ = \frac{1}{2c}\int_{t_0-\frac{x_0}{c}}^{t_0} \int_{x_0-c(t_0-t)}^{x_0+c(t_0-t)} f(t,x) \;dx\;dt -\int_{t_0-\frac{x_0}{c}}^{t_0} H''(t) \;(t_0-t)\;dt $$
+Now we use integration by parts on the final integral in the above expression, setting
+$$u=(t_0-t), \quad du=dt, \quad dv=H''(t)dt, \quad v=H'(t)$$
+
+so that 
+$$\int_{t_0-\frac{x_0}{c}}^{t_0}  H''(t)(t_0-t)\,dt =H'(t)(t_0-t)\vert_{t_0-\frac{x_0}{c}}^{t_0}+\int_{t_0-\frac{x_0}{c}}^{t_0}  H'(t)dt$$
+$$=-\frac{x_0}{c} H'\left(t_0-\frac{x_0}{c} \right)+H(t_0)-H\left(t_0-\frac{x_0}{c} \right)$$
+
+So $\text{III}$ is
+$$\frac{1}{2c}\int_{t_0-\frac{x_0}{c}}^{t_0} \int_{x_0-c(t_0-t)}^{x_0+c(t_0-t)} f(t,x) \;dx\;dt+\frac{x_0}{c} H'\left(t_0-\frac{x_0}{c} \right)-H(t_0)+H\left(t_0-\frac{x_0}{c} \right) $$
+
+
+And now we can find the sum of the three regions:
+
+\begin{align*}
+\text{I}+\text{II}+\text{III}&= \frac{1}{2c} \int_{0}^{t_0-\frac{x_0}{c}} \int_{0}^{c(t_0-t)-x_0} f(t,x)\;dx\;dt +\frac{1}{2c} \int_{0}^{t_0-\frac{x_0}{c}} H''(t) (x_0-c(t_0-t))\;dt + \\
+& \frac{1}{2c} \int_{0}^{t_0-\frac{x_0}{c}} \int_{0}^{x_0+c(t_0-t)} f(t,x)\;dx\;dt-
+\frac{1}{2c} \int_{0}^{t_0-\frac{x_0}{c}} H''(t)(x_0+c(t_0-t))\;dt + \\
+& \frac{1}{2c} \int_{t_0-\frac{x_0}{c}}^{t_0} \int_{x_0-c(t_0-t)}^{x_0+c(t_0-t)} f(t,x) \;dx\;dt+ \\
+& \frac{x_0}{c} H'\left(t_0-\frac{x_0}{c} \right) - H(t_0)+H\left(t_0-\frac{x_0}{c} \right)
+\end{align*}
+
+\begin{align*}
+& =\frac{1}{2c}\int_{0}^{t_0-\frac{x_0}{c}} \int_{0}^{c(t_0-t)-x_0} f(t,x)\;dx\;dt + 
+\frac{1}{2c}\int_{0}^{t_0-\frac{x_0}{c}} \int_{0}^{x_0+c(t_0-t)} f(t,x)\;dx\;dt + 
+\frac{1}{2c}\int_{t_0-\frac{x_0}{c}}^{t_0} \int_{x_0-c(t_0-t)}^{x_0+c(t_0-t)} f(t,x) \;dx\;dt+ \\
+& \color{blue} \frac{1}{2c}\int_{0}^{t_0-\frac{x_0}{c}}H''(t) (x_0-c(t_0-t))\;dt
+-\frac{1}{2c}\int_{0}^{t_0-\frac{x_0}{c}}H''(t) (x_0+c(t_0-t))\;dt\,+\\
+& \frac{x_0}{c} H'\left(t_0-\frac{x_0}{c} \right)-H(t_0)+H\left(t_0-\frac{x_0}{c} \right)
+\end{align*}
+
+
+\begin{align*}
+\color{blue}
+\frac{1}{2c}\int_{0}^{t_0-\frac{x_0}{c}} H''(t) (x_0-c(t_0-t))\;dt
+-\frac{1}{2c}\int_{0}^{t_0-\frac{x_0}{c}} H''(t) (x_0+c(t_0-t))\;dt = \\
+\frac{1}{2c}\int_{0}^{t_0-\frac{x_0}{c}} H''(t) (-c(t_0-t))\;dt
+-\frac{1}{2c}\int_{0}^{t_0-\frac{x_0}{c}} H''(t)c(t_0-t)\;dt = \\
+-\frac{1}{2c}\int_{0}^{t_0-\frac{x_0}{c}} H''(t) c(t_0-t)\;dt
+-\frac{1}{2c}\int_{0}^{t_0-\frac{x_0}{c}} H''(t)c(t_0-t)\;dt = \\
+-\int_{0}^{t_0-\frac{x_0}{c}} H''(t) (t_0-t)\;dt
+\end{align*}
+
+
+Now we use integration by parts, so that 
+$$\int_{0}^{t_0-\frac{x_0}{c}}  H''(t)(t_0-t)\,dt =H'(t)(t_0-t)\vert_{0}^{t_0-\frac{x_0}{c}}+\int_{0}^{t_0-\frac{x_0}{c}}  H'(t)dt = \\
+\frac{x_0}{c}H'\left(t_0-\frac{x_0}{c}\right)+H\left(t_0-\frac{x_0}{c}\right)-H(0)$$
+
+\begin{align*}
+\text{I}& +\text{II}+\text{III} = \\
+& \frac{1}{2c}\int_{0}^{t_0-\frac{x_0}{c}} \int_{0}^{c(t_0-t)-x_0} f(t,x)\;dx\;dt + 
+\frac{1}{2c}\int_{0}^{t_0-\frac{x_0}{c}} \int_{0}^{x_0+c(t_0-t)} f(t,x)\;dx\;dt + 
+\frac{1}{2c}\int_{t_0-\frac{x_0}{c}}^{t_0} \int_{x_0-c(t_0-t)}^{x_0+c(t_0-t)} f(t,x) \;dx\;dt \\
+& \color{blue}-\frac{x_0}{c}H'\left(t_0-\frac{x_0}{c}\right)-H\left(t_0-\frac{x_0}{c}\right)+H(0)+\\
+\color{black}
+& \frac{x_0}{c} H'\left(t_0-\frac{x_0}{c} \right)-H(t_0)+H\left(t_0-\frac{x_0}{c} \right)
+\end{align*}
+
+\begin{align*}
+\text{I}& +\text{II}+\text{III} = \\
+& \frac{1}{2c}\int_{0}^{t_0-\frac{x_0}{c}} \int_{0}^{c(t_0-t)-x_0} f(t,x)\;dx\;dt + 
+\frac{1}{2c}\int_{0}^{t_0-\frac{x_0}{c}} \int_{0}^{x_0+c(t_0-t)} f(t,x)\;dx\;dt + 
+\frac{1}{2c}\int_{t_0-\frac{x_0}{c}}^{t_0} \int_{x_0-c(t_0-t)}^{x_0+c(t_0-t)} f(t,x) \;dx\;dt + \\
+& H(0) -H(t_0)
+\end{align*}
+
+\begin{align*}
+& w(t_0,x_0)= \frac{\phi(x_0+ct_0) +\phi(ct_0-x_0)}{2}-H(0) + \\
+& \frac{1}{2c} \left[\int_{0}^{ct_0-x_0}\psi(x)\,dx +  \int_{0}^{x_0+ct_0}\psi(x)\,dx \right]-H'(0)t_0 + \\
+& \frac{1}{2c}\int_{0}^{t_0-\frac{x_0}{c}} \int_{0}^{c(t_0-t)-x_0} f(t,x)\;dx\;dt + 
+\frac{1}{2c}\int_{0}^{t_0-\frac{x_0}{c}} \int_{0}^{x_0+c(t_0-t)} f(t,x)\;dx\;dt + 
+\frac{1}{2c}\int_{t_0-\frac{x_0}{c}}^{t_0} \int_{x_0-c(t_0-t)}^{x_0+c(t_0-t)} f(t,x) \;dx\;dt + \\
+& H(0) -H(t_0)
+\end{align*}
+
+\begin{tcolorbox}[colback=white, title=Solution]
+
+So for $ct_0>x_0$, $u(t_0,x_0) =w(t_0,x_0)+H(t_0)$, which means
+\begin{align*}
+&u(t_0,x_0)= \frac{\phi(x_0+ct_0) +\phi(ct_0-x_0)}{2}+ \\
+& \frac{1}{2c} \left[\int_{0}^{ct_0-x_0}\psi(x)\,dx +  \int_{0}^{x_0+ct_0}\psi(x)\,dx \right]-H'(0)t_0 + \\
+& \frac{1}{2c}\int_{0}^{t_0-\frac{x_0}{c}} \int_{0}^{c(t_0-t)-x_0} f(t,x)\;dx\;dt + 
+\frac{1}{2c}\int_{0}^{t_0-\frac{x_0}{c}} \int_{0}^{x_0+c(t_0-t)} f(t,x)\;dx\;dt + \\
+& \frac{1}{2c}\int_{t_0-\frac{x_0}{c}}^{t_0} \int_{x_0-c(t_0-t)}^{x_0+c(t_0-t)} f(t,x) \;dx\;dt \\
+\end{align*}
+
+While for $ct_0>x_0$, from (\ref{eqn:part1}), we have
+$$u(t_0, x_0)=\frac{\phi(x_0+ct_0)+\phi(x_0-ct_0)}{2} +
+\frac{1}{2c} \int_{x_0-ct_0}^{x_0+ct_0}\psi(x) dx +
+\frac{1}{2c} \int_{0}^{t_0}  \int_{x_0-c(t_0-t)}^{x_0+c(t_0-t)} f(t,x) dx\,dt$$
+
+\end{tcolorbox}
+
+```{r, warning=FALSE, fig.height=3, fig.width=5, echo=FALSE}
+c=1
+t_0=5
+x_0=3
+x_1=seq(-20, 20, by=0.2)
+x_2=seq(-20, x_0, by=0.2)
+x_3=seq(x_0, 20, by=0.2)
+x_4=seq(0, t_0-c*x_0, by=0.2)
+rm(x)
+
+ggplot()+
+  geom_line(aes(x=x_2, y=t_0-(1/c)*(x_0-x_2)))+
+  geom_line(aes(x=x_3, y=t_0+(1/c)*(x_0-x_3)))+
+  geom_polygon(aes(x=c(0, 0, x_0, x_0+c*t_0), y=c(0,t_0-x_0/c, t_0,0)), fill="blue", alpha=0.3)+
+  geom_polygon(aes(x=c(0, 0, t_0-c*x_0), y=c(0,t_0-x_0/c, 0 )), fill="red", alpha=0.5)+
+  
+  lims(y=c(0, 10), x=c(-5, 10))+
+  geom_vline(xintercept=0, linetype="dashed")+
+  geom_hline(yintercept = t_0-x_0/c, linetype="dashed")+
+  geom_text(aes(x=-0.5, y=0.6, label="I"))+
+  geom_text(aes(x=3, y=0.6, label="II"))+
+  geom_text(aes(x=3, y=t_0-x_0/c+1, label="III"))+
+  annotate("text", label="'('* x[0]* ','* t[0] *')'", x=3, y=5.5, size=3, parse = TRUE)+
+  labs(x="x", y="t")+
+  theme_light()
+
+```
+
+When $x_0<ct_0$, we're integrating $f$ over the domain of dependence (the shaded blue region, including the red triangle) but then adding $f$ integrated over the red triangle. When $x_0<ct_0$, we just integrate $f$ over the blue triangle. 
+
+```{r, warning=FALSE, echo=FALSE, fig.height=3, fig.width=5}
+x_0=6
+x_1=seq(-20, 20, by=0.2)
+x_2=seq(-20, x_0, by=0.2)
+x_3=seq(x_0, 20, by=0.2)
+
+ggplot()+
+  geom_line(aes(x=x_2, y=t_0-(1/c)*(x_0-x_2)))+
+  geom_line(aes(x=x_3, y=t_0+(1/c)*(x_0-x_3)))+
+  geom_polygon(aes(x=c(x_0-c*t_0,  x_0+c*t_0, x_0) , y=c(0,0, t_0)), fill="blue", alpha=0.3)+
+ lims(y=c(0, 10), x=c(-5, 15))+
+  geom_vline(xintercept=0, linetype="dashed")+
+  geom_hline(yintercept = t_0-x_0/c, linetype="dashed")+
+  annotate("text", label="'('* x[0]* ','* t[0] *')'", x=x_0, y=5.5, size=3, parse = TRUE)+
+  labs(x="x", y="t")+
+  theme_light()
+```
+
 
 ## Question 4  
 
@@ -357,49 +679,21 @@ Let $u$ and $v$ be two solutions, and define $w:=u-v$. Observe that $w$ satisfie
 Does the D’Alembert method work for the wave equation $u_{tt} = c(x)^2u_{xx}$? What about $u_{tt} = c(t)^2u_{xx}$? Why?
 
 
-Let's try the factorization method if $c=c(x)$:
+Let's assume that we can factor this wave equation with $c=c(x)$ as we could with constant $c$:
 $$\left( \partial_{t}+c(x)\partial_{x}\right) \left(\partial_{t}-c(x)\partial_{x}\right)u=0$$
-Set $\xi=x+c(x)t$ and $\eta=x-c(x)t$.
+Now, let's distribute:
+$$\left( \partial_{t}+c(x)\partial_{x}\right) \left(u_{t}-c(x)u_{x}\right)=0$$
+$$u_{tt}-c(x)u_{xt} +c(x)u_{xt}-c(x)\left(c'(x)u_x+c(x)u_{xx}\right) =0$$
+$$u_{tt}-c(x)^2u_{xx}- c(x)c'(x)u_x=0$$
+But this is only equivalent to our original equation if $c'(x)=0$ for all $x$, i.e., if $c$ is constant.
 
-By the chain rule,
-
-$$\frac{\partial}{\partial x} = \frac{\partial}{\partial \xi} \frac{\partial \xi}{\partial x}+\frac{\partial}{\partial\eta}\frac{\partial\eta}{\partial x}$$
-
-$$=\partial_{\xi}(1+c')+\partial_{\eta}\,(1-c')$$
-
-$$\frac{\partial}{\partial t} = \frac{\partial}{\partial \xi} \frac{\partial \xi}{\partial t}+\frac{\partial }{\partial\eta}\frac{\partial\eta}{\partial t}$$
-$$=c\partial_{\xi}-c\partial_{\eta}$$
-When we plug these back into
-$$\left( \partial_{t}+c\partial_{x}\right) \left(\partial_{t}-c\partial_{x}\right)u=0$$
-we get
-
-$$ \left(c\partial_{\xi}-c\partial_{\eta}+c\partial_{\xi}(1+c')+c\partial_{\eta}\,(1-c')\right)
-\left(c\partial_{\xi}-c\partial_{\eta} -c\partial_{\xi}(1+c')-c\partial_{\eta}\,(1-c')\right)u=0$$
-
-When $c$ is constant, $c'=0$ and this simplifies to $-4c^2 u_{\xi\eta}=0$, allowing us to integrate to find $u(x,t)=F(x+ct)+G(x-ct)$. But we cannot do the same simplification when we have the $c'$ terms, meaning we cannot solve the wave equation by the same method when the wave speed is not constant.
-
-Similarly,
-
-Let's try the factorization method if $c=c(t)$:
+We can repeat the process for $c=c(t)$:
 $$\left( \partial_{t}+c(t)\partial_{x}\right) \left(\partial_{t}-c(t)\partial_{x}\right)u=0$$
-Set $\xi=x+c(t)t$ and $\eta=x-c(t)t$.
+$$\left( \partial_{t}+c(t)\partial_{x}\right) \left(u_{t}-c(t)u_{x}\right)=0$$
+$$u_{tt}-(c'(t)u_{x}+c(t)u_{xt}) +c(t)u_{xt}-c(t)^2u_{xx} =0$$
+$$u_{tt}-c(t)^2u_{xx}- c'(t)u_x=0$$
 
-By the chain rule,
-
-$$\frac{\partial}{\partial x} = \frac{\partial}{\partial \xi} \frac{\partial \xi}{\partial x}+\frac{\partial}{\partial\eta}\frac{\partial\eta}{\partial x}=
-\partial_{\xi}+\partial_{\eta}$$
-
-$$\frac{\partial}{\partial t} = \frac{\partial}{\partial \xi} \frac{\partial \xi}{\partial t}+\frac{\partial }{\partial\eta}\frac{\partial\eta}{\partial t}=\partial_{\xi}(c't+c)-\partial_{\eta}(c't+c)
-$$
-
-
-When we plug these back into
-$$\left( \partial_{t}+c\partial_{x}\right) \left(\partial_{t}-c\partial_{x}\right)u=0$$
-we get
-
-$$\left( \partial_{\xi}(c't+c)-\partial_{\eta}(c't+c)+c\partial_{\xi}+c\partial_{\eta} \right)
-\left(\partial_{\xi}(c't+c)-\partial_{\eta}(c't+c)-c\partial_{\xi}-c\partial_{\eta}\right)u=0$$
-Where again we cannot cancel terms to simplify our equation as we could with constant $c$.
+Which, as before, is only equivalent to our original equation if $c'(t)=0$ for all $t$, i.e., if $c$ is constant.
 
 ## Problem 7 (The Poisson-Darboux Equation)   
 Solve the initial value problem

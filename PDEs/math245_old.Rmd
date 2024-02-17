@@ -296,3 +296,56 @@ $$u_{\xi}=f(4\xi-\eta)$$
 Now integrate with respect to $\xi$:
 $$u(\eta, \xi)=F(4\xi-\eta)+G(\eta)$$
 where $F$ is the antiderivative of $f$ with respect to $\xi$.
+
+## HW 2 Problem 6
+
+Does the D’Alembert method work for the wave equation $u_{tt} = c(x)^2u_{xx}$? What about $u_{tt} = c(t)^2u_{xx}$? Why?
+
+
+Let's try the factorization method if $c=c(x)$:
+$$\left( \partial_{t}+c(x)\partial_{x}\right) \left(\partial_{t}-c(x)\partial_{x}\right)u=0$$
+Set $\xi=x+c(x)t$ and $\eta=x-c(x)t$.
+
+By the chain rule,
+
+$$\frac{\partial}{\partial x} = \frac{\partial}{\partial \xi} \frac{\partial \xi}{\partial x}+\frac{\partial}{\partial\eta}\frac{\partial\eta}{\partial x}$$
+
+$$=\partial_{\xi}(1+c')+\partial_{\eta}\,(1-c')$$
+
+$$\frac{\partial}{\partial t} = \frac{\partial}{\partial \xi} \frac{\partial \xi}{\partial t}+\frac{\partial }{\partial\eta}\frac{\partial\eta}{\partial t}$$
+$$=c\partial_{\xi}-c\partial_{\eta}$$
+When we plug these back into
+$$\left( \partial_{t}+c\partial_{x}\right) \left(\partial_{t}-c\partial_{x}\right)u=0$$
+we get
+
+$$ \left(c\partial_{\xi}-c\partial_{\eta}+c\partial_{\xi}(1+c')+c\partial_{\eta}\,(1-c')\right)
+\left(c\partial_{\xi}-c\partial_{\eta} -c\partial_{\xi}(1+c')-c\partial_{\eta}\,(1-c')\right)u=0$$
+
+When $c$ is constant, $c'=0$ and this simplifies to $-4c^2 u_{\xi\eta}=0$, allowing us to integrate to find $u(x,t)=F(x+ct)+G(x-ct)$. But we cannot do the same simplification when we have the $c'$ terms, meaning we cannot solve the wave equation by the same method when the wave speed is not constant.
+
+Similarly,
+
+Let's try the factorization method if $c=c(t)$:
+$$\left( \partial_{t}+c(t)\partial_{x}\right) \left(\partial_{t}-c(t)\partial_{x}\right)u=0$$
+Set $\xi=x+c(t)t$ and $\eta=x-c(t)t$.
+
+By the chain rule,
+
+$$\frac{\partial}{\partial x} = \frac{\partial}{\partial \xi} \frac{\partial \xi}{\partial x}+\frac{\partial}{\partial\eta}\frac{\partial\eta}{\partial x}=
+\partial_{\xi}+\partial_{\eta}$$
+
+$$\frac{\partial}{\partial t} = \frac{\partial}{\partial \xi} \frac{\partial \xi}{\partial t}+\frac{\partial }{\partial\eta}\frac{\partial\eta}{\partial t}=\partial_{\xi}(c't+c)-\partial_{\eta}(c't+c)
+$$
+
+
+When we plug these back into
+$$\left( \partial_{t}+c\partial_{x}\right) \left(\partial_{t}-c\partial_{x}\right)u=0$$
+we get
+
+$$\left( \partial_{\xi}(c't+c)-\partial_{\eta}(c't+c)+c\partial_{\xi}+c\partial_{\eta} \right)
+\left(\partial_{\xi}(c't+c)-\partial_{\eta}(c't+c)-c\partial_{\xi}-c\partial_{\eta}\right)u=0$$
+Where again we cannot cancel terms to simplify our equation as we could with constant $c$.
+
+
+<!-- paste0("(", "x[0]","','","t[0]", ")")) -->
+
