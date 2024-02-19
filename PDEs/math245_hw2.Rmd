@@ -1,7 +1,7 @@
 ---
 title: "MATH 245 Homework 2"
 author: "Ruby Krasnow and Tommy Thach"
-date: "2024-02-17"
+date: "2024-02-18"
 output:
   pdf_document:
     extra_dependencies: ["derivative", "tcolorbox", "xcolor"]
@@ -13,10 +13,9 @@ library(tidyverse)
 ```
 
 ## Question 1
-Determine the region in which the given equation is hyperbolic, parabolic, elliptic, or
-singular.  
+Determine the region in which the given equation is hyperbolic, parabolic, elliptic, or singular.  
 
-a) $$u_{xx}+y^2u_{yy}+u_x-u+x^2=0 $$  
+a) $$u_{xx}-y^2u_{yy}+u_x-u+x^2=0 $$  
 
 $a=1, b=0, c=-y^2$, so we have $b^2-ac=0-(-y^2)=y^2$. This will be positive everywhere except for $y=0$, so the equation is hyperbolic where $y \neq 0$ and parabolic for $y=0$.
 
@@ -24,6 +23,7 @@ b) $$u_{xx}-yu_{yy}+xu_x+yu_y+u=0 $$
 
 $a=1, b=0, c=-y$, so we have $b^2-ac=0-(-y)=y$. Thus, the equation will be hyperbolic where $y>0$, parabolic where $y=0$, and elliptic where $y<0$.
 
+Both PDEs are nowhere singular, because the coefficient of $u_{xx}$ is never zero.
 
 ## Question 2
 Using a factorization similar to the wave equation, solve the following IVP:
@@ -35,7 +35,7 @@ Using a factorization similar to the wave equation, solve the following IVP:
     \end{cases}       
 \end{equation*}
 
-First, we can factor the equation as follows:
+We are looking for a solution $u(x,y)$ for the above IVP. First, we can factor the given PDE as follows:
 $$\left( \pdv{}{x}+3\pdv{}{y}\right) \left(\pdv{}{x}-\pdv{}{y}\right)u=0$$
 or $$\left( \partial_{x}+3\partial_{y}\right) \left(\partial_{x}-\partial_{y}\right)u=0$$
 
@@ -96,10 +96,9 @@ $$F(\alpha)=\frac{3\sin{(\frac{\alpha}{3})}}{4}- \frac{\alpha^2}{24}$$
 
 Which means $u(x,y)=F(3x-y)+G(x+y)$ becomes
 
-$$u(x,y)=\frac{3}{4}\sin{\left(x-\frac{y}{3}\right)}- \frac{(3x-y)^2}{24}+  \frac{\sin{(x+y)}}{4}+ \frac{3(x+y)^2}{8}=$$
-
 \begin{tcolorbox}[colback=white, title=Solution]
-$$u(x,y)=\frac{3}{4}\sin{\left(x-\frac{y}{3}\right)}+\frac{\sin{(x+y)}}{4}+ xy+  \frac{y^2}{3} $$
+
+$$u(x,y)=\frac{3}{4}\sin{\left(x-\frac{y}{3}\right)}- \frac{(3x-y)^2}{24}+  \frac{\sin{(x+y)}}{4}+ \frac{3(x+y)^2}{8}$$
 \end{tcolorbox}
 
 
@@ -154,19 +153,19 @@ Then our IBVP becomes:
 Now, since we have homogeneous Neumann boundary conditions, we will use even extensions of the initial data to the whole line, namely:
 
 \begin{equation} 
-\Phi_{\text{even}}=
+\Phi_{\text{even}}(x)=
     \begin{cases} 
       \Phi(x) & \text{for } x \geq 0\\
       \Phi(-x) & \text{for } x \leq 0\\
     \end{cases}  
     ,\quad
-\Psi_{\text{even}}=
+\Psi_{\text{even}}(x)=
     \begin{cases}
       \Psi(x) & \text{for } x \geq 0\\
       \Psi(-x) & \text{for } x \leq 0\\
     \end{cases}
     ,\quad
-F_{\text{even}}=
+F_{\text{even}}(t,x)=
     \begin{cases} 
       F(t,x) & \text{for } x \geq 0\\
       F(t,-x) & \text{for } x \leq 0\\
@@ -200,7 +199,7 @@ w(t_0,x_0)= \frac{\Phi(x_0+ct_0)+\Phi(x_0-ct_0)}{2} +
 \end{equation*}
 
 \begin{equation*}
-\frac{\phi(x_0+ct_0)-H(0)+\phi(x_0-ct_0)-H(0)}{2} +
+=\frac{\phi(x_0+ct_0)-H(0)+\phi(x_0-ct_0)-H(0)}{2} +
 \frac{1}{2c} \int_{x_0-ct_0}^{x_0+ct_0}\psi(x)-H'(0)dx + \\
 \frac{1}{2c} \int_{0}^{t_0}  \int_{x_0-c(t_0-t)}^{x_0+c(t_0-t)} f(t,x)-H''(t) dx\,dt
 \end{equation*}
@@ -209,7 +208,7 @@ w(t_0,x_0)= \frac{\Phi(x_0+ct_0)+\Phi(x_0-ct_0)}{2} +
 & w(t_0,x_0)=\frac{\phi(x_0+ct_0)+\phi(x_0-ct_0)}{2}- H(0) +
 \frac{1}{2c} \int_{x_0-ct_0}^{x_0+ct_0}\psi(x) dx - \frac{H'(0)}{2c}\left[(x_0+ct_0)-(x_0-ct_0)\right]+ \\
 & \frac{1}{2c} \int_{0}^{t_0}  \int_{x_0-c(t_0-t)}^{x_0+c(t_0-t)} f(t,x) dx\,dt -
-\frac{1}{2c} H''(t) \int_{0}^{t_0}  \int_{x_0-c(t_0-t)}^{x_0+c(t_0-t)} dx\,dt
+\frac{1}{2c} \int_{0}^{t_0} H''(t)  \int_{x_0-c(t_0-t)}^{x_0+c(t_0-t)} dx\,dt
 \end{align*}
 
 
@@ -230,7 +229,7 @@ w(t_0,x_0)=A-H(0)-H'(0)t_0- \int_{0}^{t_0} H''(t)(t_0-t)\,dt
 \end{equation}
 
 Now we use integration by parts on the final integral in (\ref{eqn:w1}), setting
-$$u=(t_0-t), \quad du=dt, \quad dv=H''(t)dt, \quad v=H'(t)$$,
+$$u=(t_0-t), \quad du=-dt, \quad dv=H''(t)dt, \quad v=H'(t)$$,
 
 so that 
 $$\int_{0}^{t_0} H''(t)(t_0-t)\,dt =H'(t)(t_0-t)\vert_{0}^{t_0}+\int_{0}^{t_0} H'(t)dt=-H'(0)t_0+H(t_0)-H(0) $$
@@ -263,6 +262,7 @@ Now we must consider what happens when $x_0<ct_0$, such that $x_0-ct_0<0$. Then 
 &\frac{1}{2c}\iint\limits_\Delta F_{\text{even}}(t,x)\,dx\,dt
 \end{align*}
 
+Where $\Delta$ is the 2D  region in the diagram below.  
 
 Violet section:
 \begin{align*}
@@ -324,7 +324,7 @@ $$\text{III}= \frac{1}{2c}\int_{t_0-\frac{x_0}{c}}^{t_0} \int_{x_0-c(t_0-t)}^{x_
 $$ = \frac{1}{2c}\int_{t_0-\frac{x_0}{c}}^{t_0} \int_{x_0-c(t_0-t)}^{x_0+c(t_0-t)} f(t,x) \;dx\;dt -\frac{1}{2c}\int_{t_0-\frac{x_0}{c}}^{t_0} H''(t) \;2c(t_0-t)\;dt $$
 $$ = \frac{1}{2c}\int_{t_0-\frac{x_0}{c}}^{t_0} \int_{x_0-c(t_0-t)}^{x_0+c(t_0-t)} f(t,x) \;dx\;dt -\int_{t_0-\frac{x_0}{c}}^{t_0} H''(t) \;(t_0-t)\;dt $$
 Now we use integration by parts on the final integral in the above expression, setting
-$$u=(t_0-t), \quad du=dt, \quad dv=H''(t)dt, \quad v=H'(t)$$
+$$u=(t_0-t), \quad du=-dt, \quad dv=H''(t)dt, \quad v=H'(t)$$
 
 so that 
 $$\int_{t_0-\frac{x_0}{c}}^{t_0}  H''(t)(t_0-t)\,dt =H'(t)(t_0-t)\vert_{t_0-\frac{x_0}{c}}^{t_0}+\int_{t_0-\frac{x_0}{c}}^{t_0}  H'(t)dt$$
@@ -397,23 +397,6 @@ $$\int_{0}^{t_0-\frac{x_0}{c}}  H''(t)(t_0-t)\,dt =H'(t)(t_0-t)\vert_{0}^{t_0-\f
 & H(0) -H(t_0)
 \end{align*}
 
-\begin{tcolorbox}[colback=white, title=Solution]
-
-So for $ct_0>x_0$, $u(t_0,x_0) =w(t_0,x_0)+H(t_0)$, which means
-\begin{align*}
-&u(t_0,x_0)= \frac{\phi(x_0+ct_0) +\phi(ct_0-x_0)}{2}+ \\
-& \frac{1}{2c} \left[\int_{0}^{ct_0-x_0}\psi(x)\,dx +  \int_{0}^{x_0+ct_0}\psi(x)\,dx \right]-H'(0)t_0 + \\
-& \frac{1}{2c}\int_{0}^{t_0-\frac{x_0}{c}} \int_{0}^{c(t_0-t)-x_0} f(t,x)\;dx\;dt + 
-\frac{1}{2c}\int_{0}^{t_0-\frac{x_0}{c}} \int_{0}^{x_0+c(t_0-t)} f(t,x)\;dx\;dt + \\
-& \frac{1}{2c}\int_{t_0-\frac{x_0}{c}}^{t_0} \int_{x_0-c(t_0-t)}^{x_0+c(t_0-t)} f(t,x) \;dx\;dt \\
-\end{align*}
-
-While for $ct_0>x_0$, from (\ref{eqn:part1}), we have
-$$u(t_0, x_0)=\frac{\phi(x_0+ct_0)+\phi(x_0-ct_0)}{2} +
-\frac{1}{2c} \int_{x_0-ct_0}^{x_0+ct_0}\psi(x) dx +
-\frac{1}{2c} \int_{0}^{t_0}  \int_{x_0-c(t_0-t)}^{x_0+c(t_0-t)} f(t,x) dx\,dt$$
-
-\end{tcolorbox}
 
 ```{r, warning=FALSE, fig.height=3, fig.width=5, echo=FALSE}
 c=1
@@ -462,6 +445,25 @@ ggplot()+
   labs(x="x", y="t")+
   theme_light()
 ```
+
+\begin{tcolorbox}[colback=white, title=Solution]
+
+So for $ct_0>x_0$, $u(t_0,x_0) =w(t_0,x_0)+H(t_0)$, which means
+\begin{align*}
+&u(t_0,x_0)= \frac{\phi(x_0+ct_0) +\phi(ct_0-x_0)}{2}+ \\
+& \frac{1}{2c} \left[\int_{0}^{ct_0-x_0}\psi(x)\,dx +  \int_{0}^{x_0+ct_0}\psi(x)\,dx \right]-H'(0)t_0 + \\
+& \frac{1}{2c}\int_{0}^{t_0-\frac{x_0}{c}} \int_{0}^{c(t_0-t)-x_0} f(t,x)\;dx\;dt + 
+\frac{1}{2c}\int_{0}^{t_0-\frac{x_0}{c}} \int_{0}^{x_0+c(t_0-t)} f(t,x)\;dx\;dt + \\
+& \frac{1}{2c}\int_{t_0-\frac{x_0}{c}}^{t_0} \int_{x_0-c(t_0-t)}^{x_0+c(t_0-t)} f(t,x) \;dx\;dt \\
+\end{align*}
+
+While for $ct_0>x_0$, from (\ref{eqn:part1}), we have
+$$u(t_0, x_0)=\frac{\phi(x_0+ct_0)+\phi(x_0-ct_0)}{2} +
+\frac{1}{2c} \int_{x_0-ct_0}^{x_0+ct_0}\psi(x) dx +
+\frac{1}{2c} \int_{0}^{t_0}  \int_{x_0-c(t_0-t)}^{x_0+c(t_0-t)} f(t,x) dx\,dt$$
+
+\end{tcolorbox}
+
 
 
 ## Question 4  
@@ -525,7 +527,21 @@ So $u_{tt}=c^2 \left(u_{rr} + \frac{2}{r}u_r \right)$ becomes
 $$\frac{w_{tt}}{r} =c^2 \left(\frac{w_{rr}}{r}-\frac{2w_r}{r^2}+\frac{2w}{r^3} + \frac{2}{r} \left(\frac{w_r}{r}-\frac{w}{r^2} \right) \right),$$
 which simplifies to
 $$w_{tt}=c^2 w_{rr}.$$
-But this is just the wave equation, and we can use d'Alembert's formula to find the solution:
+But this is just the wave equation, giving us the following IVP:
+
+\begin{equation*} 
+\begin{cases}
+w_{tt}=c^2 w_{rr} \\
+u(0,r)=0 \\
+u_t(0,r) = \begin{cases}
+  1  & \lvert{r}\rvert \leq 1 \\
+  0 &  \lvert{r}\rvert > 1
+  \end{cases}
+\end{cases}
+\end{equation*}
+
+
+So can use d'Alembert's formula to find the solution:
  $$w(t,r)= \frac{\varphi(r+ct)+\varphi(r-ct)}{2}+\frac{1}{2c} \int_{r-ct}^{r+ct}{\psi(s)ds}$$
  Since $\varphi=0$, 
  $$w(t,r)= \frac{1}{2c} \int_{r-ct}^{r+ct}{\psi(s)ds}$$
@@ -598,7 +614,7 @@ $$ \frac{dE}{dt}= \frac{d}{dt} \left[\frac{1}{2} \int_{0}^{1}{ \left(u_t^2+u_x^2
 \end{equation}
 
 \begin{equation}\label{eqn:prob5c}
-=\int_{0}^{1}{ u_t u_{tt}}\: dx + \int_{0}^{1}{2u_x u_{xt}}\:dx =: I+J.
+=\int_{0}^{1}{ u_t u_{tt}}\: dx + \int_{0}^{1}{u_x u_{xt}}\:dx =: I+J.
 \end{equation}
 
 The equality (\ref{eqn:prob5a}) follows from differentiation under the integral sign, while (\ref{eqn:prob5b}) follows from the chain rule for partial derivatives.  
@@ -606,7 +622,7 @@ The equality (\ref{eqn:prob5a}) follows from differentiation under the integral 
 Consider the integral $J$ in (\ref{eqn:prob5c}). By integrating by parts, we can move one of the partials $\frac{\partial}{\partial x}$ to the other factor, at the cost of introducing a minus sign and a boundary term. Hence $J$ becomes
 
 \begin{equation} \label{eqn:J}
-J=\int_{0}^{1}{ u_x u_{xt}}\: dx =- \int_{0}^{1}{u_xx u_t}\:dx + 
+J=\int_{0}^{1}{ u_x u_{xt}}\: dx =- \int_{0}^{1}{u_{xx} u_t}\:dx + 
 \left[ u_x u_t \right]_{x=0}^{x=1}.
 \end{equation}
 
@@ -842,17 +858,17 @@ or in our original coordinates,
 
 $$u(x,y)=h_1\left(x+\frac{y^2}{2}\right)+h_2\left(x-\frac{y^2}{2}\right) $$
 
-Now we use our given conditions. When  $2 \leq x \leq 4$, we have $g(x)=h_1(2x)+h_2(0)$, which means $h_1(z_1)=g\left(\frac{z_1}{2}\right)-h_2(0)$. 
+Now we use our given conditions. When  $2 \leq x \leq 4$, we have $g(x)=h_1(2x)+h_2(0)$, which means $h_1(x)=g\left(\frac{x}{2}\right)-h_2(0)$. 
 
-Similarly, when $0 \leq x \leq 2$, we have $f(x)=h_1(4)+h_2(2x-4)$, which means $h_2(z_2)=f\left(\frac{z_2}{2}+2\right)-h_1(4)$.
+Similarly, when $0 \leq x \leq 2$, we have $f(x)=h_1(4)+h_2(2x-4)$, which means $h_2(x)=f\left(\frac{x}{2}+2\right)-h_1(4)$.
 
 
 Thus,
-$$h_1(z_1)+h_2(z_2)=g\left(\frac{z_1}{2}\right)-h_2(0)+f\left(\frac{z_2}{2} + 2\right)-h_1(4)$$
+$$h_1(x)+h_2(x)=g\left(\frac{x}{2}\right)-h_2(0)+f\left(\frac{x}{2} + 2\right)-h_1(4)$$
 
 But $h_2(0)+h_1(4)$ is just $g(x)$ when $x=2$ (or equivalently, $f(x)$ when $x=2$), 
 
-so after replacing $z_1$ by $x+\frac{y^2}{2}$ and $z_2$ by $x-\frac{y^2}{2}$, we get
+so after replacing the $x$ in $h_1(x)$ by $x+\frac{y^2}{2}$ and the $x$ in $h_2(x)$ by $x-\frac{y^2}{2}$, we get
 
 \begin{tcolorbox}[colback=white, title=Solution]
 $$u(x,y)=g\left(\frac{x}{2}+\frac{y^2}{4}\right)+f\left(\frac{x}{2}+\frac{y^2}{4}+2\right)-f(2)$$
@@ -866,10 +882,10 @@ $$u_{yy}(x,y)=\frac{y^2}{4}g''\left(\frac{x}{2}+\frac{y^2}{4}\right)+
 \frac{y^2}{4}f''\left(\frac{x}{2}+\frac{y^2}{4}+2\right)+
 \frac{1}{2}f'\left(\frac{x}{2}+\frac{y^2}{4}+2\right)$$
 
-$$u_x(x,y)=\frac{1}{2}g'\left(\frac{x}{2}+\frac{y^2}{4}\right)+\frac{1}{2}f'\left(\frac{x}{2}+\frac{y^2}{4}+2\right)-f'(2)$$
+$$u_x(x,y)=\frac{1}{2}g'\left(\frac{x}{2}+\frac{y^2}{4}\right)+\frac{1}{2}f'\left(\frac{x}{2}+\frac{y^2}{4}+2\right)$$
 
 
-$$u_{xx}(x,y)=\frac{1}{4}g''\left(\frac{x}{2}+\frac{y^2}{4}\right)+\frac{1}{4}f''\left(\frac{x}{2}+\frac{y^2}{4}+2\right)-f''(2)$$
+$$u_{xx}(x,y)=\frac{1}{4}g''\left(\frac{x}{2}+\frac{y^2}{4}\right)+\frac{1}{4}f''\left(\frac{x}{2}+\frac{y^2}{4}+2\right)$$
 
 
 This means $y^3u_{xx}-yu_{yy}+u_y=0$ becomes
