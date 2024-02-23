@@ -1,0 +1,91 @@
+---
+title: "MATH 245 Homework 3"
+author: "Ruby Krasnow and Tommy Thach"
+date: "2024-02-23"
+output:
+  pdf_document:
+    extra_dependencies: ["derivative", "tcolorbox", "xcolor"]
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+```
+
+## Question 1  (Parity of Solution)
+Prove the following. 
+
+**(a)** If initial conditions of the wave equation on the whole line are even(odd), the solution is
+even(odd).
+\newline
+  
+  Consider the IVP
+\begin{equation*}
+    \begin{cases}
+      u_{tt}=c^2u_{xx}\ & -\infty <x<\infty\\
+      u(0,x)=\varphi(x) & -\infty<x<\infty\\
+      u_t(0,x) = \psi(x) & -\infty<x<\infty\\
+    \end{cases}       
+\end{equation*}
+
+where $\varphi(x)$ and $\psi(x)$ are even functions, i.e., $\varphi(-x)=\varphi(x)$ and $\psi(-x)=\psi(x)$. Then using D'Alembert's formula, we know the solution $u$ is
+
+$$u(x,t)= \frac{\varphi(x+ct)+\varphi(x-ct)}{2}+\frac{1}{2c} \int_{x-ct}^{x+ct}{\psi(s)ds}$$
+Now plug in $-x$:
+$$u(-x,t)= \frac{\varphi(-x+ct)+\varphi(-x-ct)}{2}+\frac{1}{2c} \int_{-x-ct}^{-x+ct}{\psi(s)ds}$$
+$$ = \frac{\varphi(x-ct)+\varphi(x+ct)}{2}+\frac{1}{2c} \int_{-x-ct}^{-x+ct}{\psi(-s)ds}$$
+After setting $y=-s, dy=-ds$ in the integral of $\psi$:
+
+$$ u(-x,t)= \frac{\varphi(x-ct)+\varphi(x+ct)}{2}+\frac{1}{2c} \int_{x-ct}^{x+ct}{\psi(y)dy}=u(x,t).$$
+Therefore, even initial conditions imply that the solution of the wave equation is even. 
+
+
+Similarly, assume $\varphi(x)$ and $\psi(x)$ are odd functions, i.e., $\varphi(-x)=-\varphi(x)$ and $\psi(-x)=-\psi(x)$. Then using D'Alembert's formula, we know $u(-x, t)$ is
+
+$$u(-x,t)= \frac{\varphi(-x+ct)+\varphi(-x-ct)}{2}+\frac{1}{2c} \int_{-x-ct}^{-x+ct}{\psi(s)ds}$$
+$$= \frac{-\varphi(x-ct)-\varphi(x+ct)}{2}-\frac{1}{2c} \int_{-x-ct}^{-x+ct}{\psi(-s)ds}$$
+
+After setting $y=-s, dy=-ds$ in the integral of $\psi$:
+$$u(-x,t)= \frac{-\varphi(x-ct)-\varphi(x+ct)}{2}-\frac{1}{2c} \int_{x-ct}^{x+ct}{\psi(-y)dy}=-u(x,t).$$
+Therefore, odd initial conditions imply that the solution of the wave equation is odd.
+
+**(b)** If the initial condition of the heat equation on the whole line is even(odd), the solution is even(odd).
+
+
+## Question 2  (Speed of Heat vs Wave)
+Consider the traveling wave $u(x, t) = f(x-at)$ where $f$ is a given function of one variable.
+
+(a) If it is a solution of the wave equation, show that the speed must be $a =\pm c$ (unless $f$ is a
+linear function).
+
+(b) If it is a solution of the diffusion equation, find $f$ and show that the speed $a$ is arbitrary.
+
+
+## Question 4  (Maximum Principle)  
+
+Consider two solutions $u(t,x)$ and $v(t,x)$ of the diffusion equation in $\Omega_T = \{ 0 \leq x \leq l, 0 \leq t \leq \infty \}$
+
+(a) Let $M(T)=$ the maximum of $u(t, x)$ in the closed rectangle $\Omega_T = \{ 0 \leq x \leq l, 0 \leq t \leq \infty \}$. Does $M(T)$ increase or decrease as a function of $T$? Explain.
+
+(b) Let $m(T)=$ the minimum of $u(t, x)$ in the closed rectangle $\Omega_T = \{ 0 \leq x \leq l, 0 \leq t \leq \infty \}$. Does $m(T)$ increase or decrease as a function of $T$? Explain.
+
+(c) **Comparison Principle**
+If $u \leq v$ for $t=0,$ for $x=0, $ for $x=l$, then $u \leq v$ for $0 \leq t \leq \infty$ and $0 \leq x \leq l$.
+
+
+## Question 5 (Diffusion Equation with Dissipation). 
+Solve the following IVP for constant dissipation $b>0$.
+
+\begin{equation}\label{eqn:dissipation}
+\begin{cases}
+u_t-ku_{xx}+bu=0 & -\infty \leq x \leq \infty, \; t>0 \\
+u(0,x)=\psi(x), & -\infty \leq x \leq \infty
+
+\end{cases}
+\end{equation}
+
+We will use the change of variables $u(t,x)=e^{-bt}v(t,x)$
+
+
+## Question 6
+Prove that there is no maximum principle for the wave equation.

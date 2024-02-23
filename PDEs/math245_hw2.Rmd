@@ -138,15 +138,15 @@ Solve the Neumann boundary value problem for the wave equation on half line:
 
 The method we will use is to first convert to homogenous Neumann boundary conditions, and then extend the equation to the entire line using the reflection method.
 
-First, define $w(t,x)=u(t,x)-H(t)$, where $H_x(t)=h(t)$.
+First, define $w(t,x)=u(t,x)-H(t)$, where $H'(t)=h(t)$.
 
 Then our IBVP becomes:
 \begin{equation*}
     \begin{cases}
       \square w= \square u - H''(t)=f(t,x)-H''(t) \equiv F(t,x) & x \geq 0, t>0\\
       w(0,x)=u(0,x)-H(0)=\phi(x) - H(0) \equiv \Phi(x) & x \geq 0\\
-      w_t(0,x) =  u_t(0,x)  - H_t(0)= \psi(x) - H_t(0) \equiv \Psi(x) & x \geq 0\\
-      w_x(0,x) = u_x(t,0) - H_x(0)= u_x(t,0)-h(t) \equiv 0 & t \geq 0
+      w_t(0,x) =  u_t(0,x)  - H'(0)= \psi(x) - H'(0) \equiv \Psi(x) & x \geq 0\\
+      w_x(0,x) = u_x(t,0) - H'(0)= u_x(t,0)-h(t) \equiv 0 & t \geq 0
     \end{cases}       
 \end{equation*}
 
@@ -531,17 +531,17 @@ But this is just the wave equation, giving us the following IVP:
 
 \begin{equation*} 
 \begin{cases}
-w_{tt}=c^2 w_{rr} \\
-u(0,r)=0 \\
+w_{tt}=c^2 w_{rr} & t>0, \, r \geq 0\\
+u(0,r)=0 & r \geq 0\\
 u_t(0,r) = \begin{cases}
   1  & \lvert{r}\rvert \leq 1 \\
   0 &  \lvert{r}\rvert > 1
-  \end{cases}
+  \end{cases} & r \geq 0\\
 \end{cases}
 \end{equation*}
 
 
-So can use d'Alembert's formula to find the solution:
+Although $r$ is nonnegative, since $\varphi=0$ and there are absolute value bars in $\phi$, we can safely use d'Alembert's formula to find the solution:
  $$w(t,r)= \frac{\varphi(r+ct)+\varphi(r-ct)}{2}+\frac{1}{2c} \int_{r-ct}^{r+ct}{\psi(s)ds}$$
  Since $\varphi=0$, 
  $$w(t,r)= \frac{1}{2c} \int_{r-ct}^{r+ct}{\psi(s)ds}$$
