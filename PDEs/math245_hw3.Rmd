@@ -11,15 +11,17 @@ output:
 knitr::opts_chunk$set(echo = TRUE)
 library(tidyverse)
 ```
+##Done: 1, 6
+##Not started: 2-5
+
 
 ## Question 1  (Parity of Solution)
-Prove the following. 
 
-**(a)** If initial conditions of the wave equation on the whole line are even(odd), the solution is
+**(a)** Prove that if initial conditions of the wave equation on the whole line are even(odd), the solution is
 even(odd).
 \newline
-  
-  Consider the IVP
+\newline
+Consider the IVP
 \begin{equation*}
     \begin{cases}
       u_{tt}=c^2u_{xx}\ & -\infty <x<\infty\\
@@ -33,12 +35,11 @@ where $\varphi(x)$ and $\psi(x)$ are even functions, i.e., $\varphi(-x)=\varphi(
 $$u(x,t)= \frac{\varphi(x+ct)+\varphi(x-ct)}{2}+\frac{1}{2c} \int_{x-ct}^{x+ct}{\psi(s)ds}$$
 Now plug in $-x$:
 $$u(-x,t)= \frac{\varphi(-x+ct)+\varphi(-x-ct)}{2}+\frac{1}{2c} \int_{-x-ct}^{-x+ct}{\psi(s)ds}$$
-$$ = \frac{\varphi(x-ct)+\varphi(x+ct)}{2}+\frac{1}{2c} \int_{-x-ct}^{-x+ct}{\psi(-s)ds}$$
+$$= \frac{\varphi(x-ct)+\varphi(x+ct)}{2}+\frac{1}{2c} \int_{-x-ct}^{-x+ct}{\psi(-s)ds}$$
 After setting $y=-s, dy=-ds$ in the integral of $\psi$:
 
 $$ u(-x,t)= \frac{\varphi(x-ct)+\varphi(x+ct)}{2}+\frac{1}{2c} \int_{x-ct}^{x+ct}{\psi(y)dy}=u(x,t).$$
 Therefore, even initial conditions imply that the solution of the wave equation is even. 
-
 
 Similarly, assume $\varphi(x)$ and $\psi(x)$ are odd functions, i.e., $\varphi(-x)=-\varphi(x)$ and $\psi(-x)=-\psi(x)$. Then using D'Alembert's formula, we know $u(-x, t)$ is
 
@@ -49,7 +50,38 @@ After setting $y=-s, dy=-ds$ in the integral of $\psi$:
 $$u(-x,t)= \frac{-\varphi(x-ct)-\varphi(x+ct)}{2}-\frac{1}{2c} \int_{x-ct}^{x+ct}{\psi(-y)dy}=-u(x,t).$$
 Therefore, odd initial conditions imply that the solution of the wave equation is odd.
 
-**(b)** If the initial condition of the heat equation on the whole line is even(odd), the solution is even(odd).
+**(b)** Prove that if the initial condition of the heat equation on the whole line is even(odd), the solution is even(odd).
+
+  Consider the IVP
+\begin{equation*}
+    \begin{cases}
+      u_{t}=k u_{xx} & -\infty <x<\infty\\
+      u(0,x)=f(x)\\
+    \end{cases}       
+\end{equation*}
+
+Then we know 
+
+$$u(x,t)= \frac{1}{\sqrt{4 \pi kt}} \int_{-\infty}^{\infty} e^{-(x-y)^2/4kt}f(y)\;dy $$
+Which means, when $x=-x$:
+$$u(-x,t)= \frac{1}{\sqrt{4 \pi kt}} \int_{-\infty}^{\infty} e^{-(-x-y)^2/4kt}f(y)\;dy $$
+Now use the change of variable $y=-s, dy=-ds$:
+$$u(-x,t)= \frac{-1}{\sqrt{4 \pi kt}} \int_{\infty}^{-\infty} e^{-(-x+s)^2/4kt}f(-s)\;ds $$
+
+$$= \frac{1}{\sqrt{4 \pi kt}} \int_{-\infty}^{\infty} e^{-((-1)(x-s))^2/4kt}f(-s)\;ds $$
+But $e^{-((-1)(x-s))^2/4kt}$ is equivalent to $e^{-(x-s)^2/4kt}$, so we have
+
+$$u(-x,t)= \frac{1}{\sqrt{4 \pi kt}} \int_{-\infty}^{\infty} e^{-(x-s)^2/4kt}f(-s)\;ds $$
+
+Now assume $f$ is odd. By definition we have $f(-s)=-f(s)$, so
+
+$$u(-x,t)=\frac{1}{\sqrt{4 \pi kt}} \int_{-\infty}^{\infty} e^{-(x-s)^2/4kt}f(-s)\;ds = 
+\frac{-1}{\sqrt{4 \pi kt}} \int_{-\infty}^{\infty} e^{-(x-s)^2/4kt}f(s)\;ds = -u(x,t) $$
+
+And therefore our solution is odd when our initial $f(x)$ is an odd function. Similarly, if we assume $f(x)$ is even, by definition we have $f(-s)=f(s)$, so
+$$u(-x,t)=\frac{1}{\sqrt{4 \pi kt}} \int_{-\infty}^{\infty} e^{-(x-s)^2/4kt}f(-s)\;ds = 
+\frac{1}{\sqrt{4 \pi kt}} \int_{-\infty}^{\infty} e^{-(x-s)^2/4kt}f(s)\;ds = u(x,t), $$
+meaning our solution is also even.
 
 
 ## Question 2  (Speed of Heat vs Wave)
@@ -60,20 +92,35 @@ linear function).
 
 (b) If it is a solution of the diffusion equation, find $f$ and show that the speed $a$ is arbitrary.
 
+## Question 3 (Heat Equation with Robin boundary)
+Consider the following problem with a Robin boundary condition:
+\begin{equation*}
+    \begin{cases}
+      u_{t}=k u_{xx} & 0 <x<\infty,0 <t<\infty \\
+      u(0,x)=x & t=0,0 <x<\infty \\
+      u_x(0,t)-2u(0,t)=0 & x=0
+    \end{cases}       
+\end{equation*}
 
 ## Question 4  (Maximum Principle)  
 
-Consider two solutions $u(t,x)$ and $v(t,x)$ of the diffusion equation in $\Omega_T = \{ 0 \leq x \leq l, 0 \leq t \leq \infty \}$
+Consider two solutions $u(t,x)$ and $v(t,x)$ of the diffusion equation in $\{ 0 \leq x \leq l, 0 \leq t \leq \infty \}$
 
-(a) Let $M(T)=$ the maximum of $u(t, x)$ in the closed rectangle $\Omega_T = \{ 0 \leq x \leq l, 0 \leq t \leq \infty \}$. Does $M(T)$ increase or decrease as a function of $T$? Explain.
-
-(b) Let $m(T)=$ the minimum of $u(t, x)$ in the closed rectangle $\Omega_T = \{ 0 \leq x \leq l, 0 \leq t \leq \infty \}$. Does $m(T)$ increase or decrease as a function of $T$? Explain.
-
-(c) **Comparison Principle**
-If $u \leq v$ for $t=0,$ for $x=0, $ for $x=l$, then $u \leq v$ for $0 \leq t \leq \infty$ and $0 \leq x \leq l$.
+(a) Let $M(T)=$ the maximum of $u(t, x)$ in the closed rectangle $\Omega_T = \{ 0 \leq x \leq l, 0 \leq t \leq T\}$. Does $M(T)$ increase or decrease as a function of $T$?
 
 
-## Question 5 (Diffusion Equation with Dissipation). 
+The maximum principle says that if $u(x, t)$ satisfies the diffusion equation in a rectangle $\{ 0 \leq x \leq x, 0 \leq t \leq T \}$, then the maximum value of $u(x, t)$ is assumed either initially $(t = 0)$ or on the lateral sides $(x = 0$ or $x = l)$.
+
+By the definition of maximum, if $u$ assumes a higher value on the lateral sides $x = 0$ or $x = l$ when $T$ is extended from some $T_1$ to a new $T$, $T_2 > T_1$, then the maximum of $u$ will increase to that new value; otherwise, the maximum of $u$ will remain the same. In other words, $M$ is non-decreasing (increases, but not strictly) as a function of $T$.
+
+(b) Let $m(T)=$ the minimum of $u(t, x)$ in the closed rectangle $\Omega_T = \{ 0 \leq x \leq l, 0 \leq t \leq T \}$. Does $m(T)$ increase or decrease as a function of $T$? 
+
+By the definition of minimum, if $u$ assumes a lower value on the lateral sides $x = 0$ or $x = l$ when $T$ is extended from some $T_1$ to a new $T$, $T_2 > T_1$, then the minimum of $u$ will decrease to that new value; otherwise, the minimum of $u$ will remain the same. In other words, $M$ is non-increasing (decreases, but not strictly) as a function of $T$.
+
+(c) Comparison Principle: Show that if $u \leq v$ for $t=0,x=0,$ and $x=l$, then $u \leq v$ for $0 \leq t \leq \infty$ and $0 \leq x \leq l$.
+
+
+## Question 5 (Diffusion Equation with Dissipation)
 Solve the following IVP for constant dissipation $b>0$.
 
 \begin{equation}\label{eqn:dissipation}
@@ -88,4 +135,21 @@ We will use the change of variables $u(t,x)=e^{-bt}v(t,x)$
 
 
 ## Question 6
-Prove that there is no maximum principle for the wave equation.
+
+Suppose that there is a maximum principle for the wave equation and that $u(x,t)$ is a solution to the wave equation in the closed rectangle $\Omega_T = \{ 0 \leq x \leq \pi, \; 0 \leq t \leq \pi/c \}$. Then the maximum of $u$ is assumed either initially (at $t=0$) or on the lines $x=0$ or $x=\pi$.
+
+Consider the particular solution $u(x, t) = \sin x \sin ct$. This clearly satisfies the wave equation:
+$$u_x=\cos x \sin ct $$
+$$u_{xx}=-\sin x \sin ct $$
+$$u_t=\sin x (c \cos ct) $$
+$$u_{tt}=-\sin x (c^2 \sin ct)= c^2 u_{xx}$$
+
+According to our presumed maximum principle, the maximum of $u(x,t)$ would have to be one of the following:
+$$u(x,0)= \sin x \sin 0=0 $$
+$$u(0, t)=\sin 0 \sin ct = 0 $$
+$$u(\pi, t)=\sin \pi \sin ct = 0 $$
+
+But $u(x,t)$ has a higher value when $x=\pi/2$ and $t=\pi/2c$:  
+$$u\left(\frac{\pi}{2}, \frac{\pi}{2c}\right)=\sin \left(\frac{\pi}{2}\right) \sin \left(\frac{\pi}{2}\right)=1$$
+
+This contradicts the definition of maximum, so we have found a counterexample and therefore there is no maximum principle for the wave equation.
