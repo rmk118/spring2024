@@ -11,8 +11,9 @@ output:
 knitr::opts_chunk$set(echo = TRUE)
 library(tidyverse)
 ```
-##Done: 1, 6
-##Not started: 2-5
+##Done: 1, 2, 4, 5, 6. 
+
+##Not Done: 3
 
 
 ## Question 1  (Parity of Solution)
@@ -41,6 +42,7 @@ After setting $y=-s, dy=-ds$ in the integral of $\psi$:
 $$ u(-x,t)= \frac{\varphi(x-ct)+\varphi(x+ct)}{2}+\frac{1}{2c} \int_{x-ct}^{x+ct}{\psi(y)dy}=u(x,t).$$
 Therefore, even initial conditions imply that the solution of the wave equation is even. 
 
+
 Similarly, assume $\varphi(x)$ and $\psi(x)$ are odd functions, i.e., $\varphi(-x)=-\varphi(x)$ and $\psi(-x)=-\psi(x)$. Then using D'Alembert's formula, we know $u(-x, t)$ is
 
 $$u(-x,t)= \frac{\varphi(-x+ct)+\varphi(-x-ct)}{2}+\frac{1}{2c} \int_{-x-ct}^{-x+ct}{\psi(s)ds}$$
@@ -48,7 +50,8 @@ $$= \frac{-\varphi(x-ct)-\varphi(x+ct)}{2}-\frac{1}{2c} \int_{-x-ct}^{-x+ct}{\ps
 
 After setting $y=-s, dy=-ds$ in the integral of $\psi$:
 $$u(-x,t)= \frac{-\varphi(x-ct)-\varphi(x+ct)}{2}-\frac{1}{2c} \int_{x-ct}^{x+ct}{\psi(-y)dy}=-u(x,t).$$
-Therefore, odd initial conditions imply that the solution of the wave equation is odd.
+Therefore, using the uniqueness of the wave equation, odd initial conditions imply that the solution of the wave equation is odd.
+
 
 **(b)** Prove that if the initial condition of the heat equation on the whole line is even(odd), the solution is even(odd).
 
@@ -64,8 +67,10 @@ Then we know
 
 $$u(x,t)= \frac{1}{\sqrt{4 \pi kt}} \int_{-\infty}^{\infty} e^{-(x-y)^2/4kt}f(y)\;dy $$
 Which means, when $x=-x$:
+
 $$u(-x,t)= \frac{1}{\sqrt{4 \pi kt}} \int_{-\infty}^{\infty} e^{-(-x-y)^2/4kt}f(y)\;dy $$
 Now use the change of variable $y=-s, dy=-ds$:
+
 $$u(-x,t)= \frac{-1}{\sqrt{4 \pi kt}} \int_{\infty}^{-\infty} e^{-(-x+s)^2/4kt}f(-s)\;ds $$
 
 $$= \frac{1}{\sqrt{4 \pi kt}} \int_{-\infty}^{\infty} e^{-((-1)(x-s))^2/4kt}f(-s)\;ds $$
@@ -73,7 +78,7 @@ But $e^{-((-1)(x-s))^2/4kt}$ is equivalent to $e^{-(x-s)^2/4kt}$, so we have
 
 $$u(-x,t)= \frac{1}{\sqrt{4 \pi kt}} \int_{-\infty}^{\infty} e^{-(x-s)^2/4kt}f(-s)\;ds $$
 
-Now assume $f$ is odd. By definition we have $f(-s)=-f(s)$, so
+Now assume $f$ is odd. By definition, we have $f(-s)=-f(s)$, so
 
 $$u(-x,t)=\frac{1}{\sqrt{4 \pi kt}} \int_{-\infty}^{\infty} e^{-(x-s)^2/4kt}f(-s)\;ds = 
 \frac{-1}{\sqrt{4 \pi kt}} \int_{-\infty}^{\infty} e^{-(x-s)^2/4kt}f(s)\;ds = -u(x,t) $$
@@ -81,26 +86,143 @@ $$u(-x,t)=\frac{1}{\sqrt{4 \pi kt}} \int_{-\infty}^{\infty} e^{-(x-s)^2/4kt}f(-s
 And therefore our solution is odd when our initial $f(x)$ is an odd function. Similarly, if we assume $f(x)$ is even, by definition we have $f(-s)=f(s)$, so
 $$u(-x,t)=\frac{1}{\sqrt{4 \pi kt}} \int_{-\infty}^{\infty} e^{-(x-s)^2/4kt}f(-s)\;ds = 
 \frac{1}{\sqrt{4 \pi kt}} \int_{-\infty}^{\infty} e^{-(x-s)^2/4kt}f(s)\;ds = u(x,t), $$
-meaning our solution is also even.
+meaning (using the uniqueness of the heat equation), our solution is also even.
 
 
 ## Question 2  (Speed of Heat vs Wave)
 Consider the traveling wave $u(x, t) = f(x-at)$ where $f$ is a given function of one variable.
 
-(a) If it is a solution of the wave equation, show that the speed must be $a =\pm c$ (unless $f$ is a
-linear function).
+(a) If it is a solution of the wave equation, show that the speed must be $a =\pm c$ (unless $f$ is a linear function).
+
+\begin{equation}\label{eqn:tderiv}
+u_t = -af'(x-at), \quad u_{tt}=a^2 f''(x-at)
+\end{equation}
+
+\begin{equation}\label{eqn:xderiv}
+u_x = f'(x-at), \quad u_{xx}=f''(x-at)
+\end{equation}
+
+If $u(x, t) = f(x-at)$ is a solution to the wave equation, then we must have $u_{tt}=c^2 u_{xx}$. By substituting (\ref{eqn:tderiv}) and (\ref{eqn:xderiv}) into the PDE, we get
+
+$$a^2 f''=c^2f'' ,$$
+which implies at $a^2=c^2$, or $a= \pm c$. However, if $f$ is a linear function, then the second derivative $f''=0$ and we cannot conclude that $a^2=c^2$.
+
 
 (b) If it is a solution of the diffusion equation, find $f$ and show that the speed $a$ is arbitrary.
 
+If $u(x, t) = f(x-at)$ is a solution to the wave equation, then we must have $u_{t}=k u_{xx}$. By substituting (\ref{eqn:tderiv}) and (\ref{eqn:xderiv}) into the PDE, we get
+
+$$-af'=kf'' $$
+$$-af'=kf'' $$
+$$ \frac{-a}{k}= \frac{f''}{f'} $$
+Now if we set $\xi=x-at$, 
+$$\frac{-a}{k}=\frac{f''}{f'}= \frac{d}{d\xi} \ln(f') $$
+So integrating with respect to $\xi$,
+$$\frac{-a}{k}\xi+C= \ln (f')$$
+$$ f'(\xi) = e^{ \frac{-a}{k} \xi+C_1} = C_2 e^{\frac{-a}{k} \xi} $$
+Now if we integrate again with respect to $\xi$,
+$$f(\xi)=\frac{-k}{a}C_2 e^{\frac{-a}{k}\xi}+C_3 $$
+
+Set a new constant $C_4=\frac{-k}{a}C_3$,
+$$f(\xi)=C_4 e^{\frac{-a}{k}\xi}+C_3 $$
+
+If we change back to the original variables,
+$$f(x-at)=C_4 e^ \frac{-a(x-at)}{k}+C_3 $$
+
+Thus, we found the solution
+\begin{equation} \label{eqn:findf}
+u(x, t) = f(x-at)=A e^{\frac{-a}{k}(x-at)}+B,
+\end{equation}
+where $A$ and $B$ are constants.
+
+We can check that this satisfies the heat equation:
+$$u_t=A\frac{a^2}{k} e^ {\frac{-a}{k}(x-at)}$$
+
+$$u_x=A\frac{-a}{k} e^ {\frac{-a}{k}(x-at)}$$
+
+$$u_{xx}=A\frac{a^2}{k^2} e^ {\frac{-a}{k}(x-at)}$$
+$$u_t-ku_{xx}=A\frac{a^2}{k} e^ {\frac{-a}{k}(x-at)}-kA\frac{a^2}{k^2} e^ {\frac{-a}{k}(x-at)}=0$$
+However, (\ref{eqn:findf}) will be a solution regardless of the value of $a$; i.e., $a$ is arbitrary.
+
 ## Question 3 (Heat Equation with Robin boundary)
 Consider the following problem with a Robin boundary condition:
-\begin{equation*}
+\begin{equation*} (\ast)
     \begin{cases}
       u_{t}=k u_{xx} & 0 <x<\infty,0 <t<\infty \\
       u(0,x)=x & t=0,0 <x<\infty \\
       u_x(0,t)-2u(0,t)=0 & x=0
     \end{cases}       
 \end{equation*}
+
+
+The purpose of this exercise is to verify the solution formula for $(\ast)$. Let $f(x)=x$ for $x>0$ and let $f(x)=x+1-e^{2x}$ for $x<0$, and let
+
+$$v(x,t)= \frac{1}{\sqrt{4 \pi kt}} \int_{-\infty}^{\infty} e^{-(x-y)^2/4kt}f(y)\;dy. $$
+**(a)** What PDE and initial conditions does $v(x,t)$ satisfy for $-\infty < x < \infty$?
+
+$v(x,t)$ satisfies
+
+\begin{equation*}
+    \begin{cases}
+      u_{t}=k u_{xx} & 0 <x<\infty,0 <t<\infty \\
+      u(0,x)=x & t=0,0 <x<\infty \\
+    \end{cases}       
+\end{equation*}
+
+
+**(b)** Let $w=v_x-2v$. What PDE and initial condition does $w(x,y)$ satisfy for $-\infty < x < \infty$?
+
+
+
+**(c)** Show that $f'(x)-2f(x)$ is an odd function for $x \neq 0$.
+\begin{equation*}  f(x)=
+\begin{cases}
+   x & \text{ if } x >0 \\
+   x+1-e^{2x} & \text{ if } x<0\\
+\end{cases}
+\end{equation*}
+
+\begin{equation*}  f'(x)=
+\begin{cases}
+   1 & \text{ if } x >0 \\
+   1-2e^{2x} & \text{ if } x<0\\
+\end{cases}
+\end{equation*}
+
+\begin{equation*}  f'(x)-2f(x)=
+\begin{cases}
+   1-2x & \text{ if } x >0 \\
+   -1-2x & \text{ if } x<0\\
+\end{cases}
+\end{equation*}
+
+
+Which means that
+\begin{equation*}  f'(-x)-2f(-x)=
+\begin{cases}
+   1-2(-x) & \text{ if } (-x) >0 \\
+   -1-2(-x) & \text{ if } (-x) <0\\
+\end{cases}
+\end{equation*}
+
+But this is equivalent to
+\begin{equation*}
+f'(-x)-2f(-x)=
+\begin{cases}
+   1+2x & \text{ if } x <0 \\
+    -1+2x & \text{ if } x>0\\
+\end{cases}
+\end{equation*}
+
+which is exactly $-(f'(x)-2f(x))$. Therefore, $f'(x)-2f(x)$ is an odd function of $x$.
+
+**(d)** Use Exercise 2.4.11 to show that $w$ is an odd function of $x$.
+
+
+
+**(e)** Deduce that $v(x, t)$ satisfies $(\ast)$ for $x>0$. Assuming uniqueness, deduce that the solution of $(\ast)$ is given by
+$$v(x,t)= \frac{1}{\sqrt{4 \pi kt}} \int_{-\infty}^{\infty} e^{-(x-y)^2/4kt}f(y)\;dy. $$
+
 
 ## Question 4  (Maximum Principle)  
 
@@ -119,6 +241,9 @@ By the definition of minimum, if $u$ assumes a lower value on the lateral sides 
 
 (c) Comparison Principle: Show that if $u \leq v$ for $t=0,x=0,$ and $x=l$, then $u \leq v$ for $0 \leq t \leq \infty$ and $0 \leq x \leq l$.
 
+Define $w(t,x)=u(t,x)-v(t,x)$ and note that $w$ solves the heat equation in $\{ 0 \leq x \leq l, 0 \leq t \leq T \}$:
+$$w_t-kw_{xx}=u_t-v_t-k(u_{xx}-v_{xx})=(u_t-ku_{xx})-(v_t-kv_{xx})=0-0=0 $$
+Since we are assuming $u \leq v$ for $t=0,x=0,$ and $x=l$, then $w \leq 0$ for $t=0,x=0,$ and $x=l$. But by the Maximum Principle, $w$ assumes its maximum value on one of those three lines. This means we can take $T$ to be arbitrarily large and still have $w \leq 0$, i.e., $w \leq 0$ on $\{ 0 \leq x \leq l, 0 \leq t \leq \infty \}$ and therefore $u \leq v$ for $0 \leq t \leq \infty$ and $0 \leq x \leq l$.
 
 ## Question 5 (Diffusion Equation with Dissipation)
 Solve the following IVP for constant dissipation $b>0$.
@@ -131,8 +256,24 @@ u(0,x)=\psi(x), & -\infty \leq x \leq \infty
 \end{cases}
 \end{equation}
 
-We will use the change of variables $u(t,x)=e^{-bt}v(t,x)$
+We will use the change of variables $u(t,x)=e^{-bt}v(t,x)$, and differentiate to find that: 
 
+$$u_t=e^{-bt}v_t-be^{-bt}v$$
+$$u_x=e^{-bt}v_x$$
+$$u_{xx}=e^{-bt}v_{xx}$$
+
+So $u_t-ku_{xx}+bu=0$ becomes  
+
+$$e^{-bt}v_t-be^{-bt}v-k \left(e^{-bt}v_{xx}\right) + be^{-bt}v=0 $$
+After canceling the $be^{-bt}v$ terms and dividing by $e^{-bt}$ (which we can do because it cannot equal zero), we are left with 
+
+$$v_t-kv_{xx}=0, \quad v(0,x)=u(0,x)=\psi(x) $$
+Hence, the general solution of $v$ is
+
+$$v(x,t)= \frac{1}{\sqrt{4 \pi kt}} \int_{-\infty}^{\infty} e^{-(x-y)^2/4kt}f(y)\;dy, $$
+and the general solution of $u$ is therefore
+
+$$u(x,t)= \frac{e^{-bt}}{\sqrt{4 \pi kt}} \int_{-\infty}^{\infty} e^{-(x-y)^2/4kt}f(y)\;dy. $$
 
 ## Question 6
 
