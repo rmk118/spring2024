@@ -1,7 +1,7 @@
 ---
 title: "MATH 245 Homework 3"
 author: "Ruby Krasnow and Tommy Thach"
-date: "2024-02-23"
+date: "2024-02-27"
 output:
   pdf_document:
     extra_dependencies: ["derivative", "tcolorbox", "xcolor"]
@@ -11,10 +11,6 @@ output:
 knitr::opts_chunk$set(echo = TRUE)
 library(tidyverse)
 ```
-##Done: 1, 2, 4, 5, 6. 
-
-##Not Done: 3
-
 
 ## Question 1  (Parity of Solution)
 
@@ -162,17 +158,37 @@ $$v(x,t)= \frac{1}{\sqrt{4 \pi kt}} \int_{-\infty}^{\infty} e^{-(x-y)^2/4kt}f(y)
 
 $v(x,t)$ satisfies
 
-\begin{equation*}
+\begin{equation} \label{eqn:heatIVP}
     \begin{cases}
-      u_{t}=k u_{xx} & 0 <x<\infty,0 <t<\infty \\
-      u(0,x)=x & t=0,0 <x<\infty \\
+      v_{t}=k v_{xx} & -\infty <x<\infty,0 <t<\infty \\
+      v(0,x)=f(x) & -\infty  <x<\infty \\
     \end{cases}       
-\end{equation*}
+\end{equation}
+
+where 
+\begin{equation} f(x)=
+    \begin{cases}
+      x & x>0 \\
+      x+1-e^{2x} & x<0 \\
+    \end{cases}       
+\end{equation}
 
 
 **(b)** Let $w=v_x-2v$. What PDE and initial condition does $w(x,y)$ satisfy for $-\infty < x < \infty$?
 
+Let $v(x,t)$ be a solution of $v_x=v_{tt}$. Now, we know that any partial derivatives of a solution to the heat equation are also solutions, and any linear combination of solutions is also a solution. Thus, if $v(x,t)$ is a solution to $v_x=v_{tt}$, so is $w=v_x-2v$. The initial conditions will be 
 
+\begin{equation*}
+w(x,0)=v_x(0,x)-2v(0,x)= f'(x)-2f(x) = \begin{cases}
+   1-2x & \text{ if } x >0 \\
+   -1-2x & \text{ if } x<0\\
+\end{cases}
+\end{equation*}
+
+Thus, $w(x,t)$ satisfies the PDE $v_x=v_{tt}$ with initial conditions $$w(x,0)= \begin{cases}
+   1-2x & \text{ if } x >0 \\
+   -1-2x & \text{ if } x<0\\
+\end{cases}$$
 
 **(c)** Show that $f'(x)-2f(x)$ is an odd function for $x \neq 0$.
 \begin{equation*}  f(x)=
@@ -218,11 +234,36 @@ which is exactly $-(f'(x)-2f(x))$. Therefore, $f'(x)-2f(x)$ is an odd function o
 
 **(d)** Use Exercise 2.4.11 to show that $w$ is an odd function of $x$.
 
+By Problem 1 in this assignment, we know that given the diffusion equation on the whole line with the usual initial condition $u(x, 0)=\phi(x), \phi(x)$ odd, the solution $u(x, t)$ is also an odd function of $x$.  
 
+To summarize, we know that
+\begin{itemize}
+  \item $f'(x)-2f(x)$ is an odd function of $x$
+  \item Given a diffusion equation with odd initial conditions, the solution is also odd
+  \item $w(x,t)$ is a solution to the diffusion equation with initial conditions $f'(x)-2f(x)$
+\end{itemize}
+
+Combining these three points, it is clear that $w(x,t)$ must be an odd function of $x$.
+\newline
 
 **(e)** Deduce that $v(x, t)$ satisfies $(\ast)$ for $x>0$. Assuming uniqueness, deduce that the solution of $(\ast)$ is given by
 $$v(x,t)= \frac{1}{\sqrt{4 \pi kt}} \int_{-\infty}^{\infty} e^{-(x-y)^2/4kt}f(y)\;dy. $$
 
+Since $w(x,t)$ is an odd function, it must automatically satisfy the boundary conditions $w(0,t)=0$. We can solve the problem on the half-line by restricting $x>0$. We know that the solution to 
+$$w_t=kw_{xx}, \quad w(x,0)=f'(x)-2f(x), \quad -\infty <x<\infty $$
+
+is given by $$w(x,t)= \frac{1}{\sqrt{4 \pi kt}} \int_{-\infty}^{\infty} e^{-(x-y)^2/4kt} \left[f'(y)-2f(y) \right]\;dy. $$
+
+Now we can use our solution for $w$ to solve for $v$:
+$$v_x-2v= \frac{1}{\sqrt{4 \pi kt}} \int_{-\infty}^{\infty} e^{-(x-y)^2/4kt} \left[f'(y)-2f(y) \right]\;dy $$
+$$v_x-2v= \frac{1}{\sqrt{4 \pi kt}} \int_{-\infty}^{\infty} e^{-(x-y)^2/4kt} f'(y)\;dy - 
+\frac{2}{\sqrt{4 \pi kt}} \int_{-\infty}^{\infty} e^{-(x-y)^2/4kt} f(y)\;dy$$
+
+
+We can see that the first term on the right-hand side is the solution to $(vx)_t = k(vx)_{xx}, -\infty<x<\infty$ with the initial condition $v_x(x, 0) = f'(x)$, i.e., it equals $v_x$. Thus, we can subtract $v_x$ from both sides of the above equation and divide by $-2$ to find show that $(\ast)$ is indeed satisfied by
+$$v(x,t)= \frac{1}{\sqrt{4 \pi kt}} \int_{-\infty}^{\infty} e^{-(x-y)^2/4kt}f(y)\;dy, \quad x>0 $$
+
+Because any solution satisfying the heat equation with specified initial and boundary conditions must be the one and only solution, this must be the unique solution to $(\ast)$.
 
 ## Question 4  (Maximum Principle)  
 
