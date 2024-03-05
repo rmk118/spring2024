@@ -1,0 +1,9 @@
+site,position,elevation_m
+GW,low,0.4
+GW,high,1.09
+TB,low,0.75
+TB,high,1.5
+CP,low,1.75
+CP,high,2.73
+SCP,low,0.33
+SCP,high,1.18

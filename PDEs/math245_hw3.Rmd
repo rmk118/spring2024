@@ -1,7 +1,7 @@
 ---
 title: "MATH 245 Homework 3"
 author: "Ruby Krasnow and Tommy Thach"
-date: "2024-02-27"
+date: "2024-03-01"
 output:
   pdf_document:
     extra_dependencies: ["derivative", "tcolorbox", "xcolor"]
@@ -260,7 +260,7 @@ $$v_x-2v= \frac{1}{\sqrt{4 \pi kt}} \int_{-\infty}^{\infty} e^{-(x-y)^2/4kt} f'(
 \frac{2}{\sqrt{4 \pi kt}} \int_{-\infty}^{\infty} e^{-(x-y)^2/4kt} f(y)\;dy$$
 
 
-We can see that the first term on the right-hand side is the solution to $(vx)_t = k(vx)_{xx}, -\infty<x<\infty$ with the initial condition $v_x(x, 0) = f'(x)$, i.e., it equals $v_x$. Thus, we can subtract $v_x$ from both sides of the above equation and divide by $-2$ to find show that $(\ast)$ is indeed satisfied by
+We can see that the first term on the right-hand side is the solution to $(v_x)_t = k(v_x)_{xx}, -\infty<x<\infty$ with the initial condition $v_x(x, 0) = f'(x)$, i.e., it equals $v_x$. Thus, we can subtract $v_x$ from both sides of the above equation and divide by $-2$ to find show that $(\ast)$ is indeed satisfied by
 $$v(x,t)= \frac{1}{\sqrt{4 \pi kt}} \int_{-\infty}^{\infty} e^{-(x-y)^2/4kt}f(y)\;dy, \quad x>0 $$
 
 Because any solution satisfying the heat equation with specified initial and boundary conditions must be the one and only solution, this must be the unique solution to $(\ast)$.

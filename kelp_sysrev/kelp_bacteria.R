@@ -2,6 +2,7 @@
 
 library(PRISMAstatement)
 library(tidyverse)
+library(clipr)
 
 prisma(found = 1448,
        found_other = 106,
@@ -17,3 +18,8 @@ prisma(found = 1448,
 #files for full-text screening
 inital_screen <- read_csv("./kelp_sysrev/initial_screen.csv")
 
+blank_table <- read_clip_tbl()
+
+blank_table %>% bind_rows(blank_table, blank_table) %>% arrange(title) %>% write_clip()
+
+blank_table%>% write_clip()
