@@ -1,0 +1,179 @@
+---
+title: "BIOL 274 Homework 6"
+author: "Ruby Krasnow"
+date: "2024-03-15"
+output:
+  pdf_document:
+    extra_dependencies: ["derivative", "tcolorbox", "xcolor"]
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+```
+
+## Question 1  
+Write each of the following systems in matrix/vector notation:
+
+(a)
+\begin{align*}
+      x' &= 4x-6y \\
+      y' &= 0.7x + y
+\end{align*}
+
+\begin{equation*}
+\begin{bmatrix} x' \\ y' \end{bmatrix} = \begin{bmatrix} 
+    4 & -6 \\
+    0.7 & 1 \end{bmatrix} \begin{bmatrix} x \\ y \end{bmatrix}, \quad \text{ or }
+  \end{equation*}
+
+\begin{equation*}
+\dot{X} = \begin{bmatrix} 
+    4 & -6 \\
+    0.7 & 1 \end{bmatrix} X
+  \end{equation*}
+
+(b)
+\begin{align*}
+    \frac{dx_1}{dt}-16x_2 &=-2x_1 \\
+    \frac{dx_2}{dt}+4x_1 & =0
+\end{align*}
+
+\begin{equation*}
+\begin{bmatrix} x_1' \\ x_2' \end{bmatrix} = \begin{bmatrix} 
+    -2 & 16 \\
+    -4 & 0 \end{bmatrix} \begin{bmatrix} x_1 \\ x_2 \end{bmatrix}, \quad \text{ or }
+  \end{equation*}
+
+
+\begin{equation*}
+\dot{X} = \begin{bmatrix} 
+    -2 & 16 \\
+    -4 & 0 \end{bmatrix} X
+  \end{equation*}
+
+(c)
+\begin{align*}
+    \dot{v}=v-u+\sin{t} \\
+    \dot{u}=2v+u-\cos{t}
+\end{align*}
+
+\begin{equation*}
+\begin{bmatrix} \dot{v} \\ \dot{u} \end{bmatrix} = \begin{bmatrix} 
+    1 & -1 \\
+    2 & 1 \end{bmatrix} \begin{bmatrix}v \\ u \end{bmatrix} + \begin{bmatrix} \sin{t} \\ -\cos{t} \end{bmatrix}, \quad \text{ or }
+  \end{equation*}
+  
+\begin{equation*}
+\dot{V} = \begin{bmatrix} 
+    1 & -1 \\
+    2 & 1 \end{bmatrix} V + \begin{bmatrix} \sin{t} \\ -\cos{t} \end{bmatrix}
+  \end{equation*}
+  
+## Question 2  
+
+Find the general solution for each of the following systems:  
+(a)
+\begin{align*}
+      \dot{x} &= 9x-8y \\
+      \dot{y} &= 24x-19y
+\end{align*}
+
+\begin{equation*}
+A = \begin{bmatrix} 
+    9 & -8 \\
+    24 & -19 \end{bmatrix}
+  \end{equation*}
+  
+\begin{equation*}
+\det{\begin{bmatrix} 
+    9-\lambda & -8 \\
+    24 & -19\lambda \end{bmatrix}}=0 \\
+\end{equation*}
+
+$$ \left(9-\lambda\right) \left(-19-\lambda\right)+192=0 $$
+\begin{equation*}
+-171-9\lambda+19\lambda+ \lambda^2+192 = \lambda^2+10\lambda+21 =(\lambda+7)(\lambda+3)
+\end{equation*}
+
+So we have found two distinct real eigenvalues, $\lambda_1=-7, \; \lambda_2=-3$. Now we need to solve $AX=\lambda X$, or $(A-\lambda I)X=0$ with these two values of $\lambda$. Let's start with the first eigenvalue, -7.
+
+\begin{equation*}
+A+7I=\begin{bmatrix} 
+    9+7 & -8 \\
+    24 & -19+7 \end{bmatrix}= \begin{bmatrix} 
+    16 & -8 \\
+    24 & -12 \end{bmatrix} \end{equation*}
+    
+Now we use Gauss-Jordan elimination:
+ \begin{equation*}   
+   \begin{bmatrix} 
+  16 & -8 \\  
+  24 & -12   \end{bmatrix} \longrightarrow{}
+ \begin{bmatrix} 
+  -2 & 1 \\  
+  -2 & 1
+ \end{bmatrix}
+\longrightarrow{}
+ \begin{bmatrix} 
+  -2 & 1 \\  
+  0 & 0 \end{bmatrix} \end{equation*}
+  
+ \begin{equation*} 
+  -2x_1+x_2=0 \quad \rightarrow{} \quad x_2=2x_1 \quad \rightarrow{} \quad 
+  v_1=
+   \begin{bmatrix} 1 \\ 2  \end{bmatrix}
+\end{equation*}
+
+And repeat for the second eigenvalue, -3:
+\begin{equation*} A+3I=\begin{bmatrix} 
+    9+3 & -8 \\
+    24 & -19+3 \end{bmatrix}= \begin{bmatrix} 
+    12 & -8 \\
+    24 & -16 \end{bmatrix}
+\end{equation*}
+    
+ \begin{equation*}   
+   \begin{bmatrix} 
+  12 & -8 \\  
+  24 & -16   \end{bmatrix} \longrightarrow{}
+ \begin{bmatrix} 
+  -3 & 2 \\  
+  0 & 0
+ \end{bmatrix} \end{equation*}
+  
+ \begin{equation*} 
+  -3x_1+2x_2=0 \quad \rightarrow{} \quad 2x_2=3x_1 \quad \rightarrow{} \quad v_2=
+   \begin{bmatrix} 2 \\ 3  \end{bmatrix}
+\end{equation*}
+
+So we have found $\lambda_1=-7$ with eigenvector $\begin{bmatrix} 1 \\ 2  \end{bmatrix}$ and $\lambda_2=-3$ with eigenvector $\begin{bmatrix} 2 \\ 3  \end{bmatrix}$. We can plug these values into our formula for the general solution of a system of linear first-order ODEs with constant coefficients:
+
+$$y=C_1e^{\lambda_1 t}v_1 +C_2e^{\lambda_2 t}v_2$$
+\begin{tcolorbox}[colback=white, title=Solution]
+$$y=C_1e^{-7 t}\begin{bmatrix} 1 \\ 2  \end{bmatrix} +C_2e^{-3 t}\begin{bmatrix} 2 \\ 3 \end{bmatrix}$$
+\end{tcolorbox}
+
+\newpage
+Let's also do a quick check using R:
+```{r}
+A <- matrix(c(9, -8, 24, -19), 2, 2, byrow=TRUE)
+
+lambda1 <- eigen(A)$values[1] # eigenvalue 1
+v1<- eigen(A)$vectors[,1] / eigen(A)$vectors[1,1] #eigenvector 1
+# divided by the first element to give integer values
+
+lambda2 <- eigen(A)$values[2] # eigenvalue 2
+v2 <- eigen(A)$vectors[,2] / eigen(A)$vectors[1,2]*2 #eigenvector 2
+# divided by the first element and multiplied by 2 to give integer values
+```
+
+```{r}
+paste("lambda 1 = ", lambda1, " with eigenvector [", v1[1], ",", v1[2], "]", sep="")
+paste("lambda 2 = ", lambda2, " with eigenvector [", v2[1], ",", v2[2], "]", sep="")
+```
+
+(b)
+
+$$y=C_1e^{-t} \begin{bmatrix} \sin{2t} \\ \cos{2t} \end{bmatrix}+
+C_2e^{-t} \begin{bmatrix} -\cos{2t} \\ \sin{2t} \end{bmatrix} $$
