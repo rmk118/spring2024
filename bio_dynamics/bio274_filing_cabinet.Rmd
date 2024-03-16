@@ -16,3 +16,21 @@ ggplot()+
   labs(x="P", y="dP/dt", color="type")
 ```
 
+\newpage
+Let's first do a quick check of our eigenvalues and eigenvectors using R:
+```{r}
+A <- matrix(c(9, -8, 24, -19), 2, 2, byrow=TRUE)
+
+lambda1 <- eigen(A)$values[1] # eigenvalue 1
+v1<- eigen(A)$vectors[,1] / eigen(A)$vectors[1,1] #eigenvector 1
+# divided by the first element to give integer values
+
+lambda2 <- eigen(A)$values[2] # eigenvalue 2
+v2 <- eigen(A)$vectors[,2] / eigen(A)$vectors[1,2]*2 #eigenvector 2
+# divided by the first element and multiplied by 2 to give integer values
+```
+
+```{r}
+paste("lambda 1 = ", lambda1, " with eigenvector [", v1[1], ",", v1[2], "]", sep="")
+paste("lambda 2 = ", lambda2, " with eigenvector [", v2[1], ",", v2[2], "]", sep="")
+```
