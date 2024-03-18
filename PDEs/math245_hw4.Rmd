@@ -1,0 +1,95 @@
+---
+title: "MATH 245 Homework 4"
+author: "Ruby Krasnow and Tommy Thach"
+date: "2024-03-18"
+output:
+  pdf_document:
+    extra_dependencies: ["tcolorbox", "xcolor"]
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+```
+
+## Question 1: Find eigenvalues and eigenfunctions
+
+**(a)**
+
+$- \frac{d^2}{dx^2}X(x)=\lambda X(x)$ in $0 < x < l$ with boundary conditions $X'(0) = 0 = X(l)$.
+
+**(b)**
+
+$x^2 X''(x) + xX'(x)+\lambda X(x) = 0$ in $1 < x < e$ with boundary conditions $X(1) = 0 = X(e)$.
+
+**(c)**  
+
+On the interval $0 \leq x \leq 1$ of length one, consider the eigenvalue problem
+$$-X'' = \lambda X,\quad  X'(0) + X(0) = 0,\quad X(1) = 0$$
+
+(i) Find an eigenfunction with eigenvalue zero. Call it $X_0(x)$.
+
+(ii) Find an equation for the positive eigenvalues $\lambda = \beta^2$.
+
+(iii) Show graphically from part (b) that there are an infinite number of positive eigenvalues.
+
+(iv) Is there a negative eigenvalue?
+
+## Question 2  
+Find the Fourier-series of $f(x)$. Does the Fourier-series converge (i) pointwise, or (ii)
+uniformly?
+
+**(a)**
+\begin{equation*} f(x)=
+    \begin{cases}
+      1-\lvert x \rvert & \lvert x \rvert \leq 1\\
+      1 & 1 < \lvert x \rvert \leq \pi\\
+    \end{cases}       
+\end{equation*}
+
+
+**(b)**
+\begin{equation*} f(x)=\lvert x \rvert=
+    \begin{cases}
+      -x & -\pi \leq x \leq 0 \\
+      x &  0<x\leq \pi \\
+    \end{cases}       
+\end{equation*}
+
+**(c)**
+$$f(x)=x+x^2, \quad -\pi \leq x \leq \pi $$
+
+## Question 3
+
+**(a)** Find the Fourier-sine-series of
+\begin{equation*} f(x)=
+    \begin{cases}
+      1 & 0 < x < \pi /2 \\
+      2 &   \pi /2 < x < \pi \\
+    \end{cases}       
+\end{equation*}
+
+**(b)** Find the Fourier-cosine-series of $f(x)= \lvert \sin{x} \rvert$. Then find
+$$\sum^\infty_{k=1} \frac{1}{4k^2-1} $$
+
+**(c)** The Riemann Zeta function is defined for $s > 1$ by
+$$ \zeta(s)= \sum^\infty_{n=1} \frac{1}{n^s}$$
+
+By computing the Fourier series of $x^2$ over $-\pi<x<\pi$ and using Parseval’s identity, compute 
+$\zeta(4)$.
+
+**(d)** Use the Fourier series in 2c and the pointwise convergence theorem to find $\zeta(2)$. Then find
+$$\sum^\infty_{n=1} \frac{1}{(2n-1)^2} $$
+
+## Question 4
+Compute the complex Fourier series of the following functions:
+
+**(a)** Compute the complex Fourier series of $f(x) = e^x$ and show that
+
+$$\coth{\pi}= \frac{1}{\pi}+ \frac{2}{\pi}  \left( \frac{1}{1+1^2} +  \frac{1}{1+2^2} +  \frac{1}{1+3^2} + \;...\right) $$
+
+**(b)** Find the complex Fourier series of $xe^{ix}$. Then use your result to find the Fourier series of $x \cos{x}$ and $x \sin{x}$.
+
+## Question 5. 
+
+Find the function represented by the new series which is obtained by termwise integration of the following series from $0$ to $x$.
