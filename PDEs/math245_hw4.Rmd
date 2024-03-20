@@ -93,3 +93,5 @@ $$\coth{\pi}= \frac{1}{\pi}+ \frac{2}{\pi}  \left( \frac{1}{1+1^2} +  \frac{1}{1
 ## Question 5. 
 
 Find the function represented by the new series which is obtained by termwise integration of the following series from $0$ to $x$.
+
+$$ \sum^\infty_{k=1} (-1)^{k+1} \frac{\cos{kx}}{k}=\log{  \left(2 \cos{\left(\frac{x}{2}\right)}\right) }, \quad -\pi<x<\pi$$
