@@ -1,0 +1,32 @@
+---
+title: "BIOL 274 Homework 7"
+author: "Ruby Krasnow"
+date: "2024-03-22"
+output:
+  pdf_document:
+    extra_dependencies: ["derivative", "tcolorbox", "xcolor"]
+---
+# Visualizing Solutions of Linear Systems with Constant Coefficients
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+```
+
+For each of the following systems, state the general solution and sketch the phase portrait (with at least 4 different solutions / ICs shown):
+
+## Question 1 
+
+## Question 2
+
+## Question 3
+
+## Question 4
+
+## Question 5
+
+## Question 6
+
+## Question 7
+
+## Question 8

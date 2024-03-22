@@ -1,7 +1,7 @@
 ---
 title: "MATH 245 Homework 4"
 author: "Ruby Krasnow and Tommy Thach"
-date: "2024-03-18"
+date: "2024-03-22"
 output:
   pdf_document:
     extra_dependencies: ["tcolorbox", "xcolor"]
@@ -14,26 +14,166 @@ library(tidyverse)
 
 ## Question 1: Find eigenvalues and eigenfunctions
 
-**(a)**
+### (a)  
 
-$- \frac{d^2}{dx^2}X(x)=\lambda X(x)$ in $0 < x < l$ with boundary conditions $X'(0) = 0 = X(l)$.
+$- \frac{d^2}{dx^2}X(x)=\lambda X(x)$ in $0 < x < l$ with boundary conditions $X'(0) = 0 = X(l)$
 
-**(b)**
+
+\underline{Case 1:} Positive eigenvalues, $\lambda = \beta^2 >0$
+
+Re-writing as $X''+\lambda X=0$, we will get the characteristic equation: $r^2+\beta^2=0$. Since our characteristic equation has complex roots $r= \pm i\beta$, our solutions take the form 
+$$X(x)=A\sin{(\beta x)}+B\cos{(\beta x)}$$
+Differentiating, we find that 
+$$X'(x)=\beta A\cos{(\beta x)}-\beta B\sin{(\beta x)}$$
+Now plugging in our initial condition $X'(0) = 0$, we get
+$X'(0)=\beta A=0$. And since we are in a case where $\beta \neq 0$, this means $B=0$ so $X(x)=A\sin{(\beta x)}$. Now we use our boundary condition $X(l)=0$ to get $X(l)=A\sin{(\beta l)}=0$. If $A=0$, then $X(0)=0$ and this contradicts the definition of an eigenfunction. Therefore, we must have $\sin{(\beta l)}=0$, which can only occur if $\beta = \frac{(2n+1)\pi}{l}$. Therefore, this case gives us eigenvalues 
+
+$$\lambda_n= \left(\frac{(2n+1)\pi}{l}\right)^2 \quad n=1,2,3... $$
+with eigenfunctions
+$$X_n(x)=\sin{\left(\frac{(2n+1)\pi x}{l}\right)}$$
+
+\underline{Case 2:} Zero eigenvalues, $\lambda=0$
+$X''=0$ implies that $X(x)$ is of the form $Ax+B$, with derivative $X'(x)=A$. Now plugging in our initial condition $X'(0) = 0$, we get $A=0$, which means $X(x)=B$. But from the boundary condition $X(l)=0$, we get $B=0$ and so $X(0)=0$. Therefore, there are no eigenfunctions $X(x)$ that satisfy $- \frac{d^2}{dx^2}X(x)=\lambda X(x)$ when $\lambda=0$ and hence no zero eigenvalues.
+
+\underline{Case 3:} Negative eigenvalues, $\lambda = -\beta^2 <0$
+This case gives us the characteristic equation: $r^2-\beta^2=0$. Since our characteristic equation has distinct real roots $r= \pm \beta$, our solutions take the form 
+$$X(x)=Ae^{\beta x}+Be^{-\beta x}$$
+Differentiating, we find that
+$$X'(x)=\beta Ae^{\beta x}-\beta Be^{-\beta x}$$
+
+$$X'(0)=\beta A-\beta B=0$$
+Since we are in a case where $\beta \neq 0$, this means $A-B=0$, or $A=B$. Then the boundary condition gives
+$$X(l)=Be^{\beta l}+Be^{-\beta l}=0$$
+
+Since $e^{\beta l}$ and $e^{-\beta l}$ are nonzero for all values of $l$, we must have $B=0$, implying that again $X(x)=0$. 
+
+
+Thus, this problem has only positive eigenvalues and their associated eigenfunctions as found in Case 1.
+
+
+### (b) 
 
 $x^2 X''(x) + xX'(x)+\lambda X(x) = 0$ in $1 < x < e$ with boundary conditions $X(1) = 0 = X(e)$.
 
-**(c)**  
+We recognize this equation as having the same form as a second-order Cauchy-Euler equation, a linear homogeneous ODE of the form $ax^2y+bxy'+cy=0$ with the auxiliary equation $ar(r-1)+br+c=0$. Here, $a=b=1$ and $c=\lambda$, so we have
+
+$$r(r-1)+r+\lambda=0$$
+$$r^2-r+r+\lambda=0$$
+$$r^2+\lambda=0$$
+\underline{Case 1:} Positive eigenvalues, $\lambda = \beta^2 >0$
+
+$$X(x)=A\sin{(\beta \ln{x})}+B\cos{(\beta \ln{x})}$$
+$$X(1)=A\sin{(0)}+B\cos{(0)}=0 \quad \longrightarrow \quad B=0$$
+$$X(e)=A\sin{(\beta \ln{e})}=0$$
+$$A\sin{(\beta)}=0$$
+If $A=0$, then $X(0)=0$ and this contradicts the definition of an eigenfunction. Therefore, we must have $\sin{(\beta)}=0$, which can only occur if $\beta = (2n+1)\pi$. Therefore, this case gives us eigenvalues 
+$$\lambda_n= (2n+1)^2 \pi^2 \quad n=1,2,3... $$
+with eigenfunctions
+$$X_n(x)=\sin{\left((2n+1)\pi \ln{x}\right)}$$
+
+\underline{Case 2:} Zero eigenvalues, $\lambda=0$
+$X''=0$ implies that $X(x)$ is of the form $Ax+B$. Now plugging in our initial condition $X(1) = 0$, we get $A+B=0$, which means $X(x)=Ax-A$. But from the boundary condition $X(e)=0$, we get $A(e-1)=0$ which is only possible if $A=0$ and accordingly $X(0)=0$. Therefore, there are no eigenfunctions $X(x)$ that satisfy the boundary conditions when $X''=0$ and hence no zero eigenvalues.
+
+
+\underline{Case 3:} Negative eigenvalues, $\lambda = -\beta^2 <0$
+This case gives us the characteristic equation: $r^2-\beta^2=0$. Since our characteristic equation has distinct real roots $r= \pm \beta$, our solutions take the form 
+$$X(x)=Ax^{\beta }+Bx^{-\beta}$$
+
+$$X(1)=A+B=0 \quad \longrightarrow\quad A=-B$$
+$$X(x)=Ax^{\beta }-Ax^{-\beta}$$
+Then the other boundary condition gives $X(e)=Ae^{\beta}-Ae^{-\beta }=0$. Since $e^{\beta}$ and $e^{-\beta}$ are always nonzero, we must have $A=0$, implying that again $X(x)=0$.Thus, this problem has only positive eigenvalues and their associated eigenfunctions as found in Case 1.
+
+
+### (c)
 
 On the interval $0 \leq x \leq 1$ of length one, consider the eigenvalue problem
 $$-X'' = \lambda X,\quad  X'(0) + X(0) = 0,\quad X(1) = 0$$
 
 (i) Find an eigenfunction with eigenvalue zero. Call it $X_0(x)$.
 
+$X''=0$ implies that $X(x)$ is of the form $Ax+B$ and $X'(x)=A$. Then $X(1)=0$ becomes $A+B=0$, or $A=-B$. Now we look at our second condition, 
+$$ X'(0) + X(0) = 0$$
+$X'(0)$ is just $A$ and $X(0)$ is just $B$, so again this gives us $A=-B$. Thus, we have $X(x)=Ax-A=A(x-1)$, so we have found
+$$X_0(x)=x-1 $$
+
 (ii) Find an equation for the positive eigenvalues $\lambda = \beta^2$.
+
+$$X(x)=A\sin{(\beta x)}+B\cos{(\beta x)}$$
+$$X'(x)=\beta A\cos{(\beta x)}-\beta B\sin{(\beta x)}$$
+
+$$X(1)=A\sin{(\beta)}+B\cos{(\beta)}=0$$
+$$A\sin{(\beta)}=-B\cos{(\beta)}$$
+
+\begin{equation}\label{aciii}
+-\frac{B}{A}=\frac{\sin{(\beta)}}{\cos{(\beta)}}=\tan{\beta}
+\end{equation}
+
+$$ X'(0) =\beta A, \quad X(0)=B$$
+$$ X'(0) + X(0) = \beta A+B=0 $$
+\begin{equation}\label{aciv}\beta=-\frac{B}{A}\end{equation}
+
+Combining (\ref{aciii}) and (\ref{aciv}), we get the equation $\beta=\tan{(\beta)}$ for the positive eigenvalues.
+
 
 (iii) Show graphically from part (b) that there are an infinite number of positive eigenvalues.
 
+In part (b), we showed that $\beta$ is a positive eigenvalue if $\beta=\tan{(\beta)}$. However, plotting the equations $y=\beta$ and $y=\tan{\beta}$ reveals that these two functions intersect an infinite number of times (Fig. 1), meaning there are an infinite number of positive eigenvalues.
+
+```{r, echo=FALSE,   fig.height=3, fig.width=5}
+df_1c <- tibble(x = seq(-1*pi, 10*pi, length.out = 1000),
+                y=tan(x)) %>% 
+  mutate(y = ifelse(abs(y) < 30, y, NA))
+                      
+ggplot(df_1c) + 
+  geom_line(aes(x=x, y=y, color="A"))+
+  geom_line(aes(x=x, y=x, color="B"))+
+  geom_hline(yintercept=0, color="black")+
+ coord_cartesian(ylim=c(-10,10), xlim=c(-1,11))+
+  theme_bw()+
+  labs(y="y", x=expression(beta), color="")+ scale_colour_discrete(labels=c(expression(paste("y=tan(", beta, ")")), expression(paste("y=", beta))))+ggtitle("Figure 1")
+
+```
+
+
 (iv) Is there a negative eigenvalue?
+
+This case gives us the characteristic equation: $r^2-\beta^2=0$. Since our characteristic equation has distinct real roots $r= \pm \beta$, our solutions take the form 
+$$X(x)=Ae^{\beta x}+Be^{-\beta x}$$
+Differentiating, we find that
+$$X'(x)=\beta Ae^{\beta x}-\beta Be^{-\beta x}$$
+
+$$X'(0)=\beta A-\beta B$$
+$$X(0)=A+B$$
+
+$$ X'(0) + X(0) = \beta A-\beta B+A+B$$
+$$0=A(\beta+1)+B(1-\beta)$$
+$$-A(\beta+1)=B(1-\beta)$$
+$$\frac{\beta+1}{1-\beta}=-\frac{B}{A}$$
+Now turning to our other boundary condition,
+$$X'(1)=\beta Ae^{\beta}-\beta Be^{-\beta}=0$$
+$$\beta Ae^{\beta}=\beta Be^{-\beta}$$
+$$-\frac{B}{A} = -e^{2\beta}$$
+This would give us the following equation:
+$$\frac{\beta+1}{1-\beta}=-e^{2\beta}$$
+But the only time that this equality holds true is when $\beta=0$ (Fig. 2), but we are in the case when we defined $\beta$ to be nonzero, meaning that we have reached a contradiction and we cannot have any negative eigenvalues.
+
+```{r, echo=FALSE,   fig.height=3, fig.width=5}
+df_1d <- tibble(x = seq(-10, 10, length.out = 1000),
+                y1=exp(2*x),
+                y2=(x+1)/(1-x)) %>% 
+  mutate(y2 = ifelse(abs(y2) < 30, y2, NA))
+                      
+ggplot(df_1d) + 
+  geom_hline(yintercept=0, color="black")+
+  geom_vline(xintercept=0, color="black")+
+  geom_line(aes(x=x, y=y1, color="A"))+
+  geom_line(aes(x=x, y=y2, color="B"))+
+  annotate(geom = "point",x=0,y=1)+
+  coord_cartesian(ylim=c(-6,8), xlim=c(-4,4))+
+  theme_bw()+
+  labs(y="y", x=expression(beta), color="")+ scale_colour_discrete(labels=c(expression(paste("y=exp(2", beta, ")")), expression(paste("y=(", beta, "+1)/(1-", beta, ")"))))+ggtitle("Figure 2")
+
+```
 
 ## Question 2  
 Find the Fourier-series of $f(x)$. Does the Fourier-series converge (i) pointwise, or (ii)
