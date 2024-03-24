@@ -1,7 +1,7 @@
 ---
 title: "BIOL 274 Homework 7"
 author: "Ruby Krasnow"
-date: "2024-03-22"
+date: "2024-03-24"
 output:
   pdf_document:
     extra_dependencies: ["derivative", "tcolorbox", "xcolor"]
@@ -16,17 +16,533 @@ library(tidyverse)
 For each of the following systems, state the general solution and sketch the phase portrait (with at least 4 different solutions / ICs shown):
 
 ## Question 1 
+\begin{align*}
+      \dot{x} &= x+2y \\
+      \dot{y} &= 3x+2y
+\end{align*}
+
+\begin{equation*}
+A = \begin{bmatrix} 
+    1 & 2 \\
+    3 & 2 \end{bmatrix}
+  \end{equation*}
+
+\begin{equation*}
+\det{\begin{bmatrix} 
+    1-\lambda & 2 \\
+    3 & 2-\lambda \end{bmatrix}}=0 \\
+\end{equation*}
+
+$$ \left(1-\lambda\right) \left(2-\lambda\right)-6=0 $$
+
+$$2-\lambda-2\lambda+\lambda^2-6=0 $$
+
+$$\lambda^2-3\lambda-4=(\lambda-4)(\lambda+1) $$
+So we have found two distinct real eigenvalues, $\lambda_1=4, \; \lambda_2=-1$. Now we need to solve $AX=\lambda X$, or $(A-\lambda I)X=0$ with these two values of $\lambda$. Let's start with the first eigenvalue, 4.
+
+\begin{equation*}
+A-4I=\begin{bmatrix} 
+    1-4 & 2 \\
+    3 & 2-4 \end{bmatrix}= \begin{bmatrix} 
+    -3 & 2 \\
+    3 & -2 \end{bmatrix} \longrightarrow{}
+ \begin{bmatrix} 
+  -3 & 2 \\  
+  0 & 0
+ \end{bmatrix} \end{equation*}
+ 
+ \begin{equation*} 
+  -3x_1+2x_2=0 \quad \rightarrow{} \quad 2x_2=3x_1 \quad \rightarrow{} \quad 
+  v_1=
+   \begin{bmatrix} 2 \\ 3  \end{bmatrix}
+\end{equation*}
+
+And repeat for the second eigenvalue, -1:
+\begin{equation*}
+A-(-I)=\begin{bmatrix} 
+    1+1 & 2 \\
+    3 & 2+1 \end{bmatrix}= \begin{bmatrix} 
+    2 & 2 \\
+    3 & 3 \end{bmatrix} \longrightarrow{}
+ \begin{bmatrix} 
+  1 & 1 \\  
+  0 & 0
+ \end{bmatrix} \end{equation*}
+ 
+ \begin{equation*} 
+  x_1+x_2=0 \quad \rightarrow{} \quad x_2=-x_1 \quad \rightarrow{} \quad 
+  v_2=
+   \begin{bmatrix} 1 \\ -1  \end{bmatrix}
+\end{equation*}
+
+\begin{tcolorbox}[colback=white, title=Solution]
+$$X=C_1e^{4 t}\begin{bmatrix} 2 \\ 3  \end{bmatrix} +C_2e^{- t}\begin{bmatrix} 1 \\ -1 \end{bmatrix}$$
+\end{tcolorbox}
+
+\begin{tcolorbox}[colback=blue!5!white,colframe=blue!75!black,title=Check solution]
+$$X'=C_1\begin{bmatrix} 8e^{4 t} \\ 12e^{4 t}  \end{bmatrix} +C_2\begin{bmatrix} -e^{-t} \\ e^{- t} \end{bmatrix}$$
+$$x'= 8C_1e^{4 t}-C_2e^{-t}=2C_1e^{4 t}+C_2e^{- t}+2(3C_1e^{4 t}-C_2e^{- t})=x+2y$$
+$$y'= 12C_1e^{4 t}+C_2e^{-t}=3(2C_1e^{4 t}+C_2e^{- t})+2(3C_1e^{4 t}-C_2e^{- t})=3x+2y$$
+\end{tcolorbox}
 
 ## Question 2
 
+\begin{align*}
+      \dot{x} &= 4x+2y \\
+      \dot{y} &= -x+y
+\end{align*}
+
+\begin{equation*}
+A = \begin{bmatrix} 
+    4 & 2 \\
+    -1 & 1 \end{bmatrix}
+  \end{equation*}
+
+\begin{equation*}
+\det{\begin{bmatrix} 
+    4-\lambda & 2 \\
+    -1 & 1-\lambda \end{bmatrix}}=0 \\
+\end{equation*}
+
+
+$$ \left(4-\lambda\right) \left(1-\lambda\right)+2=0 $$
+$$ \lambda^2-5\lambda+6=0 $$
+$$ \left(\lambda-3\right) \left(\lambda-2\right)=0 $$
+So we have found two distinct real eigenvalues, $\lambda_1=3, \; \lambda_2=2$. Now we need to solve $AX=\lambda X$, or $(A-\lambda I)X=0$ with these two values of $\lambda$. Let's start with the first eigenvalue, 3.
+
+\begin{equation*}
+A-3I=\begin{bmatrix} 
+    4-3 & 2 \\
+    -1 & 1-3 \end{bmatrix}= \begin{bmatrix} 
+    1 & 2 \\
+    -1 & -2 \end{bmatrix} \longrightarrow{}
+ \begin{bmatrix} 
+  1 & 2 \\  
+  0 & 0
+ \end{bmatrix} \end{equation*}
+ 
+  \begin{equation*} 
+  x_1+2x_2=0 \quad \rightarrow{} \quad 2x_2=-x_1 \quad \rightarrow{} \quad 
+  v_1=
+   \begin{bmatrix} 2 \\ -1  \end{bmatrix}
+\end{equation*}
+ 
+ And repeat for the second eigenvalue, 2:
+ \begin{equation*}
+A-2I=\begin{bmatrix} 
+    4-2 & 2 \\
+    -1 & 1-2 \end{bmatrix}= \begin{bmatrix} 
+    2 & 2 \\
+    -1 & -1 \end{bmatrix} \longrightarrow{}
+ \begin{bmatrix} 
+  1 & 1 \\  
+  0 & 0
+ \end{bmatrix} \end{equation*}
+ 
+  \begin{equation*} 
+  x_1+x_2=0 \quad \rightarrow{} \quad x_2=-x_1 \quad \rightarrow{} \quad 
+  v_2=
+   \begin{bmatrix} 1 \\ -1  \end{bmatrix}
+\end{equation*}
+ 
+ \begin{tcolorbox}[colback=white, title=Solution]
+$$X=C_1e^{3 t}\begin{bmatrix} 2 \\ -1  \end{bmatrix} +C_2e^{2 t}\begin{bmatrix} 1 \\ -1 \end{bmatrix}$$
+\end{tcolorbox}
+ 
+\begin{tcolorbox}[colback=blue!5!white,colframe=blue!75!black,title=Check solution]
+
+$$x'= 6C_1e^{3 t}+2C_2e^{2t}=4(2C_1e^{3 t}+C_2e^{2 t})+2(-C_1e^{3 t}-C_2e^{2 t})=4x+2y$$
+
+$$y'= -3C_1e^{3 t}-2C_2e^{2t}=-(2C_1e^{3 t}+C_2e^{2 t})+(-C_1e^{3 t}-C_2e^{2 t})=-x+y$$
+\end{tcolorbox}
+ 
 ## Question 3
+
+\begin{align*}
+      \dot{x} &= 3x-5y \\
+      \dot{y} &= 5x+3y
+\end{align*}
+
+\begin{equation*}
+A = \begin{bmatrix} 
+    3 & -5 \\
+    5 & 3 \end{bmatrix}
+  \end{equation*}
+
+\begin{equation*}
+\det{\begin{bmatrix} 
+    3-\lambda & -5 \\
+    5 & 3-\lambda \end{bmatrix}}=0 \\
+\end{equation*}
+
+$$ \left(3-\lambda\right) \left(3-\lambda\right)+25=0 $$
+$$ \lambda^2-6\lambda+34=0 $$
+$$\frac{-b\pm\sqrt{b^2-4ac}}{2a} \quad \longrightarrow \quad \frac{6\pm\sqrt{36-136}}{2} = \frac{6\pm10i}{2}= 3 \pm 5i$$
+So we have complex eigenvalues, $\lambda_1=3+5i, \; \lambda_2=3-5i$. Now we need to solve $AX=\lambda X$, or $(A-\lambda I)X=0$ with these two values of $\lambda$.
+
+\begin{equation*}
+A-(3+5i)I=\begin{bmatrix} 
+    3-3-5i & -5 \\
+    5 & 3-3-5i \end{bmatrix}= \begin{bmatrix} 
+    -5i & -5 \\
+    5 & -5i \end{bmatrix} \quad \rightarrow{} \quad  
+    \begin{bmatrix} 
+    i & 1 \\
+    0 & 0 \end{bmatrix}
+\end{equation*}
+
+
+\begin{equation*} 
+  ix_1+x_2=0 \quad \rightarrow{} \quad ix_1=-x_2 \quad \rightarrow{} \quad v_1=
+   \begin{bmatrix} i \\ 1  \end{bmatrix}
+\end{equation*}
+
+Which means the eigenvector for the other eigenvalue is the conjugate of this vector, $v_2=\begin{bmatrix} -i \\ 1  \end{bmatrix}$.
+
+Now we use Euler's formula:
+$$e^{(3+5i)t} \begin{bmatrix} i \\ 1  \end{bmatrix} = e^{3t}e^{5it}\begin{bmatrix} i \\ 1  \end{bmatrix} = e^{3t} \left(\cos{(5t)}+i\sin{(5t)}\right)\begin{bmatrix} i \\ 1 \end{bmatrix} $$
+$$e^{3t} \begin{bmatrix} i\cos{(5t)}-\sin{(5t)} \\ \cos{(5t)}+i\sin{(5t)} \end{bmatrix}=e^{3t} \left(  \begin{bmatrix} -\sin{(5t)} \\ \cos{(5t)}\end{bmatrix}+i\begin{bmatrix} \cos{(5t)}\\ \sin{(5t)} \end{bmatrix}\right)$$
+
+Having found our real and imaginary parts, we can now write our general solution as a linear combination of them:
+\begin{tcolorbox}[colback=white, title=Solution]
+$$X=C_1e^{3t} \begin{bmatrix} -\sin{5t} \\ \cos{5t} \end{bmatrix}+
+C_2e^{3t} \begin{bmatrix} \cos{5t} \\ \sin{5t} \end{bmatrix} $$
+\end{tcolorbox}
+
+\begin{tcolorbox}[colback=blue!5!white,colframe=blue!75!black,title=Check solution]
+$$x=-C_1e^{3t}\sin{5t}+C_2e^{3t}\cos{5t} $$
+$$y=C_1e^{3t}\cos{5t}+C_2e^{3t}\sin{5t} $$
+\begin{align*}
+\dot{x} &= -5 C_1e^{3t}\cos{5t}-3C_1e^{3t}\sin{5t}-5C_2e^{3t}\sin{5t}+3 C_2e^{3t}\cos{5t} \\
+        &= 3 \left( -C_1e^{3t}\sin{5t}+C_2e^{3t}\cos{5t} \right)- 5\left( C_1e^{3t}\cos{5t}+C_2e^{3t}\sin{5t}\right) \\
+        &= 3x-5y
+\end{align*}
+
+\begin{align*}
+\dot{y} &= -5 C_1e^{3t}\sin{5t}+3C_1e^{3t}\cos{5t}+5C_2e^{3t}\cos{5t}+3C_2e^{3t}\sin{5t} \\
+        &= 5 \left( -C_1e^{3t}\sin{5t}+C_2e^{3t}\cos{5t} \right)+3\left( C_1e^{3t}\cos{5t}+C_2e^{3t}\sin{5t}\right) \\
+        &= 5x+3y
+\end{align*}
+\end{tcolorbox}
 
 ## Question 4
 
+\begin{align*}
+      \dot{x} &= 6x-8y \\
+      \dot{y} &= -3x+4y
+\end{align*}
+
+\begin{equation*}
+A = \begin{bmatrix} 
+    6 & -8 \\
+    -3 & 4 \end{bmatrix}
+  \end{equation*}
+
+\begin{equation*}
+\det{\begin{bmatrix} 
+    6-\lambda & -8 \\
+    -3 & 4-\lambda \end{bmatrix}}=0 \\
+\end{equation*}
+
+$$ \left(6-\lambda\right) \left(4-\lambda\right)-24=0 $$
+$$\lambda^2-10\lambda=\lambda(\lambda-10)=0 $$
+So we have found two distinct real eigenvalues, $\lambda_1=0, \; \lambda_2=10$. Now we need to solve $AX=\lambda X$, or $(A-\lambda I)X=0$ with these two values of $\lambda$. Let's start with the first eigenvalue, 0.
+
+\begin{equation*}
+A-0I=\begin{bmatrix} 
+   6 & -8 \\
+    -3 & 4 \end{bmatrix} \quad \rightarrow{} \quad  
+    \begin{bmatrix} 
+    3 & -4 \\
+    0 & 0 \end{bmatrix} \end{equation*}
+
+\begin{equation*} 
+  3x_1-4x_2=0 \quad \rightarrow{} \quad 3x_1=4x_2 \quad \rightarrow{} \quad v_1=
+   \begin{bmatrix} 4 \\ 3  \end{bmatrix}
+\end{equation*}
+
+ And repeat for the second eigenvalue, 10:
+\begin{equation*}
+A-10I=\begin{bmatrix} 
+   6-10 & -8 \\
+    -3 & 4-10 \end{bmatrix} =
+    \begin{bmatrix} 
+   -4 & -8 \\
+    -3 & -6 \end{bmatrix} \quad \rightarrow{} \quad  
+    \begin{bmatrix} 
+    1 & 2 \\
+    0 & 0 \end{bmatrix} \end{equation*}
+
+\begin{equation*} 
+  x_1+2x_2=0 \quad \rightarrow{} \quad x_1=-2x_2 \quad \rightarrow{} \quad v_2=
+   \begin{bmatrix} -2 \\ 1  \end{bmatrix}
+\end{equation*}
+
+
+\begin{tcolorbox}[colback=white, title=Solution]
+$$X=C_1\begin{bmatrix} 4 \\ 3  \end{bmatrix} +C_2e^{10 t}\begin{bmatrix} -2 \\ 1 \end{bmatrix}$$
+\end{tcolorbox}
+\begin{tcolorbox}[colback=blue!5!white,colframe=blue!75!black,title=Check solution]
+
+$$x'= -20C_2e^{10t}=6(4C_1-2C_2e^{10t)}-8(3C_1+C_2e^{10 t})=6x-8y$$
+$$y'= 10C_2e^{10t}=-3(4C_1-2C_2e^{10t)}+4(3C_1+C_2e^{10 t})=-3x+4y$$
+\end{tcolorbox}
+
+
 ## Question 5
+
+\begin{align*}
+      \dot{x} &= 4x-2y \\
+      \dot{y} &= 2x
+\end{align*}
+
+\begin{equation*}
+A = \begin{bmatrix} 
+    4 & -2 \\
+    2 & 0 \end{bmatrix}
+  \end{equation*}
+
+\begin{equation*}
+\det{\begin{bmatrix} 
+    4-\lambda & -2 \\
+    2 & -\lambda \end{bmatrix}}=0 \\
+\end{equation*}
+
+$$ \left(4-\lambda\right) \left(-\lambda\right)+4=0 $$
+$$\lambda^2-4\lambda+4=(\lambda-2)^2=0 $$
+So we have a repeated eigenvalue, $\lambda_1=\lambda_2=2$.
+
+If the eigenvalues of A are repeated (i.e. $\lambda_1=\lambda_2$), then the general solution to the system $\dot{X}=AX$ is $X=e^{\lambda t} v_0+te^{\lambda t} v_1$, where $v_0=\begin{bmatrix} x_0 \\ y_0 \end{bmatrix}$ and $v_1 = (A-\lambda I)v_0$.
+
+\begin{align*}
+v_1 &= (A-2I)v_0 \\
+    &= \begin{bmatrix} 
+    2 & -2 \\
+    2 & -2 \end{bmatrix} \begin{bmatrix} x_0 \\ y_0 \end{bmatrix} \\
+    &= \begin{bmatrix} 2x_0-2y_0 \\ 2x_0-2y_0 \end{bmatrix}
+\end{align*}
+
+Which means the general solution is:
+\begin{tcolorbox}[colback=white, title=Solution]
+$$X=e^{2t} \begin{bmatrix} x_0 \\ y_0 \end{bmatrix}+2te^{2t}\begin{bmatrix} x_0-y_0 \\ x_0-y_0 \end{bmatrix}$$
+\end{tcolorbox}
+\begin{tcolorbox}[colback=blue!5!white,colframe=blue!75!black,title=Check solution]
+\begin{align*}
+\dot{x}&= 2e^{2t} x_0 + 4te^{2t} (x_0-y_0)+ 2e^{2t} (x_0-y_0) \\
+       &= 4e^{2t} x_0 + 4te^{2t} (x_0-y_0)-2e^{2t} y_0 \\
+       &= 4(e^{2t} x_0 + 2te^{2t} (x_0-y_0))-2(e^{2t} y_0 + 2te^{2t} (x_0-y_0)) \\
+       &= 4x-2y
+\end{align*}
+
+\begin{align*}
+\dot{y}&= 2e^{2t} y_0 + 4te^{2t} (x_0-y_0)+ 2e^{2t} (x_0-y_0) \\
+       &= 2e^{2t} x_0 + 4te^{2t} (x_0-y_0)\\
+       &= 2(e^{2t} x_0 + 2te^{2t} (x_0-y_0)) \\
+       &= 2x
+\end{align*}
+\end{tcolorbox}
 
 ## Question 6
 
+\begin{align*}
+      \dot{x} &= -4x+y \\
+      \dot{y} &= 3x-2y
+\end{align*}
+
+\begin{equation*}
+A = \begin{bmatrix} 
+    -4 & 1 \\
+    3 & -2 \end{bmatrix}
+  \end{equation*}
+
+\begin{equation*}
+\det{\begin{bmatrix} 
+    -4-\lambda & 1 \\
+    3 & -2-\lambda \end{bmatrix}}=0 \\
+\end{equation*}
+
+$$ \left(-4-\lambda\right) \left(-2-\lambda\right)-3=0 $$
+
+
+$$\lambda^2+6\lambda+5=(\lambda+5)(\lambda+1)=0 $$
+So we have found two distinct real eigenvalues, $\lambda_1=-5, \; \lambda_2=-1$. Now we need to solve $AX=\lambda X$, or $(A-\lambda I)X=0$ with these two values of $\lambda$. Let's start with the first eigenvalue, 0.
+
+\begin{equation*}
+A+5I=\begin{bmatrix} 
+    -4+5 & 1 \\
+    3 & -2+5 \end{bmatrix} =
+    \begin{bmatrix} 
+    1 & 1 \\
+    3 & 3 \end{bmatrix} \quad \rightarrow{} \quad  
+    \begin{bmatrix} 
+    1 & 1 \\
+    0 & 0 \end{bmatrix} \end{equation*}
+
+\begin{equation*} 
+  x_1+x_2=0 \quad \rightarrow{} \quad x_1=-x_2 \quad \rightarrow{} \quad v_2=
+   \begin{bmatrix} 1 \\ -1  \end{bmatrix}
+\end{equation*}
+
+\begin{equation*}
+A+I=\begin{bmatrix} 
+    -4+1 & 1 \\
+    3 & -2+1 \end{bmatrix} =
+    \begin{bmatrix} 
+    -3 & 1 \\
+    3 & -1 \end{bmatrix} \quad \rightarrow{} \quad  
+    \begin{bmatrix} 
+    3 & -1 \\
+    0 & 0 \end{bmatrix} \end{equation*}
+
+\begin{equation*} 
+  3x_1-x_2=0 \quad \rightarrow{} \quad 3x_1=x_2 \quad \rightarrow{} \quad v_2=
+   \begin{bmatrix} 1 \\ 3  \end{bmatrix}
+\end{equation*}
+
+
+ \begin{tcolorbox}[colback=white, title=Solution]
+$$X=C_1e^{-5 t}\begin{bmatrix} 1 \\ -1  \end{bmatrix} +C_2e^{- t}\begin{bmatrix} 1 \\ 3 \end{bmatrix}$$
+\end{tcolorbox}
+
+\begin{tcolorbox}[colback=blue!5!white,colframe=blue!75!black,title=Check solution]
+$$x'=-5C_1e^{-5 t}-C_2 e^{- t}=-4(C_1e^{-5 t}+C_2 e^{- t})+(-C_1e^{-5 t}+3C_2 e^{- t})=-4x+y $$
+$$y'=5C_1e^{-5 t}-3C_2 e^{- t}=3(C_1e^{-5 t}+C_2 e^{- t})-2(-C_1e^{-5 t}+3C_2 e^{- t})=3x-2y $$
+\end{tcolorbox}
+
+
 ## Question 7
 
+\begin{align*}
+      \dot{x} &= -9x-3y \\
+      \dot{y} &= 3x+y
+\end{align*}
+
+\begin{equation*}
+A = \begin{bmatrix} 
+    -9 & -3 \\
+    3 & 1 \end{bmatrix}
+  \end{equation*}
+
+\begin{equation*}
+\det{\begin{bmatrix} 
+    -9-\lambda & -3 \\
+    3 & 1-\lambda \end{bmatrix}}=0 \\
+\end{equation*}
+
+
+$$ \left(-9-\lambda\right) \left(1-\lambda\right)+9=0 $$
+
+$$\lambda^2+8\lambda=\lambda(\lambda+8)=0 $$
+
+So we have found two distinct real eigenvalues, $\lambda_1=0, \; \lambda_2=-8$. Now we need to solve $AX=\lambda X$, or $(A-\lambda I)X=0$ with these two values of $\lambda$. Let's start with the first eigenvalue, 0.
+
+\begin{equation*}
+A-0I=\begin{bmatrix} 
+  -9 & -3 \\
+    3 & 1 \end{bmatrix} \quad \rightarrow{} \quad  
+    \begin{bmatrix} 
+    3 & 1 \\
+    0 & 0 \end{bmatrix} \end{equation*}
+
+\begin{equation*} 
+  3x_1+x_2=0 \quad \rightarrow{} \quad 3x_1=-x_2 \quad \rightarrow{} \quad v_1=
+   \begin{bmatrix} 1 \\ -3  \end{bmatrix}
+\end{equation*}
+
+ And repeat for the second eigenvalue, -8:
+\begin{equation*}
+A+8I=\begin{bmatrix} 
+    -9+8 & -3 \\
+    3 & 1+8 \end{bmatrix} =
+    \begin{bmatrix} 
+   -1 & -3 \\
+    3 & 9 \end{bmatrix} \quad \rightarrow{} \quad  
+    \begin{bmatrix} 
+    1 & 3 \\
+    0 & 0 \end{bmatrix} \end{equation*}
+
+\begin{equation*} 
+  x_1+3x_2=0 \quad \rightarrow{} \quad x_1=-3x_2 \quad \rightarrow{} \quad v_2=
+   \begin{bmatrix} 3 \\ -1  \end{bmatrix}
+\end{equation*}
+
+ \begin{tcolorbox}[colback=white, title=Solution]
+$$X=C_1\begin{bmatrix} 1 \\ -3  \end{bmatrix} +C_2e^{-8t}\begin{bmatrix} 3 \\ -1 \end{bmatrix}$$
+\end{tcolorbox}
+
+\begin{tcolorbox}[colback=blue!5!white,colframe=blue!75!black,title=Check solution]
+$$x'=-24C_2e^{-8t}= -9(C_1+3C_2e^{-8t})-3(-3C_1-C_2e^{-8t})=-9x-3y$$
+$$y'=8C_2e^{-8t}=3(C_1+3C_2e^{-8t})+(-3C_1-C_2e^{-8t})=3x+y $$
+
+\end{tcolorbox}
+
+
 ## Question 8
+
+\begin{align*}
+      \dot{x} &= -3x+10y \\
+      \dot{y} &= -x+3y
+\end{align*}
+
+\begin{equation*}
+A = \begin{bmatrix} 
+    -3 & 10 \\
+    -1 & 3 \end{bmatrix}
+  \end{equation*}
+
+\begin{equation*}
+\det{\begin{bmatrix} 
+    -3-\lambda & 10 \\
+    -1 & 3-\lambda \end{bmatrix}}=0 \\
+\end{equation*}
+
+$$ \left(-3-\lambda\right) \left(3-\lambda\right)+10=0 $$
+
+$$\lambda^2+1=0 $$
+
+So we have complex eigenvalues, $\lambda_1=i, \; \lambda_2=-i$. Now we need to solve $AX=\lambda X$, or $(A-\lambda I)X=0$ with these two values of $\lambda$.
+
+\begin{equation*}
+A-iI=\begin{bmatrix} 
+    -3-i & 10 \\
+    -1 & 3-i \end{bmatrix}\quad \rightarrow{} \quad  
+    \begin{bmatrix} 
+    -1 & 3-i \\
+    0 & 0 \end{bmatrix}
+\end{equation*}
+
+
+\begin{equation*} 
+  -x_1+(3-i)x_2=0 \quad \rightarrow{} \quad x_1=(3-i)x_2 \quad \rightarrow{} \quad v_1=
+   \begin{bmatrix} 3-i \\ 1  \end{bmatrix}
+\end{equation*}
+
+Which means the eigenvector for the other eigenvalue is the conjugate of this vector, $v_2=\begin{bmatrix} 3+i \\ 1  \end{bmatrix}$.
+
+Now we use Euler's formula:
+$$e^{it} \begin{bmatrix} 3-i \\ 1  \end{bmatrix} = \left(\cos{(t)}+i\sin{(t)}\right)\begin{bmatrix} 3-i \\ 1 \end{bmatrix} $$
+
+$$\begin{bmatrix} (3-i)\cos{t}+(3i+1)\sin{t} \\ \cos{t}+i\sin{t} \end{bmatrix}=  
+\begin{bmatrix} 3\cos{t}+\sin{t} \\ \cos{t} \end{bmatrix} +i\begin{bmatrix} 3\sin{t}-\cos{t}\\ \sin{t} \end{bmatrix}$$
+
+
+Having found our real and imaginary parts, we can now write our general solution as a linear combination of them:
+\begin{tcolorbox}[colback=white, title=Solution]
+$$X=C_1 \begin{bmatrix} 3\cos{t}+\sin{t} \\ \cos{t} \end{bmatrix}+
+C_2 \begin{bmatrix} 3\sin{t}-\cos{t}\\ \sin{t} \end{bmatrix} $$
+\end{tcolorbox}
+
+\begin{tcolorbox}[colback=blue!5!white,colframe=blue!75!black,title=Check solution]
+
+\begin{align*}
+x'&=-3C_1\sin{t}+C_1\cos{t}+3C_2 \cos{t}+C_2\sin{t} \\
+  &= -3(3C_1\cos{t}+C_1\sin{t}+3C_2\sin{t}-C_2\cos{t})+ 10(C_1 \cos{t}+C_2\sin{t}) \\
+  &= -3x+10y
+\end{align*}
+
+\begin{align*}
+y'&=-C_1\sin{t}+C_2 \cos{t} \\
+  &= -(3C_1\cos{t}+C_1\sin{t}+3C_2\sin{t}-C_2\cos{t})+ 3(C_1 \cos{t}+C_2\sin{t}) \\
+  &= -x+3y
+\end{align*}
+\end{tcolorbox}
