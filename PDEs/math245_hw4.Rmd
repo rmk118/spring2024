@@ -26,11 +26,11 @@ $$X(x)=A\sin{(\beta x)}+B\cos{(\beta x)}$$
 Differentiating, we find that 
 $$X'(x)=\beta A\cos{(\beta x)}-\beta B\sin{(\beta x)}$$
 Now plugging in our initial condition $X'(0) = 0$, we get
-$X'(0)=\beta A=0$. And since we are in a case where $\beta \neq 0$, this means $B=0$ so $X(x)=A\sin{(\beta x)}$. Now we use our boundary condition $X(l)=0$ to get $X(l)=A\sin{(\beta l)}=0$. If $A=0$, then $X(0)=0$ and this contradicts the definition of an eigenfunction. Therefore, we must have $\sin{(\beta l)}=0$, which can only occur if $\beta = \frac{(2n+1)\pi}{l}$. Therefore, this case gives us eigenvalues 
+$X'(0)=\beta A=0$. And since we are in a case where $\beta \neq 0$, this means $B=0$ so $X(x)=A\sin{(\beta x)}$. Now we use our boundary condition $X(l)=0$ to get $X(l)=A\sin{(\beta l)}=0$. If $A=0$, then $X(0)=0$ and this contradicts the definition of an eigenfunction. Therefore, we must have $\sin{(\beta l)}=0$, which can only occur if $\beta = \frac{n\pi}{l}$. Therefore, this case gives us eigenvalues 
 
-$$\lambda_n= \left(\frac{(2n+1)\pi}{l}\right)^2 \quad n=1,2,3... $$
+$$\lambda_n= \left(\frac{n\pi}{l}\right)^2 \quad n=1,2,3... $$
 with eigenfunctions
-$$X_n(x)=\sin{\left(\frac{(2n+1)\pi x}{l}\right)}$$
+$$X_n(x)=\sin{\left( \frac{n \pi x}{l}\right)}$$
 
 \underline{Case 2:} Zero eigenvalues, $\lambda=0$
 $X''=0$ implies that $X(x)$ is of the form $Ax+B$, with derivative $X'(x)=A$. Now plugging in our initial condition $X'(0) = 0$, we get $A=0$, which means $X(x)=B$. But from the boundary condition $X(l)=0$, we get $B=0$ and so $X(0)=0$. Therefore, there are no eigenfunctions $X(x)$ that satisfy $- \frac{d^2}{dx^2}X(x)=\lambda X(x)$ when $\lambda=0$ and hence no zero eigenvalues.
@@ -66,10 +66,10 @@ $$X(x)=A\sin{(\beta \ln{x})}+B\cos{(\beta \ln{x})}$$
 $$X(1)=A\sin{(0)}+B\cos{(0)}=0 \quad \longrightarrow \quad B=0$$
 $$X(e)=A\sin{(\beta \ln{e})}=0$$
 $$A\sin{(\beta)}=0$$
-If $A=0$, then $X(0)=0$ and this contradicts the definition of an eigenfunction. Therefore, we must have $\sin{(\beta)}=0$, which can only occur if $\beta = (2n+1)\pi$. Therefore, this case gives us eigenvalues 
-$$\lambda_n= (2n+1)^2 \pi^2 \quad n=1,2,3... $$
+If $A=0$, then $X(0)=0$ and this contradicts the definition of an eigenfunction. Therefore, we must have $\sin{(\beta)}=0$, which can only occur if $\beta = n\pi$. Therefore, this case gives us eigenvalues 
+$$\lambda_n= n^2 \pi^2 \quad n=1,2,3... $$
 with eigenfunctions
-$$X_n(x)=\sin{\left((2n+1)\pi \ln{x}\right)}$$
+$$X_n(x)=\sin{\left(n\pi \ln{x}\right)}$$
 
 \underline{Case 2:} Zero eigenvalues, $\lambda=0$
 $X''=0$ implies that $X(x)$ is of the form $Ax+B$. Now plugging in our initial condition $X(1) = 0$, we get $A+B=0$, which means $X(x)=Ax-A$. But from the boundary condition $X(e)=0$, we get $A(e-1)=0$ which is only possible if $A=0$ and accordingly $X(0)=0$. Therefore, there are no eigenfunctions $X(x)$ that satisfy the boundary conditions when $X''=0$ and hence no zero eigenvalues.
@@ -195,7 +195,7 @@ $$a_0=\frac{1}{2l} \int_{-l}^{l}f(x)dx$$
 $$ a_n=\frac{1}{l} \int_{-l}^{l}f(x)\cos{  \left(\frac{n\pi x}{l}\right) }dx$$
 $$ b_n=\frac{1}{l} \int_{-l}^{l}f(x)\sin{  \left(\frac{n\pi x}{l}\right) }dx$$
 
-Let's start with $a_0$:
+Here, $l=\pi$. Let's start with $a_0$:
 \begin{align*}
 a_0 &=\frac{1}{2\pi} \int_{-\pi}^{\pi}f(x)dx \\
     &=\frac{1}{2\pi}\left[ \int_{-\pi}^{-1} 1\;dx + \int_{-1}^{1} (1-\lvert x \rvert) dx+ \int_{1}^{\pi} 1\;dx  \right] \\
@@ -257,6 +257,7 @@ a_n &= \frac{1}{\pi} \int_{-\pi}^{\pi}f(x)\cos{\left(nx\right) }dx \\
     &= \frac{2}{\pi} \int_{0}^{\pi}x\cos{\left(nx\right) }dx \\
     &= \frac{2}{n \pi} x \sin{(nx)} \Bigr\rvert_0^{\pi} - \frac{2}{n \pi}\int_{0}^{\pi}\sin{\left( nx \right) } dx \\
     &= 0 + \frac{2}{n^2 \pi} \cos{(nx)}\Bigr\rvert_0^{\pi} \\
+    &= \frac{2}{n^2 \pi} (-1)^{n}-\frac{2}{n^2 \pi} \\
     &= \frac{2}{n^2 \pi} (-1)^{n+1}
 \end{align*}
 
@@ -278,23 +279,25 @@ a_0 &=\frac{1}{2\pi} \int_{-\pi}^{\pi}x + x^2 dx \\
 \end{align*}
 
 \begin{align*}
-a_n &= \frac{1}{\pi} \int_{-\pi}^{\pi}f(x)\cos{(nx)}dx \\
-    &= \frac{1}{\pi} \int_{-\pi}^{\pi}x\cos{(nx)}+ \frac{1}{\pi} \int_{-\pi}^{\pi}x^2\cos{(nx)}dx 
+a_n &= \frac{1}{\pi} \int_{-\pi}^{\pi}f(x)\cos{(nx)}\;dx \\
+    &= \frac{1}{\pi} \int_{-\pi}^{\pi}x\cos{(nx)}\;dx+ \frac{1}{\pi} \int_{-\pi}^{\pi}x^2\cos{(nx)}\;dx 
 \end{align*}
 
 Applying integration by parts to the first integral,
-$$\frac{1}{\pi} \int_{-\pi}^{\pi}x\cos{(nx)}=\frac{1}{n\pi}x\sin{(nx)} \Bigr\rvert_{-\pi}^{\pi}+\frac{1}{n\pi} \int_{-\pi}^{\pi}\sin{(nx)}$$
-$$=\frac{1}{n\pi}x\sin{(nx)} \Bigr\rvert_{-\pi}^{\pi}+\frac{-1}{n^2\pi} \cos{(nx)}\Bigr\rvert_{-\pi}^{\pi}=0+0=0$$
+$$\frac{1}{\pi} \int_{-\pi}^{\pi}x\cos{(nx)}\;dx=\frac{1}{n\pi}x\sin{(nx)} \Bigr\rvert_{-\pi}^{\pi}-\frac{1}{n\pi} \int_{-\pi}^{\pi}\sin{(nx)}\;dx$$
+$$=\frac{1}{n\pi}x\sin{(nx)} \Bigr\rvert_{-\pi}^{\pi}-\frac{-1}{n^2\pi} \cos{(nx)}\Bigr\rvert_{-\pi}^{\pi}=0-0=0$$
 
-We then use the integration by parts table method demonstrated in class to find that
+For the second integral, we can use the integration by parts table method demonstrated in class to find that
 
 
-$$\frac{1}{\pi} \int_{-\pi}^{\pi}x^2\cos{(nx)}= \frac{x^2}{n}\sin{(nx)}\Bigr\rvert_{-\pi}^{\pi} +  \frac{2x}{n^2}\cos{(nx)}\Bigr\rvert_{-\pi}^{\pi}+\frac{2}{n^3}\sin{(nx)}\Bigr\rvert_{-\pi}^{\pi}$$
-The first and last terms (with $\sin{(nx)}$) vanish, while the middle term evaluates to $\frac{4 \cos{(n\pi)}}{n^2}$.
+$$\frac{1}{\pi} \int_{-\pi}^{\pi}x^2\cos{(nx)}\;dx= \frac{x^2}{n\pi}\sin{(nx)}\Bigr\rvert_{-\pi}^{\pi} +  \frac{2x}{n^2\pi}\cos{(nx)}\Bigr\rvert_{-\pi}^{\pi}+
+\frac{2}{n^3\pi}\sin{(nx)}\Bigr\rvert_{-\pi}^{\pi}$$
+The first and last terms (with $\sin{(nx)}$) vanish. Evaluating the middle term, we get:
 
-$$\frac{4 \cos{(n\pi)}}{n^2}=\frac{4}{n^2} (-1)^{n}$$
-Thus, we add this to the result of first integral to find that
+$$\frac{2\pi \cos{(n\pi)}}{n^2 \pi}-\frac{-2\pi \cos{(n\pi)}}{n^2 \pi}=\frac{4 \cos{(n\pi)}}{n^2}=\frac{4}{n^2} (-1)^{n}$$
+Thus, we have found our coefficients $a_n$:
 $$a_n= \frac{4}{n^2} (-1)^{n} $$
+Now for $b_n$:
 \begin{align*}
 b_n &= \frac{1}{\pi} \int_{-\pi}^{\pi}f(x)\sin{(nx)}dx \\
     &= \frac{1}{\pi} \int_{-\pi}^{\pi}x\sin{(nx)}+ \frac{1}{\pi} \int_{-\pi}^{\pi}x^2\sin{(nx)}dx 
@@ -327,7 +330,8 @@ $$A_n = \frac{2}{\pi} \int_{0}^{\pi}f(x)\sin{(nx)}dx $$
 \begin{align*}
 A_n &= \frac{2}{\pi}\left[ \int_{0}^{\pi/2}\sin{(nx)}dx + 2 \int_{\pi/2}^{\pi}\sin{(nx)}dx \right] \\
     &= \frac{2}{\pi}\left[\frac{-1}{n} \cos{(nx)}\Bigr\rvert_{0}^{\pi/2}- \frac{2}{n} \cos{(nx)}\Bigr\rvert_{\pi/2}^{\pi}\right] \\
-    &= \frac{2}{n \pi}\left[\cos{\left(\frac{n\pi}{2}\right)}+1-2\cos{(n\pi)} \right]
+    &= \frac{2}{n \pi}\left[-\cos{\left(\frac{n\pi}{2}\right)}+1-2\cos{(n\pi)}+2\cos{\left(\frac{n\pi}{2}\right)} \right]\\
+    &= \frac{2}{n \pi}\left[1+\cos{\left(\frac{n\pi}{2}\right)}-2\cos{(n\pi)} \right]
 \end{align*}
 
  $$f(x)=  \frac{2}{\pi} \sum_{n=1}^{\infty} \frac{1}{n}\left[1+\cos{\left(\frac{n\pi}{2}\right)}-2\cos{(n\pi)} \right] \sin{(nx) }$$
@@ -394,14 +398,18 @@ a_0 &=\frac{1}{2\pi} \int_{-\pi}^{\pi}x^2 dx \\
     &= \frac{1}{2\pi} \left( \frac{2\pi^3}{3} \right) = \frac{\pi^2}{3}
 \end{align*}
 
-$$a_n = \frac{1}{\pi} \int_{-\pi}^{\pi}x\cos{(nx)}dx$$
+$$a_n = \frac{1}{\pi} \int_{-\pi}^{\pi}x^2\cos{(nx)}dx$$
 
-But in part (2b), we found that this evaluates to zero.
+But in part (2c), we found that this is equivalent to $\frac{4}{n^2} (-1)^{n}$, so
+$$a_n= \frac{4}{n^2} (-1)^{n} $$
+$$b_n = \frac{1}{\pi} \int_{-\pi}^{\pi}x^2\sin{(nx)}dx$$
+Since $x^2$ is an even function, $b_n=0$.
 
+$$f(x)=\frac{\pi^2}{3}+ 4 \sum_{n=1}^{\infty}  \frac{(-1)^{n}\cos{(nx) } }{n^2} $$
+Now let $x=0$, such that $f(0)=0^2=0$ and $\cos{(nx)}=\cos{(0)}=1$.
 
-
-
-
+$$0=\frac{\pi^2}{3}+ 4 \sum_{n=1}^{\infty}  \frac{(-1)^{n} }{n^2} $$
+$$-\frac{\pi^2}{12}=\sum_{n=1}^{\infty}  \frac{(-1)^{n} }{n^2} $$
 
 
 <!-- **(d)** Use the Fourier series in 2c and the pointwise convergence theorem to find $\zeta(2)$. Then find -->
