@@ -574,11 +574,12 @@ fun <- function(t, y, parameters) {
 
 ```{r, echo=FALSE, results='hide'}
 fun2 <- c(dx ~ x+2*y, dy ~3*x+2*y)
-p1 <- phaseplane(fun2,x_var="x",y_var="y", x_window = c(-7, 7), y_window = c(-7, 7))
+
+p1 <- phaseplane(fun2, x_var="x" ,y_var="y", x_window = c(-7, 7), y_window = c(-7, 7))
 
 y0 <- matrix(c(0, 1, 0, 4, -6, 1, 5, 0.5, 0, -3), 5, 2, byrow = TRUE)
 
-y2 <- tibble(x=c(0,0,-6,5,0), y=c(1,4,1,0.5,-3), IC=c("V1", "V2", "V3", "V4", "V5"))%>% mutate(pt = paste0("(",x, ",", y, ")"))
+y0_df <- tibble(x=c(0,0,-6,5,0), y=c(1,4,1,0.5,-3), IC=c("V1", "V2", "V3", "V4", "V5"))%>% mutate(pt = paste0("(",x, ",", y, ")"))
 ```
 
 ```{r, results='hide', echo=FALSE, message=FALSE, warning=FALSE, fig.keep = "none"}
@@ -593,7 +594,7 @@ x <- as_tibble(traj$x) %>% bind_cols("t"=t) %>%
 y <- as_tibble(traj$y) %>% bind_cols("t"=t) %>% 
   pivot_longer(cols = c(1:5), names_to = "IC", values_to = "y")
 
-z <- left_join(x,y) %>% filter(x<7 & x>-7 & y<7 & y>-7) %>% left_join(y2 %>% select(IC, pt), by="IC")
+z <- left_join(x,y) %>% filter(x<7 & x>-7 & y<7 & y>-7) %>% left_join(y0_df %>% select(IC, pt), by="IC")
 
 ```
 
@@ -602,7 +603,7 @@ p1+theme_classic()+
   geom_abline(slope=-1, color="gray", linewidth=1)+
   geom_abline(slope=3/2, color="gray", linewidth=1)+
   geom_path(data=z, aes(x=x, y=y, color=pt), linewidth=1.5)+
-  geom_point(data=y2, aes(x=x,y=y, color=pt), shape=21, fill="white",size=5, stroke=2)+labs(color="IC")
+  geom_point(data=y2, aes(x=x,y=y, color=pt), shape=21, fill="white",size=4, stroke=2)+labs(color="IC")
 
 ```
 
