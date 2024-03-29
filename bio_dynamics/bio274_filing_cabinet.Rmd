@@ -34,3 +34,80 @@ v2 <- eigen(A)$vectors[,2] / eigen(A)$vectors[1,2]*2 #eigenvector 2
 paste("lambda 1 = ", lambda1, " with eigenvector [", v1[1], ",", v1[2], "]", sep="")
 paste("lambda 2 = ", lambda2, " with eigenvector [", v2[1], ",", v2[2], "]", sep="")
 ```
+
+```{r}
+# Define the rate equation:
+lynx_hare_eq <- c(
+  dHdt ~ r * H - b * H * L,
+  dLdt ~ e * b * H * L - d * L
+)
+
+# Define the parameters (as a named vector):
+lynx_hare_params <- c(r = 2, b = 0.5, e = 0.1, d = 1)
+
+# Define the initial condition (as a named vector):
+lynx_hare_init <- c(H = 1, L = 3)
+
+# Define deltaT and the number of time steps:
+deltaT <- 0.05
+n_steps <- 200
+
+# Compute the solution via Euler's method:
+out_solution <- euler(system_eq = lynx_hare_eq,
+                      parameters = lynx_hare_params,
+                      initial_condition = lynx_hare_init,
+                      deltaT = deltaT,
+                      n_steps = n_steps
+                      )
+
+# Make a plot of the solution,
+# using different colors for lynx or hares:
+ggplot(data = out_solution) +
+  geom_line(aes(x = t, y = H), color = "red") +
+  geom_line(aes(x = t, y = L), color = "blue",linetype='dashed') +
+  labs(
+    x = "Time",
+    y = "Lynx (red) or Hares (blue/dashed)"
+  )
+```
+
+```{r}
+ggplot(data = out_solution) +
+  geom_path(aes(x = L, y = H)) +
+  labs(
+    x = "Lynx",
+    y = "Hares"
+  )
+```
+
+```{r}
+
+lin_eq <- c(
+  dxdt ~ a * x + b * y,
+  dydt ~ c * x + d * y
+)
+
+# Define the parameters (as a named vector):
+lin_params <- c(a = 1, b = 2, c = 3, d = 2)
+
+# Define the initial condition (as a named vector):
+lin_init <- c(x = -0.5, y = 0.5)
+
+# Define deltaT and the number of time steps:
+deltaT <- 0.01
+n_steps <- 200
+
+# Compute the solution via Euler's method:
+out_solution <- euler(system_eq = lin_eq,
+                      parameters = lin_params,
+                      initial_condition = lin_init,
+                      deltaT = deltaT,
+                      n_steps = n_steps
+                      )
+
+ggplot(data = out_solution) +
+  geom_line(aes(x = x, y = y))+
+  xlim(-5,5)+
+  ylim(-5,5)
+```
+

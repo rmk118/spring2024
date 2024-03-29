@@ -1,7 +1,7 @@
 ---
 title: "BIOL 274 Homework 7"
 author: "Ruby Krasnow"
-date: "2024-03-24"
+date: "2024-03-28"
 output:
   pdf_document:
     extra_dependencies: ["derivative", "tcolorbox", "xcolor"]
@@ -11,6 +11,9 @@ output:
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 library(tidyverse)
+library(phaseR)
+library(ggplotify)
+library(demodelr)
 ```
 
 For each of the following systems, state the general solution and sketch the phase portrait (with at least 4 different solutions / ICs shown):
@@ -546,3 +549,61 @@ y'&=-C_1\sin{t}+C_2 \cos{t} \\
   &= -x+3y
 \end{align*}
 \end{tcolorbox}
+
+## Phase Portraits
+
+```{r}
+fun <- function(t, y, parameters) {
+  x <- y[1]
+  y <- y[2]
+  
+  a <- parameters[1]
+  b <- parameters[2]
+  c <- parameters[3]
+  d <- parameters[4]
+ 
+  dy <- numeric(2)
+  
+  dy[1] <- a*x + b*y
+  dy[2] <- c*x + d*y  
+  
+  return(list(dy))
+}
+
+```
+
+```{r, echo=FALSE, results='hide'}
+fun2 <- c(dx ~ x+2*y, dy ~3*x+2*y)
+p1 <- phaseplane(fun2,x_var="x",y_var="y", x_window = c(-7, 7), y_window = c(-7, 7))
+
+y0 <- matrix(c(0, 1, 0, 4, -6, 1, 5, 0.5, 0, -3), 5, 2, byrow = TRUE)
+
+y2 <- tibble(x=c(0,0,-6,5,0), y=c(1,4,1,0.5,-3), IC=c("V1", "V2", "V3", "V4", "V5"))%>% mutate(pt = paste0("(",x, ",", y, ")"))
+```
+
+```{r, results='hide', echo=FALSE, message=FALSE, warning=FALSE, fig.keep = "none"}
+traj <- trajectory(fun, y0 = y0,tlim= c(0, 1), 
+                   parameters = c(1, 2, 3, 2), add=FALSE)
+
+t <- c(traj$t)
+
+x <- as_tibble(traj$x) %>% bind_cols("t"=t) %>% 
+  pivot_longer(cols = c(1:5), names_to = "IC", values_to = "x")
+
+y <- as_tibble(traj$y) %>% bind_cols("t"=t) %>% 
+  pivot_longer(cols = c(1:5), names_to = "IC", values_to = "y")
+
+z <- left_join(x,y) %>% filter(x<7 & x>-7 & y<7 & y>-7) %>% left_join(y2 %>% select(IC, pt), by="IC")
+
+```
+
+```{r}
+p1+theme_classic()+
+  geom_abline(slope=-1, color="gray", linewidth=1)+
+  geom_abline(slope=3/2, color="gray", linewidth=1)+
+  geom_path(data=z, aes(x=x, y=y, color=pt), linewidth=1.5)+
+  geom_point(data=y2, aes(x=x,y=y, color=pt), shape=21, fill="white",size=5, stroke=2)+labs(color="IC")
+
+```
+
+
