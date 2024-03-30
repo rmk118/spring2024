@@ -1,7 +1,7 @@
 ---
 title: "BIOL 274 Homework 7"
 author: "Ruby Krasnow"
-date: "2024-03-28"
+date: "2024-03-30"
 output:
   pdf_document:
     extra_dependencies: ["derivative", "tcolorbox", "xcolor"]
@@ -12,8 +12,105 @@ output:
 knitr::opts_chunk$set(echo = TRUE)
 library(tidyverse)
 library(phaseR)
-library(ggplotify)
 library(demodelr)
+```
+
+```{r, echo=FALSE}
+# Phase Portrait setup
+y0 <- matrix(c(0, 1, 0, 4, -6, 1, 5, 0.5, 0, -3), 5, 2, byrow = TRUE)
+
+y0_df <- tibble(x=c(0,0,-6,5,0), 
+                y=c(1,4,1,0.5,-3),
+                IC=c("V1", "V2", "V3", "V4", "V5")) %>% 
+  mutate(pt = paste0("(",x, ",", y, ")"))
+
+fun_traj <- function(t, y, parameters) {
+  x <- y[1]
+  y <- y[2]
+  a <- parameters[1]
+  b <- parameters[2]
+  c <- parameters[3]
+  d <- parameters[4]
+  dy <- numeric(2)
+  dy[1] <- a*x + b*y
+  dy[2] <- c*x + d*y  
+  return(list(dy))
+}
+
+fun_plane <- c(dx ~ a*x+b*y, dy ~c*x+d*y)
+
+make_plane <- function(params) {
+  params_unnamed <- unname(params)
+  traj <- trajectory(fun_traj, y0 = y0, tlim= c(0, 1), tstep=0.005,
+                     parameters = params_unnamed, add=FALSE)
+  
+  t <- c(traj$t)
+  x <- as_tibble(traj$x) %>% bind_cols("t"=t) %>% 
+    pivot_longer(cols = c(1:5), names_to = "IC", values_to = "x")
+  y <- as_tibble(traj$y) %>% bind_cols("t"=t) %>% 
+    pivot_longer(cols = c(1:5), names_to = "IC", values_to = "y")
+  z <- left_join(x,y, by = join_by(t, IC)) %>% filter(x<7 & x>-7 & y<7 & y>-7) %>% 
+    left_join(y0_df %>% select(IC, pt), by="IC")
+  
+  p1 <- phaseplane(fun_plane, x_var="x" ,y_var="y",
+                   x_window = c(-7, 7), y_window = c(-7, 7),
+                   parameters = params)
+  
+  A<- matrix(params_unnamed, 2, 2, byrow=TRUE)
+  
+  lambda1 <- eigen(A)$values[1] # eigenvalue 1
+  lambda2 <- eigen(A)$values[2] # eigenvalue 2
+  
+  if (abs(lambda1) < (1^(-10))) {
+    v1_col <- "black"
+    v1_wid <- 2
+  }
+  else {
+    v1_col <- "gray"
+    v1_wid <- 1
+  }
+  
+  if  (abs(lambda2) < (1^(-10))) {
+    v2_col <- "black"
+    v2_wid <- 2
+  }
+  else {
+    v2_col <- "gray"
+    v2_wid <- 1
+  }
+  
+  v1_slope <- eigen(A)$vectors[2,1] / eigen(A)$vectors[1,1]
+  v2_slope <- eigen(A)$vectors[2,2] / eigen(A)$vectors[1,2]
+  
+  p1+theme_bw()+
+    geom_abline(slope=v1_slope, color=v1_col, linewidth=v1_wid)+
+    geom_abline(slope=v2_slope, color=v2_col, linewidth=v2_wid)+
+    geom_path(data=z, aes(x=x, y=y, color=pt), linewidth=1.5)+
+    geom_point(data=y0_df, aes(x=x,y=y, color=pt), shape=21, fill="white",size=4, stroke=2)+labs(color="IC")
+}
+
+make_plane_complex <- function(params) {
+  params_unnamed <- unname(params)
+  traj <- trajectory(fun_traj, y0 = y0, tlim= c(0, 1), tstep = 0.005,
+                     parameters = params_unnamed, add=FALSE)
+  
+  t <- c(traj$t)
+  x <- as_tibble(traj$x) %>% bind_cols("t"=t) %>% 
+    pivot_longer(cols = c(1:5), names_to = "IC", values_to = "x")
+  y <- as_tibble(traj$y) %>% bind_cols("t"=t) %>% 
+    pivot_longer(cols = c(1:5), names_to = "IC", values_to = "y")
+  z <- left_join(x,y, by = join_by(t, IC)) %>% filter(x<7 & x>-7 & y<7 & y>-7) %>% 
+    left_join(y0_df %>% select(IC, pt), by="IC")
+  
+  p1 <- phaseplane(fun_plane, x_var="x" ,y_var="y",
+                   x_window = c(-7, 7), y_window = c(-7, 7),
+                   parameters = params)
+  
+  p1+theme_bw()+
+    geom_path(data=z, aes(x=x, y=y, color=pt), linewidth=1.5)+
+    geom_point(data=y0_df, aes(x=x,y=y, color=pt), shape=21, fill="white",size=4, stroke=2)+
+    labs(color="IC")
+}
 ```
 
 For each of the following systems, state the general solution and sketch the phase portrait (with at least 4 different solutions / ICs shown):
@@ -88,6 +185,14 @@ $$x'= 8C_1e^{4 t}-C_2e^{-t}=2C_1e^{4 t}+C_2e^{- t}+2(3C_1e^{4 t}-C_2e^{- t})=x+2
 $$y'= 12C_1e^{4 t}+C_2e^{-t}=3(2C_1e^{4 t}+C_2e^{- t})+2(3C_1e^{4 t}-C_2e^{- t})=3x+2y$$
 \end{tcolorbox}
 
+One positive eigenvalue and one negative eigenvalue gives a saddle:  
+
+
+```{r, echo=FALSE, message=FALSE, warning=FALSE,fig.keep="last"}
+make_plane(c(a=1,b=2,c=3,d=2))
+```
+
+
 ## Question 2
 
 \begin{align*}
@@ -158,6 +263,13 @@ $$x'= 6C_1e^{3 t}+2C_2e^{2t}=4(2C_1e^{3 t}+C_2e^{2 t})+2(-C_1e^{3 t}-C_2e^{2 t})
 
 $$y'= -3C_1e^{3 t}-2C_2e^{2t}=-(2C_1e^{3 t}+C_2e^{2 t})+(-C_1e^{3 t}-C_2e^{2 t})=-x+y$$
 \end{tcolorbox}
+
+Two positive eigenvalues gives a source, with solutions going towards the eigenvector $\begin{bmatrix} 2 \\ -1  \end{bmatrix}$ with the eigenvalue $\lambda=3$ of the larger magnitude.  
+
+
+```{r, echo=FALSE, message=FALSE, warning=FALSE,fig.keep="last"}
+make_plane(c(a=4,b=2,c=-1,d=1))
+```
  
 ## Question 3
 
@@ -228,6 +340,14 @@ $$y=C_1e^{3t}\cos{5t}+C_2e^{3t}\sin{5t} $$
 \end{align*}
 \end{tcolorbox}
 
+Complex eigenvalues with a positive real part gives a spiral source. Plugging in some test points (e.g., (1,1)) to our original matrix reveals that the spiral rotates counterclockwise.  
+
+
+```{r, echo=FALSE, message=FALSE, warning=FALSE,fig.keep="last"}
+make_plane_complex(c(a=3,b=-5,c=5,d=3))
+```
+
+
 ## Question 4
 
 \begin{align*}
@@ -291,6 +411,13 @@ $$x'= -20C_2e^{10t}=6(4C_1-2C_2e^{10t)}-8(3C_1+C_2e^{10 t})=6x-8y$$
 $$y'= 10C_2e^{10t}=-3(4C_1-2C_2e^{10t)}+4(3C_1+C_2e^{10 t})=-3x+4y$$
 \end{tcolorbox}
 
+The zero eigenvalue gives a line of equilibria, emphasized with the black line, with solutions pointing outward (because of the positive eigenvalue 10) parallel to the other eigenvector.  
+
+
+```{r, echo=FALSE, message=FALSE, warning=FALSE,fig.keep="last"}
+make_plane(c(a=6,b=-8,c=-3,d=4))
+```
+
 
 ## Question 5
 
@@ -344,6 +471,13 @@ $$X=e^{2t} \begin{bmatrix} x_0 \\ y_0 \end{bmatrix}+2te^{2t}\begin{bmatrix} x_0-
        &= 2x
 \end{align*}
 \end{tcolorbox}
+
+The positive repeated eigenvalue makes this a source, with solutions going towards the straight-line solution with the same slope (1, because y=x) as $v_1$.  
+
+
+```{r, echo=FALSE, message=FALSE, warning=FALSE,fig.keep="last"}
+make_plane(c(a=4,b=-2,c=2,d=0))
+```
 
 ## Question 6
 
@@ -411,7 +545,12 @@ $$X=C_1e^{-5 t}\begin{bmatrix} 1 \\ -1  \end{bmatrix} +C_2e^{- t}\begin{bmatrix}
 $$x'=-5C_1e^{-5 t}-C_2 e^{- t}=-4(C_1e^{-5 t}+C_2 e^{- t})+(-C_1e^{-5 t}+3C_2 e^{- t})=-4x+y $$
 $$y'=5C_1e^{-5 t}-3C_2 e^{- t}=3(C_1e^{-5 t}+C_2 e^{- t})-2(-C_1e^{-5 t}+3C_2 e^{- t})=3x-2y $$
 \end{tcolorbox}
+Two negative eigenvalues make this a sink, with solutions going towards the eigenvector $\begin{bmatrix} 1 \\ 3 \end{bmatrix}$  with the larger (less negative) eigenvalue.  
 
+
+```{r, echo=FALSE, message=FALSE, warning=FALSE,fig.keep="last"}
+make_plane(c(a=-4,b=1,c=3,d=-2))
+```
 
 ## Question 7
 
@@ -478,7 +617,12 @@ $$x'=-24C_2e^{-8t}= -9(C_1+3C_2e^{-8t})-3(-3C_1-C_2e^{-8t})=-9x-3y$$
 $$y'=8C_2e^{-8t}=3(C_1+3C_2e^{-8t})+(-3C_1-C_2e^{-8t})=3x+y $$
 
 \end{tcolorbox}
+The zero eigenvalue gives a line of equilibria, with solutions drawn towards the line (because the other eigenvalue is negative) parallel with the other eigenvector.  
 
+
+```{r, echo=FALSE, message=FALSE, warning=FALSE,fig.keep="last"}
+make_plane(c(a=-9,b=-3,c=3,d=1))
+```
 
 ## Question 8
 
@@ -550,61 +694,43 @@ y'&=-C_1\sin{t}+C_2 \cos{t} \\
 \end{align*}
 \end{tcolorbox}
 
-## Phase Portraits
+Purely imaginary complex eigenvalues give a center. Testing points with our original matrix reveals a clockwise direction of rotation.  
 
-```{r}
-fun <- function(t, y, parameters) {
-  x <- y[1]
-  y <- y[2]
-  
-  a <- parameters[1]
-  b <- parameters[2]
-  c <- parameters[3]
-  d <- parameters[4]
- 
-  dy <- numeric(2)
-  
-  dy[1] <- a*x + b*y
-  dy[2] <- c*x + d*y  
-  
-  return(list(dy))
-}
 
-```
+```{r, echo=FALSE, message=FALSE, warning=FALSE,fig.keep="last"}
+y1<- matrix(c(0, 1, 
+              10, 4,
+              -6, 10,
+              30, 10,
+              40, 15),
+          5, 2, byrow = TRUE)
 
-```{r, echo=FALSE, results='hide'}
-fun2 <- c(dx ~ x+2*y, dy ~3*x+2*y)
+y1_df <- tibble(x=c(0,10,-6,30,40), 
+                y=c(1,4,10,10,15),
+                IC=c("V1", "V2", "V3", "V4", "V5")) %>% 
+  mutate(pt = paste0("(",x, ",", y, ")"))
 
-p1 <- phaseplane(fun2, x_var="x" ,y_var="y", x_window = c(-7, 7), y_window = c(-7, 7))
+traj8<- trajectory(fun_traj,
+           y0         = y1,
+           tlim       = c(0, 10),
+           parameters = c(-3, 10, -1, 3), add = FALSE)
 
-y0 <- matrix(c(0, 1, 0, 4, -6, 1, 5, 0.5, 0, -3), 5, 2, byrow = TRUE)
-
-y0_df <- tibble(x=c(0,0,-6,5,0), y=c(1,4,1,0.5,-3), IC=c("V1", "V2", "V3", "V4", "V5"))%>% mutate(pt = paste0("(",x, ",", y, ")"))
-```
-
-```{r, results='hide', echo=FALSE, message=FALSE, warning=FALSE, fig.keep = "none"}
-traj <- trajectory(fun, y0 = y0,tlim= c(0, 1), 
-                   parameters = c(1, 2, 3, 2), add=FALSE)
-
-t <- c(traj$t)
-
-x <- as_tibble(traj$x) %>% bind_cols("t"=t) %>% 
+t8 <- c(traj8$t)
+x8 <- as_tibble(traj8$x) %>% bind_cols("t"=t8) %>% 
   pivot_longer(cols = c(1:5), names_to = "IC", values_to = "x")
-
-y <- as_tibble(traj$y) %>% bind_cols("t"=t) %>% 
+y8 <- as_tibble(traj8$y) %>% bind_cols("t"=t8) %>% 
   pivot_longer(cols = c(1:5), names_to = "IC", values_to = "y")
+z8 <- left_join(x8,y8, by = join_by(t, IC)) %>% filter(x<50 & x>-50 & y<40 & y>-40) %>% 
+  left_join(y1_df %>% select(IC, pt), by="IC")
 
-z <- left_join(x,y) %>% filter(x<7 & x>-7 & y<7 & y>-7) %>% left_join(y0_df %>% select(IC, pt), by="IC")
+p8 <- phaseplane(fun_plane, x_var="x" ,y_var="y",
+           x_window = c(-50, 50), y_window = c(-40, 40),
+           parameters = c(a=-3, b=10, c=-1, d=3))
 
+p8+theme_bw()+
+  geom_path(data=z8 %>% filter(pt!="(-6,10)"), aes(x=x, y=y, color=pt), linewidth=1.5)+
+  geom_point(data=y1_df%>% filter(pt!="(-6,10)"), aes(x=x,y=y, color=pt), shape=21, fill="white",size=4, stroke=2)+labs(color="IC")
 ```
 
-```{r}
-p1+theme_classic()+
-  geom_abline(slope=-1, color="gray", linewidth=1)+
-  geom_abline(slope=3/2, color="gray", linewidth=1)+
-  geom_path(data=z, aes(x=x, y=y, color=pt), linewidth=1.5)+
-  geom_point(data=y2, aes(x=x,y=y, color=pt), shape=21, fill="white",size=4, stroke=2)+labs(color="IC")
-
-```
 
 
