@@ -1,7 +1,7 @@
 ---
 title: "MATH 245 Homework 4"
 author: "Ruby Krasnow and Tommy Thach"
-date: "2024-03-24"
+date: "2024-04-01"
 output:
   pdf_document:
     extra_dependencies: ["tcolorbox", "xcolor"]
@@ -235,6 +235,7 @@ But $\sin{x}$ is an odd function and so is $\lvert x \rvert\sin{(nx)}$, so both 
 Now inserting the coefficients $a_n$ we found above, we get the Fourier series:
 $$f(x)=\frac{2}{\pi} \sum_{n=1}^{\infty}  \left(\frac{\sin{n}}{n}+ \frac{\cos{n}+1}{n^2} \right) \cos{ \left( nx \right)}$$
 
+Since $f(x)$ and $f'(x)$ are both piecewise continuous, the Fourier series converges pointwise. However, since $f(x)$ is not continuous (only piecewise), it does not converge uniformly.
 
 
 ### (b)
@@ -266,7 +267,7 @@ But since $\lvert x \rvert$ is even and $\sin{(nx)}$ is odd, the product of the 
 
 Then we plug in our formulas for $a_0$ and $a_n$:
 $$ f(x) = \frac{\pi}{2} + \frac{2}{\pi} \sum_{n=1}^{\infty} \left[ \frac{1}{n^2} (-1)^{n+1} \cos{(nx)} \right]$$
-
+Since $f(x)$ and $f'(x)$ are both piecewise continuous, the Fourier series converges pointwise. Also, $f(x)$ is continuous and $f'(x)$ is piecewise continuous. Finally, the periodic boundary conditions are satisfied because $f(-\pi)=\pi=f(\pi)$. Therefore, the Fourier series also converges uniformly.
 
 ### (c)
 
@@ -309,7 +310,7 @@ But since $\cos$ is even and $\cos{\pi}=\cos{-\pi}$, both terms are zero. Thus, 
 
 $$f(x)=a_0 + \sum_{n=1}^{\infty}  a_n \cos{  \left(\frac{n\pi x}{l}\right) } $$
 $$f(x)=\frac{\pi^2}{3} + 4 \sum_{n=1}^{\infty} \frac{(-1)^{n}\cos{ (nx) }}{n^2}  $$
-
+Here, $f(x)$ and $f'(x)$ are both continuous, so the Fourier series converges piecewise. However, $f(-\pi)=\pi^2-\pi$ while $f(\pi)=\pi^2+\pi$, so the periodic boundary conditions are not satisfied and the Fourier series does not converge uniformly.
 
 ## Question 3
 
@@ -323,20 +324,35 @@ Find the Fourier sine series of
 \end{equation*}
 
 
-The Fourier sine series of a function $f(x)$ is $$f(x)= \sum_{n=1}^{\infty} A_n \sin{  \left(\frac{n\pi x}{l}\right) }$$
+The Fourier sine series of a function $f(x)$ is $$f(x)= \sum_{n=1}^{\infty} B_n \sin{  \left(\frac{n\pi x}{l}\right) }$$
 where 
-$$A_n = \frac{2}{l} \int_{0}^{l}f(x)\sin{  \left(\frac{n\pi x}{l}\right) }dx $$
-$$A_n = \frac{2}{\pi} \int_{0}^{\pi}f(x)\sin{(nx)}dx $$
+$$B_n = \frac{2}{l} \int_{0}^{l}f(x)\sin{  \left(\frac{n\pi x}{l}\right) }dx $$
+$$B_n = \frac{2}{\pi} \int_{0}^{\pi}f(x)\sin{(nx)}dx $$
 \begin{align*}
-A_n &= \frac{2}{\pi}\left[ \int_{0}^{\pi/2}\sin{(nx)}dx + 2 \int_{\pi/2}^{\pi}\sin{(nx)}dx \right] \\
+B_n &= \frac{2}{\pi}\left[ \int_{0}^{\pi/2}\sin{(nx)}dx + 2 \int_{\pi/2}^{\pi}\sin{(nx)}dx \right] \\
     &= \frac{2}{\pi}\left[\frac{-1}{n} \cos{(nx)}\Bigr\rvert_{0}^{\pi/2}- \frac{2}{n} \cos{(nx)}\Bigr\rvert_{\pi/2}^{\pi}\right] \\
     &= \frac{2}{n \pi}\left[-\cos{\left(\frac{n\pi}{2}\right)}+1-2\cos{(n\pi)}+2\cos{\left(\frac{n\pi}{2}\right)} \right]\\
     &= \frac{2}{n \pi}\left[1+\cos{\left(\frac{n\pi}{2}\right)}-2\cos{(n\pi)} \right]
 \end{align*}
 
  $$f(x)=  \frac{2}{\pi} \sum_{n=1}^{\infty} \frac{1}{n}\left[1+\cos{\left(\frac{n\pi}{2}\right)}-2\cos{(n\pi)} \right] \sin{(nx) }$$
-
-
+ $$f(x)=  \frac{2}{\pi} \sum_{n=1}^{\infty} \frac{1}{n}\left[1+\cos{\left(\frac{n\pi}{2}\right)}+2 (-1)^{n+1} \right] \sin{(nx) }$$
+$$f(x)= \sum_{n_{odd}}+\sum_{n_{even}}$$
+\begin{align*}
+\sum_{n_{even}} &=\frac{2}{\pi} \sum_{k=1}^{\infty} \frac{1}{2k}\left[1+\cos{\left(\frac{2k\pi}{2}\right)}+
+ 2 (-1)^{2k+1} \right] \sin{(2kx) } \\
+ &=\frac{2}{\pi} \sum_{k=1}^{\infty} \frac{1}{2k}\left[1+(-1)^n-2 \right] \sin{(2kx) } \\
+ &=\frac{2}{\pi} \sum_{k=1}^{\infty} \frac{(-1)^{n+1}}{2k}\sin{(2kx) }
+ \end{align*}
+ 
+\begin{align*}
+\sum_{n_{odd}}& =
+ \frac{2}{\pi} \sum_{k=1}^{\infty} \frac{1}{2k-1}\left[1+\cos{\left(\frac{(2k-1)\pi}{2}\right)}+2 (-1)^{2k-1+1} \right] \sin{((2k-1)x) } \\
+&= \frac{2}{\pi} \sum_{k=1}^{\infty} \frac{3}{2k-1}\sin{((2k-1)x) }
+ \end{align*}
+ 
+ $$f(x)=\frac{2}{\pi} \sum_{k=1}^{\infty} \frac{(-1)^{n+1}}{2k}\sin{(2kx) }+\frac{2}{\pi} \sum_{k=1}^{\infty} \frac{3}{2k-1}\sin{((2k-1)x) }$$
+ 
 ### b)
 
 Find the Fourier-cosine-series of $f(x)= \lvert \sin{x} \rvert$. Then find
@@ -406,26 +422,170 @@ $$b_n = \frac{1}{\pi} \int_{-\pi}^{\pi}x^2\sin{(nx)}dx$$
 Since $x^2$ is an even function, $b_n=0$.
 
 $$f(x)=\frac{\pi^2}{3}+ 4 \sum_{n=1}^{\infty}  \frac{(-1)^{n}\cos{(nx) } }{n^2} $$
-Now let $x=0$, such that $f(0)=0^2=0$ and $\cos{(nx)}=\cos{(0)}=1$.
+Parseval's Identity says that
+$$ \frac{1}{2\pi}\int_{-\pi}^{\pi}(x^2)^2\;dx=a_0^2+\frac{1}{2}\sum_{n=1}^{\infty} (a_n^2+b_n^2)$$
 
-$$0=\frac{\pi^2}{3}+ 4 \sum_{n=1}^{\infty}  \frac{(-1)^{n} }{n^2} $$
-$$-\frac{\pi^2}{12}=\sum_{n=1}^{\infty}  \frac{(-1)^{n} }{n^2} $$
+$$ \frac{1}{2\pi}\int_{-\pi}^{\pi}(x^2)^2\;dx= \left(\frac{\pi^2}{3}\right)^2+ \frac{1}{2}\sum_{n=1}^{\infty}  \left( \frac{4(-1)^{n} }{n^2}\right)^2  $$
+
+$$ \frac{1}{\pi}\int_{0}^{\pi}x^4\;dx= \frac{\pi^4}{9}+ \sum_{n=1}^{\infty} \frac{8}{n^4} $$
+$$ \frac{1}{\pi} \frac{x^5}{5} \Bigr\rvert_{0}^{\pi}= \frac{\pi^4}{9}+ 8 \sum_{n=1}^{\infty} \frac{1 }{n^4}$$
+$$  \frac{\pi^4}{5}= \frac{\pi^4}{9}+ 8 \sum_{n=1}^{\infty} \frac{1}{n^4}$$
+$$ \frac{4\pi^4}{45}= 8\sum_{n=1}^{\infty} \frac{1}{n^4}$$
+Thus,
+$$\zeta(4)= \sum_{n=1}^{\infty} \frac{1}{n^4}=\frac{\pi^4}{90}$$
+
+**(d)** Use the Fourier series in 2c and the pointwise convergence theorem to find $\zeta(2)$. Then find
+$$\sum^\infty_{n=1} \frac{1}{(2n-1)^2} $$
 
 
-<!-- **(d)** Use the Fourier series in 2c and the pointwise convergence theorem to find $\zeta(2)$. Then find -->
-<!-- $$\sum^\infty_{n=1} \frac{1}{(2n-1)^2} $$ -->
+Take the following Fourier series and set $x=\pi$.
+$$f(x)=x^2=\frac{\pi^2}{3}+ 4 \sum_{n=1}^{\infty}  \frac{(-1)^{n}\cos{(nx) } }{n^2} $$
 
-<!-- ## Question 4 -->
-<!-- Compute the complex Fourier series of the following functions: -->
+$$\pi^2=\frac{\pi^2}{3}+ 4 \sum_{n=1}^{\infty}  \frac{1 }{n^2} $$
+$$\frac{2\pi^2}{3}=4 \sum_{n=1}^{\infty}  \frac{1 }{n^2} $$
 
-<!-- **(a)** Compute the complex Fourier series of $f(x) = e^x$ and show that -->
+Thus, 
+$$\zeta(2)= \sum_{n=1}^{\infty} \frac{1}{n^2}=\frac{\pi^2}{6}$$
+Now, we want to find 
+$$\sum_{n=1}^{\infty} \frac{1}{(2n-1)^2} = \frac{1}{1}+\frac{1}{9}+\frac{1}{25}+\frac{1}{49}+ \;...$$
+Let's also write out some terms in the series representation of $\zeta(2)$:
+$$\sum_{n=1}^{\infty} \frac{1}{n^2}=\frac{1}{1}+\frac{1}{4}+\frac{1}{9}+\frac{1}{16}+\frac{1}{25}+\frac{1}{36}+\frac{1}{49}+ \;...$$
+We can see that the top series is simply the bottom series without the terms where the denominator is the square of an even integer; which we can write as:
+\begin{align*}
+\sum_{n=1}^{\infty} \frac{1}{(2n-1)^2} 
+&=\sum_{n=1}^{\infty} \frac{1}{n^2}-\sum_{n=1}^{\infty} \frac{1}{(2n)^2} \\
+&=\sum_{n=1}^{\infty} \frac{1}{n^2}-\frac{1}{4}\sum_{n=1}^{\infty} \frac{1}{n^2}\\
+&=\frac{\pi^2}{6}-\frac{1}{4}\frac{\pi^2}{6} \\
+&=\frac{\pi^2}{8}
+\end{align*}
+Therefore, we conclude that $$\sum_{n=1}^{\infty} \frac{1}{(2n-1)^2} =\frac{\pi^2}{8}$$
 
-<!-- $$\coth{\pi}= \frac{1}{\pi}+ \frac{2}{\pi}  \left( \frac{1}{1+1^2} +  \frac{1}{1+2^2} +  \frac{1}{1+3^2} + \;...\right) $$ -->
 
-<!-- **(b)** Find the complex Fourier series of $xe^{ix}$. Then use your result to find the Fourier series of $x \cos{x}$ and $x \sin{x}$. -->
 
-<!-- ## Question 5 -->
+## Question 4
+Compute the complex Fourier series of the following functions:
 
-<!-- Find the function represented by the new series which is obtained by termwise integration of the following series from $0$ to $x$. -->
+### (a)   
+Compute the complex Fourier series of $f(x) = e^x$ and show that
 
-<!-- $$ \sum^\infty_{k=1} (-1)^{k+1} \frac{\cos{kx}}{k}=\log{  \left(2 \cos{\left(\frac{x}{2}\right)}\right) }, \quad -\pi<x<\pi$$ -->
+$$\coth{\pi}= \frac{1}{\pi}+ \frac{2}{\pi}  \left( \frac{1}{1+1^2} +  \frac{1}{1+2^2} +  \frac{1}{1+3^2} + \;...\right) $$
+
+The complex Fourier series of a function $f(x)$ is
+$$f(x)=\sum_{n=-\infty}^{\infty} c_ne^{in\pi x / l}$$
+where $$c_n= \frac{1}{2l} \int_{-l}^{l}f(x) e^{-in\pi x / l}\;dx $$
+
+\begin{align*}
+c_n&= \frac{1}{2\pi} \int_{-\pi}^{\pi}e^xe^{-in x}\;dx \\
+  &= \frac{1}{2\pi} \int_{-\pi}^{\pi}e^{x(1-in)}\;dx \\
+  &= \frac{1}{2\pi} \frac{1}{1-in}e^{x(1-in)}\Bigr\rvert_{-\pi}^{\pi} \\
+  & = \frac{1}{2\pi} \frac{1}{1-in}\left[e^{\pi}e^{-in\pi}-e^{-\pi}e^{in\pi}\right]
+\end{align*}
+and since $e^{in\pi}=\cos{(n\pi)}+i\sin{(n\pi)}=(-1)^n=\cos{(-n\pi)}+i\sin{(-n\pi)}= e^{-in\pi}$,
+
+\begin{align*}
+c_n& = \frac{1}{2\pi} \frac{(-1)^n}{1-in}\left[e^{\pi}-e^{-\pi}\right]\\
+&= \frac{1}{\pi} \frac{(-1)^n}{1-in} \sinh{\pi}
+\end{align*}
+$$f(x)=e^x=\sum_{n=-\infty}^{\infty} \frac{1}{\pi} \frac{(-1)^n}{1-in} (\sinh{\pi})\,e^{inx}$$
+
+Set $x=\pi$ and $x=-\pi$ and then add the two expressions, noting that $e^{in\pi}=e^{-in\pi}=(-1)^n$ and $(-1)^n(-1)^n=(-1)^{2n}=1$.
+$$e^\pi=\sum_{n=-\infty}^{\infty} \frac{1}{\pi} \frac{1}{1-in} (\sinh{\pi})$$
+
+$$e^{-\pi}=\sum_{n=-\infty}^{\infty} \frac{1}{\pi} \frac{1}{1-in} (\sinh{\pi})$$
+
+
+$$\frac{e^\pi+e^{-\pi}}{2}=\sum_{n=-\infty}^{\infty} \frac{1}{\pi} \frac{1}{1-in} (\sinh{\pi})$$
+But note that $\frac{e^\pi+e^{-\pi}}{2}=\cosh{\pi}$.
+
+
+$$\cosh{\pi}=\sum_{n=-\infty}^{\infty} \frac{1}{\pi} \frac{1}{1-in} (\sinh{\pi})$$
+Divide both sides by $\sinh{\pi}$:
+$$\coth{\pi}=\sum_{n=-\infty}^{\infty} \frac{1}{\pi} \frac{1}{1-in}$$
+Multiply the right-hand side by $\frac{1+in}{1+in}$:
+$$\coth{\pi}=\sum_{n=-\infty}^{\infty} \frac{1}{\pi} \frac{1+n}{1+n^2}$$
+
+
+$$=\sum_{n=-\infty}^{\infty} \frac{1}{\pi} \frac{1}{1+n^2}+\sum_{n=-\infty}^{\infty} \frac{1}{\pi} \frac{n}{1+n^2}$$
+The second sum will disappear because the $n$ term in the numerator means that all negative terms in the series will cancel with the corresponding positive $n$ terms, while the expression evaluates to zero at $n=0$. Thus,
+\begin{align*}
+\coth{\pi}&=\sum_{n=-\infty}^{\infty} \frac{1}{\pi} \frac{1}{1+n^2} \\
+&=\frac{1}{\pi}+ \frac{2}{\pi}  \left( \frac{1}{1+1^2} +  \frac{1}{1+2^2} +  \frac{1}{1+3^2} +  \;...\right)
+\end{align*}
+which is what we initially sought to show.
+
+### (b)  
+Find the complex Fourier series of $xe^{ix}$. Then use your result to find the Fourier series of $x \cos{x}$ and $x \sin{x}$.
+
+The complex Fourier series of a function $f(x)$ is
+$$f(x)=\sum_{n=-\infty}^{\infty} c_ne^{in\pi x / l}$$
+where $$c_n= \frac{1}{2l} \int_{-l}^{l}f(x) e^{-in\pi x / l}\;dx $$
+
+ \begin{align*}
+ c_n &= \frac{1}{2\pi} \int_{-\pi}^{\pi}xe^{ix}e^{-in x}\;dx \\
+     &= \frac{1}{2\pi} \int_{-\pi}^{\pi}xe^{ix(1-n)}\;dx
+  \end{align*}
+  
+Using integration by parts,
+  $$u=x, \quad du=dx,\quad dv=e^{ix(1-n)}\,dx,\quad v=\frac{1}{i(1-n)}e^{ix(1-n)} $$
+$$\frac{1}{2\pi} \int_{-\pi}^{\pi}xe^{ix(1-n)}\;dx = \frac{1}{2\pi} \left[\frac{x}{i(1-n)}e^{ix(1-n)}\right]^{\pi}_{-\pi}-\frac{1}{2\pi} \int_{-\pi}^{\pi}\frac{1}{i(1-n)}e^{ix(1-n)}\;dx$$
+First, let's evaluate the first term on the right-hand side:
+\begin{align*}
+\frac{1}{2\pi} \left[\frac{x}{i(1-n)}e^{ix(1-n)}\right]^{\pi}_{-\pi} 
+&= \frac{1}{2\pi} \left[ \frac{\pi}{i(1-n)} e^{i \pi (1-n)} -\frac{-\pi}{i(1-n)} e^{-i \pi (1-n)}\right]  \\
+&= \frac{1}{2\pi} \left[ \frac{\pi}{i(1-n)} e^{i \pi}e^{-i \pi n}  -\frac{-\pi}{i(1-n)} e^{-i \pi} e^{i \pi n} \right]  \\
+&= \frac{1}{2\pi} \left[ \frac{\pi}{i(1-n)} (-1)(-1)^n  -\frac{-\pi}{i(1-n)} (-1)(-1)^n \right] \\
+&= \frac{1}{2\pi} \left[ \frac{2\pi}{i(1-n)} (-1)^{n+1}  \right] \\
+&= \frac{(-1)^{n+1}} {i(1-n)} 
+\end{align*}
+
+
+Now we turn to the integral on the right-hand side:
+\begin{align*}
+-\frac{1}{2\pi} \int_{-\pi}^{\pi}\frac{1}{i(1-n)}e^{ix(1-n)}\;dx &= \frac{1}{2\pi} \left[\frac{e^{ix(1-n)}}{(1-n)^2}\right]^{\pi}_{-\pi}  \\
+&= \frac{1}{2\pi} \left[ \frac{e^{i\pi (1-n)}}{(1-n)^2}  -\frac{e^{-i \pi (1-n)}}{(1-n)^2}\right] \\
+&= \frac{1}{2\pi} \left[ \frac{(-1)^{n+1}}{(1-n)^2}  -\frac{(-1)^{n+1}}{(1-n)^2}\right] \\
+&=0 
+\end{align*}
+
+Thus, $c_n=\frac{(-1)^{n+1}}{i(1-n)}$. Plugging this into the equation for a complex Fourier series, we find that
+
+$$xe^{ix}=\sum_{n=-\infty}^{\infty}  \frac{(-1)^{n+1}} {i(1-n)} e^{inx}$$
+
+Now, we use Euler's identity
+$$e^{ix}=\cos{x}+i\sin{x}$$
+$$\cos{x}=\frac{e^{ix}+e^{-ix}}{2}$$
+\begin{align*}
+x \cos{x} &=  \frac{x\left( e^{ix}+ e^{-ix} \right) } {2} \\
+          &= \frac{x}{2}\sum_{n=-\infty}^{\infty}  \frac{(-1)^{n+1}} {i(1-n)} e^{inx} + \frac{x}{2}\sum_{n=-\infty}^{\infty}  \frac{(-1)^{n+1}} {i(1-n)} e^{-inx}\\
+          &= \frac{x}{2}\sum_{n=-\infty}^{\infty}  \frac{(-1)^{n+1}} {i(1-n)} (\cos{nx}+i\sin{nx}) + \frac{x}{2}\sum_{n=-\infty}^{\infty}  \frac{(-1)^{n+1}} {i(1-n)}(\cos{(-nx)}+i\sin{(-nx)})  \\
+          &=\frac{x}{2}\sum_{n=-\infty}^{\infty}  \frac{(-1)^{n+1}} {i(1-n)} (\cos{nx}+i\sin{nx}) + \frac{x}{2}\sum_{n=-\infty}^{\infty}  \frac{(-1)^{n+1}} {i(1-n)}(\cos{(nx)}-i\sin{(nx)}) 
+\end{align*}
+    
+The sin terms cancel and the cos terms add, yielding
+$$x \cos{x} =x \sum_{n=-\infty}^{\infty}  \frac{(-1)^{n+1}} {i(1-n)} \cos{nx} $$
+Similarly,
+
+\begin{align*}
+\sin{x} &=\frac{e^{ix}-e^{-ix}}{2i} \\
+        &= \frac{x}{2i}\sum_{n=-\infty}^{\infty}  \frac{(-1)^{n+1}} {i(1-n)} e^{inx} - \frac{x}{2i}\sum_{n=-\infty}^{\infty}  \frac{(-1)^{n+1}} {i(1-n)} e^{-inx} \\
+        &= \frac{x}{2i}\sum_{n=-\infty}^{\infty}  \frac{(-1)^{n+1}} {i(1-n)} (\cos{nx}+i\sin{nx}) - \frac{x}{2i}\sum_{n=-\infty}^{\infty}  \frac{(-1)^{n+1}} {i(1-n)}(\cos{(-nx)}+i\sin{(-nx)})  \\
+        &=\frac{x}{2i}\sum_{n=-\infty}^{\infty}  \frac{(-1)^{n+1}} {i(1-n)} (\cos{nx}+i\sin{nx}) - \frac{x}{2i}\sum_{n=-\infty}^{\infty}  \frac{(-1)^{n+1}} {i(1-n)}(\cos{(nx)}-i\sin{(nx)})
+\end{align*}    
+        
+The $\cos$ terms cancel and the $\sin$ terms add, yielding
+$$\frac{x}{i} \sum_{n=-\infty}^{\infty}  \frac{(-1)^{n+1}} {i(1-n)}(- \sin{nx}) $$
+Multiplying the two $i$s together cancels the negative sign, meaning the Fourier series becomes:
+$$x \sin{x} =x \sum_{n=-\infty}^{\infty}  \frac{(-1)^{n+1}} {(1-n)}\sin{nx} $$
+
+## Question 5
+
+Find the function represented by the new series which is obtained by term-wise integration of the following series from $0$ to $x$.
+
+$$ \sum^\infty_{k=1} (-1)^{k+1} \frac{\cos{kx}}{k}=\log{  \left(2 \cos{\left(\frac{x}{2}\right)}\right) }, \quad -\pi<x<\pi$$
+
+
+$$ \int_{0}^{x} \sum^\infty_{k=1} (-1)^{k+1} \frac{\cos{kx}}{k}= \sum^\infty_{k=1} (-1)^{k+1} \frac{\sin{kx}}{k^2}$$
+
+$$\left[ \sum^\infty_{k=1} (-1)^{k+1} \frac{\sin{kx}}{k^2} \right]\Bigr\rvert_{0}^{x}= \sum^\infty_{k=1} (-1)^{k+1} \frac{\sin{kx}}{k^2}$$
+Therefore,
+$$\int_{0}^{x} \log{  \left(2 \cos{\left(\frac{x}{2}\right)}\right) }= \sum^\infty_{k=1} (-1)^{k+1} \frac{\sin{kx}}{k^2}$$
