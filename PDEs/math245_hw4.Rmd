@@ -1,7 +1,7 @@
 ---
 title: "MATH 245 Homework 4"
 author: "Ruby Krasnow and Tommy Thach"
-date: "2024-04-01"
+date: "2024-04-02"
 output:
   pdf_document:
     extra_dependencies: ["tcolorbox", "xcolor"]
@@ -26,11 +26,11 @@ $$X(x)=A\sin{(\beta x)}+B\cos{(\beta x)}$$
 Differentiating, we find that 
 $$X'(x)=\beta A\cos{(\beta x)}-\beta B\sin{(\beta x)}$$
 Now plugging in our initial condition $X'(0) = 0$, we get
-$X'(0)=\beta A=0$. And since we are in a case where $\beta \neq 0$, this means $B=0$ so $X(x)=A\sin{(\beta x)}$. Now we use our boundary condition $X(l)=0$ to get $X(l)=A\sin{(\beta l)}=0$. If $A=0$, then $X(0)=0$ and this contradicts the definition of an eigenfunction. Therefore, we must have $\sin{(\beta l)}=0$, which can only occur if $\beta = \frac{n\pi}{l}$. Therefore, this case gives us eigenvalues 
+$X'(0)=\beta A=0$. And since we are in a case where $\beta \neq 0$, this means $A=0$ so $X(x)=B\cos{(\beta x)}$. Now we use our boundary condition $X(l)=0$ to get $X(l)=B\cos{(\beta l)}=0$. If $B=0$, then $X(0)=0$ and this contradicts the definition of an eigenfunction. Therefore, we must have $\cos{(\beta l)}=0$, which can only occur if $\beta = \frac{(2n-1)\pi}{2l}$. Therefore, this case gives us eigenvalues 
 
-$$\lambda_n= \left(\frac{n\pi}{l}\right)^2 \quad n=1,2,3... $$
+$$\lambda_n= \left(\frac{(2n-1)\pi}{2l}\right)^2 \quad n=1,2,3... $$
 with eigenfunctions
-$$X_n(x)=\sin{\left( \frac{n \pi x}{l}\right)}$$
+$$X_n(x)=\cos{\left( \frac{(2n-1) \pi x}{2l}\right)}$$
 
 \underline{Case 2:} Zero eigenvalues, $\lambda=0$
 $X''=0$ implies that $X(x)$ is of the form $Ax+B$, with derivative $X'(x)=A$. Now plugging in our initial condition $X'(0) = 0$, we get $A=0$, which means $X(x)=B$. But from the boundary condition $X(l)=0$, we get $B=0$ and so $X(0)=0$. Therefore, there are no eigenfunctions $X(x)$ that satisfy $- \frac{d^2}{dx^2}X(x)=\lambda X(x)$ when $\lambda=0$ and hence no zero eigenvalues.
@@ -72,7 +72,7 @@ with eigenfunctions
 $$X_n(x)=\sin{\left(n\pi \ln{x}\right)}$$
 
 \underline{Case 2:} Zero eigenvalues, $\lambda=0$
-$X''=0$ implies that $X(x)$ is of the form $Ax+B$. Now plugging in our initial condition $X(1) = 0$, we get $A+B=0$, which means $X(x)=Ax-A$. But from the boundary condition $X(e)=0$, we get $A(e-1)=0$ which is only possible if $A=0$ and accordingly $X(0)=0$. Therefore, there are no eigenfunctions $X(x)$ that satisfy the boundary conditions when $X''=0$ and hence no zero eigenvalues.
+$X''=0$ implies that $X(x)$ is of the form $Ax+B$. Now plugging in our initial condition $X(1) = 0$, we get $A+B=0$, which means $X(x)=Ax-A$. But from the boundary condition $X(e)=0$, we get $A(e-1)=0$ which is only possible if $A=0$ and accordingly $B=-A=0$. Therefore, there are no eigenfunctions $X(x)$ that satisfy the boundary conditions when $X''=0$ and hence no zero eigenvalues.
 
 
 \underline{Case 3:} Negative eigenvalues, $\lambda = -\beta^2 <0$
@@ -81,7 +81,7 @@ $$X(x)=Ax^{\beta }+Bx^{-\beta}$$
 
 $$X(1)=A+B=0 \quad \longrightarrow\quad A=-B$$
 $$X(x)=Ax^{\beta }-Ax^{-\beta}$$
-Then the other boundary condition gives $X(e)=Ae^{\beta}-Ae^{-\beta }=0$. Since $e^{\beta}$ and $e^{-\beta}$ are always nonzero, we must have $A=0$, implying that again $X(x)=0$.Thus, this problem has only positive eigenvalues and their associated eigenfunctions as found in Case 1.
+Then the other boundary condition gives $X(e)=Ae^{\beta}-Ae^{-\beta }=0 \quad\Rightarrow A(e^{\beta}-e^{-\beta })=0$. If we had $e^{\beta}-e^{-\beta }=0$, that would imply $\beta=-\beta\quad\Rightarrow\beta=0$, but we are in a case when we defined $\beta$ to be nonzero. So, we must have $A=0$, implying that again $X(x)=0$. Thus, this problem has only positive eigenvalues and their associated eigenfunctions as found in Case 1.
 
 
 ### (c)
@@ -103,6 +103,9 @@ $$X'(x)=\beta A\cos{(\beta x)}-\beta B\sin{(\beta x)}$$
 
 $$X(1)=A\sin{(\beta)}+B\cos{(\beta)}=0$$
 $$A\sin{(\beta)}=-B\cos{(\beta)}$$
+Before dividing by $A$, we need to verify that $A \neq 0$. In this case, if $A = 0$,
+then $X=B \cos{\beta x}$, so $X'(0)+X(0)=0+B=0$ implies $B=0$, a contradiction. Similarly, $\cos{\beta}\neq 0$, since if $\cos{\beta}=0$, then $\sin{\beta} \neq 0$ (sin and cos are not zero at the same time), and so
+$A \sin{\beta}=-B\cos{\beta}=0 \quad\Rightarrow A=0$, leading to the same contradiction as before.
 
 \begin{equation}\label{aciii}
 -\frac{B}{A}=\frac{\sin{(\beta)}}{\cos{(\beta)}}=\tan{\beta}
@@ -150,11 +153,15 @@ $$0=A(\beta+1)+B(1-\beta)$$
 $$-A(\beta+1)=B(1-\beta)$$
 $$\frac{\beta+1}{1-\beta}=-\frac{B}{A}$$
 Now turning to our other boundary condition,
-$$X'(1)=\beta Ae^{\beta}-\beta Be^{-\beta}=0$$
-$$\beta Ae^{\beta}=\beta Be^{-\beta}$$
-$$-\frac{B}{A} = -e^{2\beta}$$
+$$X(1)=Ae^{\beta}+Be^{-\beta }=0$$
+$$Ae^{\beta}=-Be^{-\beta}$$
+$$-\frac{B}{A} = e^{2\beta}$$
+
+We know $A \neq= 0$, since otherwise $X(1)=Be^{-\beta }=0$ implies $B = 0$, a contradiction.
+Now you also can’t have $1-\beta = 0$, since $\beta = 1$ leads to $-A(1+1) = -2A = 0$. This justifies all the division so far.
+
 This would give us the following equation:
-$$\frac{\beta+1}{1-\beta}=-e^{2\beta}$$
+$$\frac{\beta+1}{1-\beta}=e^{2\beta}$$
 But the only time that this equality holds true is when $\beta=0$ (Fig. 2), but we are in the case when we defined $\beta$ to be nonzero, meaning that we have reached a contradiction and we cannot have any negative eigenvalues.
 
 ```{r, echo=FALSE,   fig.height=3, fig.width=5}
@@ -198,13 +205,16 @@ $$ b_n=\frac{1}{l} \int_{-l}^{l}f(x)\sin{  \left(\frac{n\pi x}{l}\right) }dx$$
 Here, $l=\pi$. Let's start with $a_0$:
 \begin{align*}
 a_0 &=\frac{1}{2\pi} \int_{-\pi}^{\pi}f(x)dx \\
-    &=\frac{1}{2\pi}\left[ \int_{-\pi}^{-1} 1\;dx + \int_{-1}^{1} (1-\lvert x \rvert) dx+ \int_{1}^{\pi} 1\;dx  \right] \\
-    &= \frac{1}{2\pi}\int_{-\pi}^{\pi}1\;dx - \int_{-1}^{1} \lvert x \rvert\, dx \\
-    &= 1- 2\int_{0}^{1} x \; dx \\
-    &= 1- 1=0
+    &=\frac{1}{\pi} \int_{0}^{\pi}f(x)dx \\
+    &= \frac{1}{\pi} \left(\int_{0}^{1}(1-\lvert x \rvert )\;dx +   \int_{1}^{\pi}\;dx \right) \\
+    &= \frac{1}{\pi} \left(\int_{0}^{1}(1-x )\;dx +  (\pi-1) \right) \\
+    &= \frac{1}{\pi} \left(\int_{0}^{1}(1-x )\;dx +  (\pi-1) \right) \\
+    &= \frac{1}{\pi} \left((x-x^2/2) \Bigr\rvert_{0}^{1} +  (\pi-1) \right) \\
+    &= \frac{1}{\pi} \left( \frac{1}{2} +  (\pi-1) \right) \\
+    &= \frac{1}{\pi} \left( \pi-\frac{1}{2} \right) \\
 \end{align*}
 
-where we used the evenness of $\lvert x \rvert$ to rewrite $\int_{-1}^{1} \lvert x \rvert \,dx$ as $2\int_{0}^{1} x \; dx$. Thus, $a_0=0$. Now we perform a similar procedure to find $a_n$:
+where we used the evenness of $\lvert x \rvert$ to rewrite $\int_{-\pi}^{\pi} f(x)dx \,dx$ as $2\int_{0}^{\pi} f(x)dx \; dx$. Thus, $a_0=\frac{1}{\pi} \left( \pi-\frac{1}{2} \right)$. Now we perform a similar procedure to find $a_n$:
 
 \begin{align*}
 a_n &= \frac{1}{\pi} \int_{-\pi}^{\pi} f(x) \cos{(nx)}dx \\
@@ -232,8 +242,8 @@ b_n &=
 
 But $\sin{x}$ is an odd function and so is $\lvert x \rvert\sin{(nx)}$, so both of these integrals vanish and we find $b_n=0$.
 
-Now inserting the coefficients $a_n$ we found above, we get the Fourier series:
-$$f(x)=\frac{2}{\pi} \sum_{n=1}^{\infty}  \left(\frac{\sin{n}}{n}+ \frac{\cos{n}+1}{n^2} \right) \cos{ \left( nx \right)}$$
+Now inserting the coefficients we found above, we get the Fourier series:
+$$f(x)=\frac{1}{\pi} \left( \pi-\frac{1}{2} \right)+\frac{2}{\pi} \sum_{n=1}^{\infty}  \left(\frac{\sin{n}}{n}+ \frac{\cos{n}+1}{n^2} \right) \cos{ \left( nx \right)}$$
 
 Since $f(x)$ and $f'(x)$ are both piecewise continuous, the Fourier series converges pointwise. However, since $f(x)$ is not continuous (only piecewise), it does not converge uniformly.
 
@@ -576,6 +586,8 @@ The $\cos$ terms cancel and the $\sin$ terms add, yielding
 $$\frac{x}{i} \sum_{n=-\infty}^{\infty}  \frac{(-1)^{n+1}} {i(1-n)}(- \sin{nx}) $$
 Multiplying the two $i$s together cancels the negative sign, meaning the Fourier series becomes:
 $$x \sin{x} =x \sum_{n=-\infty}^{\infty}  \frac{(-1)^{n+1}} {(1-n)}\sin{nx} $$
+**Note that if $n = 1$, then $c_n = 0$, since you end up with the integral of $x$ over $(-\pi, \pi)$, which is zero. Hence the sum is properly over all terms with $n\neq 1$.  
+
 
 ## Question 5
 
@@ -589,3 +601,16 @@ $$ \int_{0}^{x} \sum^\infty_{k=1} (-1)^{k+1} \frac{\cos{kx}}{k}= \sum^\infty_{k=
 $$\left[ \sum^\infty_{k=1} (-1)^{k+1} \frac{\sin{kx}}{k^2} \right]\Bigr\rvert_{0}^{x}= \sum^\infty_{k=1} (-1)^{k+1} \frac{\sin{kx}}{k^2}$$
 Therefore,
 $$\int_{0}^{x} \log{  \left(2 \cos{\left(\frac{x}{2}\right)}\right) }= \sum^\infty_{k=1} (-1)^{k+1} \frac{\sin{kx}}{k^2}$$
+
+If you wanted us to differentiate rather than integrate:
+$$\frac{d}{dx} \sum^\infty_{k=1} (-1)^{k+1} \frac{\cos{kx}}{k}=\frac{d}{dx}\log{  \left(2 \cos{\left(\frac{x}{2}\right)}\right) }$$
+
+\begin{align*}
+\sum^\infty_{k=1} (-1)^{k}\sin{kx} &=\frac{-\sin{\frac{x}{2}}}{2 \cos{\frac{x}{2}}} \\
+&= -\frac{1}{2}\tan{\frac{x}{2}}
+\end{align*}
+
+Thus, 
+$$\sum^\infty_{k=1} (-1)^{k}\sin{kx}=-\frac{1}{2}\tan{\frac{x}{2}}$$
+
+Note that this sum is actually divergent, since the terms don’t go to zero for any $x$ apart from a few special points (like $x = 0$).

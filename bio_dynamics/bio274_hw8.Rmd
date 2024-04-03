@@ -1,0 +1,9 @@
+---
+title: "BIOL 274 Homework 8"
+author: "Ruby Krasnow"
+date: "2024-04-02"
+output:
+  pdf_document:
+    extra_dependencies: ["derivative", "tcolorbox", "xcolor"]
+---
+# Visualizing Solutions of Linear Systems and Runga Kutta
