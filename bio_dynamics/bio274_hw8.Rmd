@@ -24,7 +24,7 @@ For the parameters given, we found one single equilibrium point. Determine wheth
 
 
 Let $X$ be the number of susceptible individuals at time $t$ and $Y$ be the number of infected individuals (who can transmit the disease). The epidemic model presented in class takes the following form:
-$$\frac{dX}{dt}=-\mu XY- \rho $$
+$$\frac{dX}{dt}=-\mu XY+ \rho $$
 $$\frac{dY}{dt}=\mu XY- \nu Y $$
 where $\mu=0.025,\; \rho=5,$ and $\nu =0.5$. We determined that given these parameters, the model has a single equilibrium point at $\left( \frac{\nu}{\mu}, \frac{\rho}{\nu}\right)=(20,10)$.
 
@@ -118,8 +118,201 @@ make_plane_complex(c(a=-0.25,b=-0.5,c=0.25,d=0))
 ### b.   
 Modify the model given in class, assuming that the Susceptible population exhibits exponential growth with an intrinsic growth rate of 0.10 in the absence of any infected individuals.
 
+The differential equation for the infected population will remain the same, so we will still have
+$$\frac{dY}{dt}=\mu XY- \nu Y $$
+However, we need to modify our DE for the susceptible population so that in the absence of infected individuals (i.e., when $Y=0$), the population will exhibit exponential growth. We set $r=0.1$ and write our new equation as
+$$\frac{dX}{dt}=-\mu XY+ rX $$
+When $Y=0$, this becomes $\frac{dX}{dt}=rX$. We know this simple first-order ODE has the solution $X(t)=X_0 e^{rt}$, meaning the population will grow exponentially over time with an intrinsic growth rate of 0.1, as desired.
+
+
 ### c.  
 Find all equilibria of your new Epidemic model from part (b) and determine their stability by sketching the phase plane near each equilibrium.
+
+To find the equilibrium points of our new epidemic model, we need to find all of the points where 
+\begin{equation}\label{eqn:dX}
+\frac{dX}{dt}=-\mu XY+ rX=0
+\end{equation}
+
+\begin{equation}\label{eqn:dY}
+\frac{dY}{dt}=\mu XY- \nu Y =0
+\end{equation}
+
+Let's start with the derivative of $Y$, which is the same as when we analyzed it in class. $$\frac{dY}{dt}=Y(\mu X- \nu)=0$$
+This means that either $Y=0$ or $\mu X - \nu = 0$. But if $Y=0$, we must have $\frac{dX}{dt}=0+ rX=0$, and since we defined $r=0.1$, $X$ must be zero and we have found the logical but boring equilibrium point $(0,0)$.
+
+The other possibility is $\mu X - \nu = 0$, which we can rearrange to be $X= \frac{\nu}{\mu}$. Plugging this into (\ref{eqn:dX}), we get
+$$\frac{dX}{dt}=-\mu \frac{\nu}{\mu}Y+ r\frac{\nu}{\mu}=0 $$
+$$\frac{dX}{dt}=-\nu Y+ r\frac{\nu}{\mu}=0 $$
+$$\nu Y= r\frac{\nu}{\mu}$$
+$$Y= \frac{r}{\mu}$$
+Therefore, our second equilibrium point is $$\left(\frac{\nu}{\mu},\frac{r}{\mu}\right)=\left(\frac{0.5}{0.025},\frac{0.1}{0.025}\right)=(20,4)$$
+
+Now we look at $\frac{dX}{dt}=-\mu XY+ rX= X(-\mu Y+r)=0$
+Thus, either $X=0$ or $-\mu Y+r=0$. If $X=0$, our equation (\ref{eqn:dY}) says that we must have $Y=0$, so we found the same equilibrium point $(0,0)$ as before. If $-\mu Y+r=0 \quad\Rightarrow\quad \mu Y=r \quad\Rightarrow\quad Y= \frac{r}{\mu}$
+
+$$\frac{dY}{dt}=\mu XY- \nu Y =0$$
+
+$$\frac{dY}{dt}=\mu X \frac{r}{\mu}- \nu \frac{r}{\mu} =0$$
+$$Xr- \nu \frac{r}{\mu} =0$$
+We can divide by $r$ because it is a non-zero constant:
+$$X- \frac{\nu}{\mu} =0$$
+So we again we have the equilibrium point 
+$$\left(\frac{\nu}{\mu},\frac{r}{\mu}\right)=(20,4)$$
+
+For our new system, the Jacobian is
+$$J(X,Y)= \begin{bmatrix} 
+    -\mu Y + r &  -\mu X \\
+    \mu Y & -\mu X-\nu \end{bmatrix}= \begin{bmatrix} 
+    -\mu Y + r &  -\mu X \\
+    \mu Y & -\mu X-\nu \end{bmatrix} $$
+
+We then evaluate the Jacobian at our equilibrium point:
+$$J(20,4)= \begin{bmatrix} 
+    -0.025(4)+0.1 &  -0.025(20) \\
+    0.025(4) & 0.025(20)-0.5 \end{bmatrix}= \begin{bmatrix} 
+    0 &  -0.5 \\
+    0.1 & 0 \end{bmatrix} $$
+
+Our next step is to find the eigenvalues of this matrix.
+\begin{equation*}
+\det{\begin{bmatrix} 
+    0-\lambda & -0.5 \\
+    0.1 & 0-\lambda \end{bmatrix}}=0 \\
+\end{equation*}
+
+
+$$ \lambda^2+0.05=0 $$
+
+So $\lambda \approx \pm 0.223 i$. Since we have purely imaginary complex eigenvalues, the phase plane will look like a center, corresponding to periodic solutions:
+```{r, echo=FALSE, message=FALSE, warning=FALSE,fig.keep="last",fig.height=4, fig.width=4,fig.align='center'}
+
+# Phase Portrait setup
+# Phase Portrait setup
+y0 <- matrix(c(0, 1, -6, 1, 5, 0.5, 0, -3), 5, 2, byrow = TRUE)
+
+y0_df <- tibble(x=c(0,-6,5,0), 
+                y=c(1,1,0.5,-3),
+                IC=c("V1", "V2", "V3", "V4")) %>% 
+  mutate(pt = paste0("(",x, ",", y, ")"))
+
+fun_traj <- function(t, y, parameters) {
+  x <- y[1]
+  y <- y[2]
+  a <- parameters[1]
+  b <- parameters[2]
+  c <- parameters[3]
+  d <- parameters[4]
+  dy <- numeric(2)
+  dy[1] <- a*x + b*y
+  dy[2] <- c*x + d*y  
+  return(list(dy))
+}
+
+fun_plane <- c(dx ~ a*x+b*y, dy ~c*x+d*y)
+
+make_plane_complex <- function(params) {
+  params_unnamed <- unname(params)
+  traj <- trajectory(fun_traj, y0 = y0, tlim= c(0, 55), tstep = 0.05,
+                     parameters = params_unnamed, add=FALSE)
+  
+  t <- c(traj$t)
+  x <- as_tibble(traj$x) %>% bind_cols("t"=t) %>% 
+    pivot_longer(cols = c(1:4), names_to = "IC", values_to = "x")
+  y <- as_tibble(traj$y) %>% bind_cols("t"=t) %>% 
+    pivot_longer(cols = c(1:4), names_to = "IC", values_to = "y")
+  z <- left_join(x,y, by = join_by(t, IC)) %>% filter(x<7 & x>-7 & y<7 & y>-7) %>% 
+    left_join(y0_df %>% select(IC, pt), by="IC")
+  
+  p1 <- phaseplane(fun_plane, x_var="x" ,y_var="y",
+                   x_window = c(-7, 7), y_window = c(-7, 7),
+                   parameters = params)
+  
+  p1+theme_bw()+
+    geom_path(data=z, aes(x=x, y=y, group=pt), linewidth=1) +
+  theme(
+    axis.ticks = element_blank(),
+    axis.text = element_blank()
+  )
+}
+
+make_plane_complex(c(a=0,b=-0.5,c=0.1,d=0))
+```
+
+
+
+We then evaluate the Jacobian at our equilibrium point:
+$$J(0,0)= \begin{bmatrix} 
+    -0.025(0)+0.1 &  -0.025(0) \\
+    0.025(0) & 0.025(0)-0.5 \end{bmatrix}= \begin{bmatrix} 
+    0.1 &  0 \\
+   0 & -0.5 \end{bmatrix} $$
+
+We can see that our eigenvalues for this matrix are the values along the diagonal, $\lambda_1=0.1, \; \lambda_2=-0.5$. Using our knowledge of linear algebra, we know that the eigenvector associated with $\lambda_1$ is just $\begin{bmatrix}1 \\ 0 \end{bmatrix}$ and the eigenvector associated with $\lambda_2$ is $\begin{bmatrix}1 \\ 0 \end{bmatrix}$.
+We have one positive and one negative eigenvalue, which means we will have an (unstable) saddle near the equilibrium at (0,0), with straight-line solutions tending towards the origin on the x-axis (because of the positive eigenvalue) and away from the origin on the y-axis (because of the negative eigenvalue).
+
+
+```{r, echo=FALSE, message=FALSE, warning=FALSE,fig.keep="last"}
+# Phase Portrait setup
+y0 <- matrix(c(0, 1, 0, 4, -6, 1, 5, 0.5, 0, -3), 5, 2, byrow = TRUE)
+
+y0_df <- tibble(x=c(0,0,-6,5,0), 
+                y=c(1,4,1,0.5,-3),
+                IC=c("V1", "V2", "V3", "V4", "V5")) %>% 
+  mutate(pt = paste0("(",x, ",", y, ")"))
+
+make_plane <- function(params) {
+  params_unnamed <- unname(params)
+  traj <- trajectory(fun_traj, y0 = y0, tlim= c(0, 1), tstep=0.005,
+                     parameters = params_unnamed, add=FALSE)
+  
+  t <- c(traj$t)
+  x <- as_tibble(traj$x) %>% bind_cols("t"=t) %>% 
+    pivot_longer(cols = c(1:5), names_to = "IC", values_to = "x")
+  y <- as_tibble(traj$y) %>% bind_cols("t"=t) %>% 
+    pivot_longer(cols = c(1:5), names_to = "IC", values_to = "y")
+  z <- left_join(x,y, by = join_by(t, IC)) %>% filter(x<7 & x>-7 & y<7 & y>-7) %>% 
+    left_join(y0_df %>% select(IC, pt), by="IC")
+  
+  p1 <- phaseplane(fun_plane, x_var="x" ,y_var="y",
+                   x_window = c(-7, 7), y_window = c(-7, 7),
+                   parameters = params)
+  
+  A<- matrix(params_unnamed, 2, 2, byrow=TRUE)
+  
+  lambda1 <- eigen(A)$values[1] # eigenvalue 1
+  lambda2 <- eigen(A)$values[2] # eigenvalue 2
+  
+  print(lambda1)
+  print(lambda2)
+  
+  v1_col <- "gray"
+  v1_wid <- 1
+  v2_col <- "gray"
+  v2_wid <- 1
+  
+  if (abs(lambda1) < (1^(-10))) {
+    v1_col <- "black"
+    v1_wid <- 2
+    print("hi")
+  }
+  
+  if (abs(lambda2) < (1^(-10))) {
+    v2_col <- "black"
+    v2_wid <- 2
+    print("hi")
+  }
+ 
+  p1+theme_bw()+
+    geom_vline(linewidth=v1_wid, xintercept = 0, color=v1_col)+
+    geom_hline(linewidth=v2_wid, yintercept = 0, color=v2_col)+
+    geom_path(data=z, aes(x=x, y=y, color=pt), linewidth=1.5)+
+    geom_point(data=y0_df, aes(x=x,y=y, color=pt), shape=21, fill="white",size=4, stroke=2)+labs(color="IC")
+}
+
+
+make_plane(c(a=0.1,b=0,c=0,d=-0.5))
+
+```
 
 
 ## Question 2   

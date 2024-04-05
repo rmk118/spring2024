@@ -53,12 +53,12 @@ make_plane <- function(params) {
     geom_point(data=y0_df, aes(x=x,y=y, color=pt), shape=21, fill="white",size=4, stroke=2)+labs(color="IC")
 }
 
-parameters=c(a=1,b=2,c=3,d=2)
+parameters=c(a=0.1,b=0,c=0,d=-0.5)
 make_plane(parameters)
 
 make_plane_complex(c(a=-3,b=10,c=-1,d=3))
 
-A <- matrix(c(-3, 10, -1, 3), 2, 2, byrow=TRUE)
+
 
 
 flowField(fun_traj,  xlim = c(-50, 50),
@@ -111,3 +111,7 @@ fun_plane <- c(dx ~ a*x+b*y, dy ~c*x+d*y)
   p1+theme_bw()+
     geom_path(data=z, aes(x=x, y=y, group=pt), linewidth=1.5)
 
+  A <- matrix(c(0.1, 0, 0, -0.5), 2, 2, byrow=TRUE)
+  eigen(A)$values  
+  eigen(A)$vectors
+  
