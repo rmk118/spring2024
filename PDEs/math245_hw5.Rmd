@@ -1,0 +1,15 @@
+---
+title: "MATH 245 Homework 5"
+author: "Ruby Krasnow and Tommy Thach"
+date: "2024-04-05"
+output:
+  pdf_document:
+    extra_dependencies: ["tcolorbox", "xcolor"]
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+```
+
+## Question 1:

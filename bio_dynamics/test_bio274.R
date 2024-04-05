@@ -69,3 +69,45 @@ flowField(fun_traj,  xlim = c(-50, 50),
 
 
 
+# April 5 -----------------------------------------------------------------
+
+# Phase Portrait setup
+y0 <- matrix(c(5, 0), 1, 2, byrow = TRUE)
+# 
+# y0_df <- tibble(x=c(0), 
+#                 y=c(4),
+#                 IC=c("V1")) %>% 
+#   mutate(pt = paste0("(",x, ",", y, ")"))
+
+fun_traj <- function(t, y, parameters) {
+  x <- y[1]
+  y <- y[2]
+  a <- parameters[1]
+  b <- parameters[2]
+  c <- parameters[3]
+  d <- parameters[4]
+  dy <- numeric(2)
+  dy[1] <- a*x + b*y
+  dy[2] <- c*x + d*y  
+  return(list(dy))
+}
+
+fun_plane <- c(dx ~ a*x+b*y, dy ~c*x+d*y)
+
+
+  params_unnamed <- unname(c(a=-0.25,b=-0.5,c=0.25,d=0))
+  traj <- trajectory(fun_traj, y0 = y0, tlim= c(0, 555), tstep = 0.1,
+                     parameters = params_unnamed, add=FALSE)
+  
+  t <- c(traj$t)
+  x <- as_tibble(traj$x) %>% rename("x"="V1") %>% bind_cols("t"=t)
+  y <- as_tibble(traj$y) %>% rename("y"="V1")%>% bind_cols("t"=t)
+  z <- left_join(x,y, by = join_by(t)) %>% filter(x<7 & x>-7 & y<7 & y>-7)
+  
+  p1 <- phaseplane(fun_plane, x_var="x" ,y_var="y",
+                   x_window = c(-7, 7), y_window = c(-7, 7),
+                   parameters = c(a=-0.25,b=-0.5,c=0.25,d=0))
+  
+  p1+theme_bw()+
+    geom_path(data=z, aes(x=x, y=y, group=pt), linewidth=1.5)
+

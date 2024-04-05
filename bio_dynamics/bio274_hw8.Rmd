@@ -1,9 +1,138 @@
 ---
 title: "BIOL 274 Homework 8"
 author: "Ruby Krasnow"
-date: "2024-04-02"
+date: "2024-04-05"
 output:
   pdf_document:
     extra_dependencies: ["derivative", "tcolorbox", "xcolor"]
 ---
-# Visualizing Solutions of Linear Systems and Runga Kutta
+# Visualizing Solutions of Linear Systems and Runge-Kutta
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(phaseR)
+library(demodelr)
+```
+
+
+## Question 1  
+Consider the epidemic model presented in class.
+
+### a.  
+For the parameters given, we found one single equilibrium point. Determine whether this equilibrium point is stable or unstable and sketch the phase plane near the equilibrium point.
+
+
+Let $X$ be the number of susceptible individuals at time $t$ and $Y$ be the number of infected individuals (who can transmit the disease). The epidemic model presented in class takes the following form:
+$$\frac{dX}{dt}=-\mu XY- \rho $$
+$$\frac{dY}{dt}=\mu XY- \nu Y $$
+where $\mu=0.025,\; \rho=5,$ and $\nu =0.5$. We determined that given these parameters, the model has a single equilibrium point at $\left( \frac{\nu}{\mu}, \frac{\rho}{\nu}\right)=(20,10)$.
+
+
+We will determine the local stability of this equilibrium point by first computing the Jacobian matrix at $(20,10)$.
+
+Given a system of the type $\dot{x}=f(x,y), \quad \dot{y}=g(x,y)$, the Jacobian is defined as the following matrix:
+$$J(x,y)= \begin{bmatrix} 
+    \frac{\partial{f}}{\partial{x}} &  \frac{\partial{f}}{\partial{y}} \\
+    \frac{\partial{g}}{\partial{x}} & \frac{\partial{g}}{\partial{y}} \end{bmatrix} $$
+For our system, the Jacobian is
+$$J(X,Y)= \begin{bmatrix} 
+    -\mu Y &  -\mu X \\
+    \mu Y & -\mu X-\nu \end{bmatrix} $$
+
+We then evaluate the Jacobian at our equilibrium point:
+$$J(20,10)= \begin{bmatrix} 
+    -0.025(10) &  -0.025(20) \\
+    0.025(10) & 0.025(20)-0.5 \end{bmatrix}= \begin{bmatrix} 
+    -0.25 &  -0.5 \\
+    0.25 & 0 \end{bmatrix} $$
+    
+Our next step is to find the eigenvalues of this matrix.
+\begin{equation*}
+\det{\begin{bmatrix} 
+    -0.25-\lambda & -0.5 \\
+    0.25 & 0-\lambda \end{bmatrix}}=0 \\
+\end{equation*}
+
+$$ \left(-0.25-\lambda\right) \left(-\lambda\right)+0.125=0 $$
+$$ \lambda^2+0.25\lambda +0.125=0 $$
+$$\frac{-b\pm\sqrt{b^2-4ac}}{2a} \quad \longrightarrow \quad \frac{-0.25\pm\sqrt{0.0625-4(0.125)}}{2} = \frac{-0.25\pm \sqrt{-4.375}}{2} \approx -0.125 \pm 0.331\,i$$
+We found complex eigenvalues with a negative real part, which means that we have a (stable) spiral sink. Near our equilibrium point, the phase portrait looks like:
+
+```{r, echo=FALSE}
+# Phase Portrait setup
+y0 <- matrix(c(0, 1, 0, 5, -6, 1, 5, 0.5, 0, -3), 5, 2, byrow = TRUE)
+
+y0_df <- tibble(x=c(0,0,-6,5,0), 
+                y=c(1,5,1,0.5,-3),
+                IC=c("V1", "V2", "V3", "V4", "V5")) %>% 
+  mutate(pt = paste0("(",x, ",", y, ")"))
+
+fun_traj <- function(t, y, parameters) {
+  x <- y[1]
+  y <- y[2]
+  a <- parameters[1]
+  b <- parameters[2]
+  c <- parameters[3]
+  d <- parameters[4]
+  dy <- numeric(2)
+  dy[1] <- a*x + b*y
+  dy[2] <- c*x + d*y  
+  return(list(dy))
+}
+
+fun_plane <- c(dx ~ a*x+b*y, dy ~c*x+d*y)
+
+make_plane_complex <- function(params) {
+  params_unnamed <- unname(params)
+  traj <- trajectory(fun_traj, y0 = y0, tlim= c(0, 55), tstep = 0.05,
+                     parameters = params_unnamed, add=FALSE)
+  
+  t <- c(traj$t)
+  x <- as_tibble(traj$x) %>% bind_cols("t"=t) %>% 
+    pivot_longer(cols = c(1:5), names_to = "IC", values_to = "x")
+  y <- as_tibble(traj$y) %>% bind_cols("t"=t) %>% 
+    pivot_longer(cols = c(1:5), names_to = "IC", values_to = "y")
+  z <- left_join(x,y, by = join_by(t, IC)) %>% filter(x<7 & x>-7 & y<7 & y>-7) %>% 
+    left_join(y0_df %>% select(IC, pt), by="IC")
+  
+  p1 <- phaseplane(fun_plane, x_var="x" ,y_var="y",
+                   x_window = c(-7, 7), y_window = c(-7, 7),
+                   parameters = params)
+  
+  p1+theme_bw()+
+    geom_path(data=z, aes(x=x, y=y, group=pt), linewidth=1) +
+  theme(
+    axis.ticks = element_blank(),
+    axis.text = element_blank()
+  )
+}
+```
+
+```{r, echo=FALSE, message=FALSE, warning=FALSE,fig.keep="last",fig.height=4, fig.width=4,fig.align='center'}
+make_plane_complex(c(a=-0.25,b=-0.5,c=0.25,d=0))
+```
+    
+    
+    
+### b.   
+Modify the model given in class, assuming that the Susceptible population exhibits exponential growth with an intrinsic growth rate of 0.10 in the absence of any infected individuals.
+
+### c.  
+Find all equilibria of your new Epidemic model from part (b) and determine their stability by sketching the phase plane near each equilibrium.
+
+
+## Question 2   
+Consider the IVP from class: $$\frac{dy}{dt}=-2ty^2, \quad y(0)=1$$ over the interval $0 \leq t \leq 2$.
+
+### a.  
+Calculate the Runge-Kutta approximation to the solution with $n=4$ steps.
+
+
+### b.  
+Calculate the total error $e_4$ associated with this approximation.
+
+
+### c.  
+How many steps are necessary to approximate the solution with an error of less than
+0.0001? Make sure to justify your answer.
