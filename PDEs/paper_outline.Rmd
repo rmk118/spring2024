@@ -1,7 +1,7 @@
 ---
 title: "Final paper outline"
 author: "Ruby Krasnow"
-date: "2024-03-19"
+date: "2024-04-06"
 output:
   pdf_document:
     extra_dependencies: ["tcolorbox", "xcolor"]
@@ -17,8 +17,9 @@ library(tidyverse)
 Reaction-diffusion models are a type of partial differential equation (PDE) that have long been used by ecologists to analyze the migration and population dynamics of invasive species. Recent work has led to innumerable modifications on the original formulations by Fisher (1937) and Skellam (1951). Beyond the fundamental processes of growth and spread, extensions of reaction-diffusion models can be applied to age- and size-structured populations (Neubert and Caswell, 2000), and incorporate environmental heterogeneity, interspecies interactions (competition, predation, mutualism, etc.), Allee effects, invasion control efforts, and long-distance dispersal. For an introduction to the use of PDEs to represent dispersal in a population ecology context, the reader is directed to Holmes et al. (1994) and the seminal papers referenced therein. For an accessible review of recent advancements in modeling invasion using reaction-diffusion equations and integro-difference equations, see Hastings et al. (2005); for a comprehensive treatment, see the textbooks by Shigesada and Kawasaki (1997) or Lewis et al. (2016).
 
 Here, we use a simple one-dimensional reaction-diffusion model to represent the spread of the invasive ascidian *Botrylloides violaceus* in the Gulf of Maine. *B. violaceus* is ... DESCRIPTION HERE
-Colonial ascidians generally display indeterminate growth, meaning that colony area tends to increase exponentially with time (Jackson, 1977). 
-Thus, our reaction-diffusion model takes the form:
+
+
+Colonial ascidians generally display indeterminate growth, meaning that colony area tends to increase exponentially with time (Jackson, 1977). Thus, our reaction-diffusion model takes the form:
 
 $$\frac{\partial{u}}{\partial{t}}=\text{D}\frac{\partial{u}^2}{\partial{x^2}}+ru $$
 where $u(t,x)$ is the population density of *B. violaceus* at time $t$ and spatial coordinate $x$. This is the simplest version of the general RD model, for a ...  (Andow et al., 1990; OTHER SOURCE).

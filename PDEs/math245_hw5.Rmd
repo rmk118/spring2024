@@ -12,4 +12,110 @@ knitr::opts_chunk$set(echo = TRUE)
 library(tidyverse)
 ```
 
-## Question 1:
+## Question 5: Radioactive Decay Problem
+
+\begin{equation}\label{eqn:radio} f(x)=
+    \begin{cases}
+     u_t - u_{xx} = Ae^{-ax} \\
+     u(0,x) = \sin{x} \\
+     u(t, 0) = u(t, \pi) = 0
+    \end{cases}       
+\end{equation}
+
+We want to find a separated solution of the form $u(t,x)=X(x)T(t)$. Recall that for the analogous homogeneous PDE with homogeneous Dirichlet boundary conditions, we consider the following eigenvalue problem $X'' + \lambda X=0,\quad  X(0) = X(l) = 0$, which we have shown to have the eigenvalues and eigenvectors
+
+$$\lambda_n= \left(\frac{n\pi}{l}\right)^2, \quad X_n(x)=\sin{\left( \frac{n\pi x}{l}\right)},\quad n=1,2,3... $$
+Giving us the Fourier sine series
+\begin{equation}\label{eqn:fss}
+f(x)= \sum_{n=1}^{\infty} b_n \sin{  \left(\frac{n\pi x}{l}\right) }
+\end{equation}
+
+where
+$$ b_n=\frac{2}{l} \int_{0}^{l}f(x)\sin{  \left(\frac{n\pi x}{l}\right) }dx$$
+
+Now, we assume that our solution to (\ref{eqn:radio}) will take a similar form as (\ref{eqn:fss}), where $l=\pi$ and $f(t,x)=Ae^{-ax}$:
+$$u(t,x)= b_0(t)+\sum_{n=1}^{\infty} b_n(t) \sin{(nx)}$$
+
+We can differentiate this and plug it into (\ref{eqn:radio}) as follows:
+$$u_t(t,x)= b_0'(t)+\sum_{n=1}^{\infty} b_n'(t) \sin{(nx)}$$
+$$u_{xx}(t,x)= -\sum_{n=1}^{\infty} b_n(t) \;n^2\sin{(nx)}$$
+
+\begin{equation}\label{eqn:radio2}
+b'_0(t)+\sum_{n=1}^{\infty} b_n'(t) \sin{(nx)}+\sum_{n=1}^{\infty} b_n(t) \;n^2\sin{(nx)}= Ae^{-ax}
+\end{equation}
+
+For each fixed $t$, we write $Ae^{-ax}$ as a Fourier sine series:
+\begin{equation}\label{eqn:radio3}
+Ae^{-ax}= q_0(t)+\sum_{n=1}^{\infty} q_n(t) \sin{(nx)}\end{equation}
+where 
+
+\begin{align*}
+q_0 (t) &=\frac{1}{l} \int_{0}^{l}f(t,x)dx \\
+    &=\frac{A}{\pi} \int_{0}^{\pi}e^{-ax}dx \\
+    &= \frac{-A}{a \pi} \left[e^{-ax}\right]^{pi}_{0} \\
+    &= \frac{-A}{a \pi} \left(e^{-a\pi}-1\right)
+\end{align*}
+
+\begin{align*}
+q_n (t) &=\frac{2}{l} \int_{0}^{l}f(t,x)\sin{  \left(\frac{n\pi x}{l}\right) }dx \\
+    &=\frac{2A}{\pi} \int_{0}^{\pi}e^{-ax}\sin{(nx)}dx
+\end{align*}
+
+Now we do integration by parts twice on $\int_{0}^{\pi}e^{-ax}\sin{(nx)}dx$
+
+First with $u=\sin{(nx)}, \;\;du=n \cos{(nx)}\;dx, \;\; dv = e^{-ax}\;dx, \;\; v=\frac{-1}{a}e^{-ax}$,
+
+and the second time with $u=n\cos{(nx)}, \;\;du=-n^2 \sin{(nx)}\;dx, \;\; dv = \frac{1}{a} e^{-ax}\;dx, \;\; v=\frac{-1}{a^2}e^{-ax}$
+
+\begin{align*}
+\int_{0}^{\pi}e^{-ax}\sin{(nx)}dx &= 
+\left[\frac{-\sin{(nx)}}{a}e^{-ax} \right]_{0}^{\pi} +
+\frac{n}{a} \int_{0}^{\pi}e^{-ax}\cos{  \left(\frac{n\pi x}{l}\right) }dx \\
+&= 0-0+\frac{n}{a} \int_{0}^{\pi}e^{-ax}\cos{(nx)}dx \\
+&= \left[\frac{-n\cos{(nx)}}{a^2}e^{-ax} \right]_{0}^{\pi} -\frac{n^2}{a^2}\int_{0}^{\pi}e^{-ax}\sin{(nx)}dx
+\end{align*}
+
+Then moving the integrals to the same side,
+\begin{align*}
+\left(1+\frac{n^2}{a^2}\right)\int_{0}^{\pi}e^{-ax}\sin{(nx)}dx 
+&= \left[\frac{-n\cos{(nx)}}{a^2}e^{-ax} \right]_{0}^{\pi} \\
+&= \frac{-n\cos{(n\pi)}}{a^2}e^{-a\pi} +\frac{n}{a^2} \\
+(n^2+a^2) \int_{0}^{\pi}e^{-ax}\sin{(nx)}dx &= n(-1)^{n+1} e^{-a\pi}+n
+\end{align*}
+
+Thus, $$\int_{0}^{\pi}e^{-ax}\sin{(nx)}dx= \frac{n(-1)^{n+1} e^{-a\pi}+n}{n^2+a^2}$$
+
+Which means that 
+$$q_n=\frac{2A}{\pi} \frac{n(-1)^{n+1} e^{-a\pi}+n}{n^2+a^2}$$
+Now, by (\ref{eqn:radio2}) and  (\ref{eqn:radio3}), we get the following equations:
+
+\begin{equation*}
+\begin{cases}
+b'_0(t)=q_0(t) \\
+b_n'(t)+b_n(t) n^2= q_n(t)
+\end{cases}
+\end{equation*}
+
+From $b'_0(t)=q_0(t)$ we get $b_0(t)=\int_{0}^{t} q_0(s)\;ds$ Since $q_0=\frac{-A}{a \pi} \left(e^{-a\pi}-1\right)$, this means $b_0(t)=\frac{-At}{a \pi} \left(e^{-a\pi}-1\right)$
+
+
+On the other hand, we have $b_n'(t)+b_n(t) n^2= q_n(t)$, which we solve as follows:
+
+$$\mu(t)=\exp{ \left(\int_{0}^{t}n^2\;ds \right)}=\exp{(n^2t)}$$
+$$b_n(t)=\frac{1}{\mu(t)}\left[\int_{0}^{t} \mu(s)q_n(s)\;ds+b_n(0)\right]$$
+$$b_n(t)=b_n(0)\,\mu(t)^{-1}+\int_{0}^{t} \frac{\mu(s)}{\mu(t)}q_n(s)\;ds$$
+
+$$b_n(t)=e^{-n^2}b_n(0)+\int_{0}^{t} \frac{\exp{(n^2s)}}{\exp{(n^2t)}}q_n(s)\;ds$$
+$$b_n(t)=e^{-n^2}b_n(0)+\int_{0}^{t} e^{n^2(s-t)}q_n(s)\;ds$$
+
+Therefore, our solution to (\ref{eqn:radio}) is:
+$$u(t,x)= b_0(t)+\sum_{n=1}^{\infty} b_n(t) \sin{(nx)}, \quad \text{where} \\ b_n(t)=e^{-n^2}b_n(0)+\int_{0}^{t} e^{n^2(s-t)}q_n\;ds,\\
+q_n=\frac{2A}{\pi} \frac{n(-1)^{n+1} e^{-a\pi}+n}{n^2+a^2}, \\ 
+b_0(t)=\frac{-At}{a \pi} \left(e^{-a\pi}-1\right)$$
+
+
+
+$$u(0,x)=b_0(0)+\sum_{n=1}^{\infty} \left[e^{-n^2}b_n(0)+\int_{0}^{0} e^{n^2(s-0)}q_n(s)\;ds   \right] \sin{(nx)}$$
+
+
+$$u(0,x)=b_0(0)+\sum_{n=1}^{\infty}e^{-n^2}b_n(0) \sin{(nx)}$$
