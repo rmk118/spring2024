@@ -1,7 +1,7 @@
 ---
 title: "MATH 245 Homework 5"
 author: "Ruby Krasnow and Tommy Thach"
-date: "2024-04-05"
+date: "2024-04-07"
 output:
   pdf_document:
     extra_dependencies: ["tcolorbox", "xcolor"]
@@ -12,9 +12,62 @@ knitr::opts_chunk$set(echo = TRUE)
 library(tidyverse)
 ```
 
-## Question 5: Radioactive Decay Problem
+## Problem 1: Inhomogeneous Heat Equation
 
-\begin{equation}\label{eqn:radio} f(x)=
+Using the method of separation of variables, solve the inhomogeneous heat equation:
+\begin{equation}\label{eqn:inhomoheat}
+    \begin{cases}
+     u_{t} -k u_{xx}=x \cos{t}          & 0<x<\pi, \quad t>0 \\
+     u(0,x) = \sin{(\pi x)}             & 0<x<\pi\\
+     u(t,0)=t^2, \;\; u(t,\pi)=2t       & t>0
+    \end{cases}       
+\end{equation}
+
+## Problem 2: Inhomogeneous Wave Equation
+
+Using the method of separation of variables, solve the inhomogeneous wave equation:
+\begin{equation}\label{eqn:inhomowave}
+    \begin{cases}
+     u_{tt} -c^2 u_{xx}=F(t,x)    & 0<x<L, \quad t>0 \\
+     u(0,x) = \phi(x)             & 0<x<L\\
+     u_t(0,x) = \psi(x)           & 0<x<L\\
+     u_x(t,0)=h(t), \;\; u_x(t,L)=g(t) & t>0
+    \end{cases}       
+\end{equation}
+
+for constants $a$ and $k>0$
+
+## Problem 3: Damped Heat Equation
+
+Using the method of separation of variables, solve the damped heat equation:
+\begin{equation}\label{eqn:dampheat}
+    \begin{cases}
+     u_{t} +au=ku_{xx}    & -\pi<x<\pi, \quad t>0 \\
+     u(0,x) = \phi(x)     & -\pi<x<\pi\\
+     u(t,\pi)=u(t,-\pi)   & t>0 \\
+     u_x(t,\pi)=u_x(t,-\pi) & t>0
+    \end{cases}       
+\end{equation}
+
+for constants $a$ and $k>0$
+
+## Problem 4: Beam Equation
+
+Using the method of separation of variables, solve the beam equation:
+\begin{equation}\label{eqn:beam}
+    \begin{cases}
+     u_{tt} =c^2 u_{xxxx} & 0<x<L, \quad t>0 \\
+     u(0,x) = \phi(x)     & 0<x<L\\
+     u_t(0,x) = \psi(x)   & 0<x<L\\
+     u(t, 0) = u(t, L) = 0 & t>0 \\
+     u_{xx}(t,0)=u_{xx}(t,L)=0
+    \end{cases}       
+\end{equation}
+
+## Problem 5: Radioactive Decay Problem
+
+Using the method of separation of variables, solve the radioactive decay problem, for constants $A, a>0$.
+\begin{equation}\label{eqn:radio}
     \begin{cases}
      u_t - u_{xx} = Ae^{-ax} \\
      u(0,x) = \sin{x} \\
@@ -96,8 +149,10 @@ b_n'(t)+b_n(t) n^2= q_n(t)
 \end{cases}
 \end{equation*}
 
-From $b'_0(t)=q_0(t)$ we get $b_0(t)=\int_{0}^{t} q_0(s)\;ds$ Since $q_0=\frac{-A}{a \pi} \left(e^{-a\pi}-1\right)$, this means $b_0(t)=\frac{-At}{a \pi} \left(e^{-a\pi}-1\right)$
+From $b'_0(t)=q_0(t)$ we get $$b_0(t)=\int_{0}^{t} q_0(s)\;ds$$
 
+Since $q_0=\frac{-A}{a \pi} \left(e^{-a\pi}-1\right)$, this means
+$$b_0(t)=\frac{-At}{a \pi} \left(e^{-a\pi}-1\right)+b_0(0)$$
 
 On the other hand, we have $b_n'(t)+b_n(t) n^2= q_n(t)$, which we solve as follows:
 
@@ -108,14 +163,144 @@ $$b_n(t)=b_n(0)\,\mu(t)^{-1}+\int_{0}^{t} \frac{\mu(s)}{\mu(t)}q_n(s)\;ds$$
 $$b_n(t)=e^{-n^2}b_n(0)+\int_{0}^{t} \frac{\exp{(n^2s)}}{\exp{(n^2t)}}q_n(s)\;ds$$
 $$b_n(t)=e^{-n^2}b_n(0)+\int_{0}^{t} e^{n^2(s-t)}q_n(s)\;ds$$
 
+
+
+$$u(0,x)= \sin{x} = b_0(0)+\sum_{n=1}^{\infty} b_n(0) \sin{(nx)}$$
+
+so using our equations to find the  coefficients of a Fourier sine series, 
+$$b_0(0)=\frac{2}{\pi} \int_{0}^{\pi}\sin{(nx)}dx$$
+$$=\frac{-2}{n\pi} \cos{(nx)}\Bigr\rvert^{\pi}_{0}\;dx\\
+=  \frac{2}{n\pi}(1+(-1)^{n+1})$$
+
+$$b_n(0)=\frac{1}{\pi} \int_{0}^{\pi}\sin{(x)} \sin{(nx)}dx$$
+
+We evaluate this integral using the following trigonometric identity: $$\sin{\alpha}\sin{\beta}=\frac{\cos{(\alpha-\beta)}-\cos{(\alpha+\beta)}}{2}
+\quad \Longrightarrow\quad \sin{(x)} \sin{(nx)}=\frac{\cos{(-x)}-\cos{(3x)}}{2}$$
+
+$$b_n(0)=\frac{1}{2\pi} \int_{0}^{\pi} \cos{(x)}-\cos{(3x)}dx=0$$
+Because $\sin{0}, \sin{\pi}$, and $\sin{3\pi}$ all equal zero.
+
 Therefore, our solution to (\ref{eqn:radio}) is:
-$$u(t,x)= b_0(t)+\sum_{n=1}^{\infty} b_n(t) \sin{(nx)}, \quad \text{where} \\ b_n(t)=e^{-n^2}b_n(0)+\int_{0}^{t} e^{n^2(s-t)}q_n\;ds,\\
-q_n=\frac{2A}{\pi} \frac{n(-1)^{n+1} e^{-a\pi}+n}{n^2+a^2}, \\ 
-b_0(t)=\frac{-At}{a \pi} \left(e^{-a\pi}-1\right)$$
+\begin{tcolorbox}[colback=white, title=Solution]
+\begin{align*}
+& u(t,x)= b_0(t)+\sum_{n=1}^{\infty} b_n(t) \sin{(nx)}, \quad \text{where} \\ 
+& b_n(t)=\int_{0}^{t} e^{n^2(s-t)}q_n\;ds,\\
+& q_n=\frac{2A}{\pi} \frac{n(-1)^{n+1} e^{-a\pi}+n}{n^2+a^2}, \\ 
+& b_0(t)=\frac{-At}{a \pi} \left(e^{-a\pi}-1\right)+b_0(0), \\
+& b_0(0)=\frac{2}{n\pi}(1+(-1)^{n+1})
+\end{align*}
+\end{tcolorbox}
+
+
+## Problem 6: Telegraph Equation
+
+Using the method of separation of variables, solve the telegraph equation:
+\begin{equation}\label{eqn:tele}
+    \begin{cases}
+     u_{tt} + au_t + bu = c^2 u_{xx}   & 0<x<l, \quad t>0 \\
+     u(0,x) = \phi(x)             & 0 \leq x \leq l\\
+     u_t(0,x) = \psi(x)           & 0 \leq x \leq l\\
+     u(t,0)=u(t,l)=0 & t>0
+    \end{cases}       
+\end{equation}
+
+for constants $a, b >0$. Only find the solution when the characteristic equation of the time problem has real roots. Define the following energy:
+
+$$E(t)=\frac{1}{2} \int_{0}^{l}(u_t^2+c^2u_x^2+bu^2)\;dx $$
+Show that $E(t) \leq E(0)$ for all $t>0$. Then prove that the telegraph equation has a unique solution.  
+
+- - - -
+
+
+Suppose we have a separated solution of the form $u(t,x)=X(x)T(t)$. 
+
+If we plug this into the homogeneous Dirichlet BCs, we find $u(t,0)=T(t)X(0)=0, u(t,l)=T(t)X(l)=0$. In order for both of these to be true, we must have either $T(t)=0$ or $X(0)=X(l)=0$.  
+
+But if $T(t)=0$, then $u(t,x)=0$ for all $x$, which contradicts our ICs. Thus, we must have $X(0)=X(l)=0$.
+
+Plugging our expression $u(t,x)=X(x)T(t)$ into the PDE in (\ref{eqn:tele}), it becomes $$T''(t)X(x)+aT'(t)X(x)+bT(t)X(x)=c^2T(t)X''(x)$$
+$$- \frac{T''(t)+aT'(t)+bT(t)}{c^2 T(t)}=-\frac{X''(x)}{X(x)}=\lambda$$
+
+Based on our assumptions thus far and the IBVP (\ref{eqn:tele}), we have three problems:
+
+**Spatial problem**
+\begin{align*} \begin{cases}
+X''+\lambda X=0 \\
+X(0)=X(l)=0 \end{cases} \end{align*}
+
+**Time problem**
+\begin{equation}\label{eqn:time6}T''+aT'+(b+\lambda c^2) T=0\end{equation}
+
+**IVP**
+$$u(0,x) = T(0)X(x)=\phi(x)$$
+
+
+The spatial problem is an eigenvalue problem with homogenous Dirichlet BCs, which we already know has the eigenvalues and eigenvectors
+$$\lambda_n= \left(\frac{n\pi}{l}\right)^2, \quad X_n(x)=\sin{\left( \frac{n\pi x}{l}\right)},\quad n=1,2,3... $$
+
+Now moving to the time problem, the equation (\ref{eqn:time6}) becomes the characteristic equation $r^2 + ar + (b+\lambda c^2)=0$. From the Pythagorean Theorem, the roots of this equation are $$\frac{-a\pm\sqrt{a^2-4(b+\lambda c^2)}}{2}$$
+
+In order for the characteristic equation of the time problem to have only real roots, we must have $a^2-4(b+\lambda c^2) \geq 0$, or $$\lambda \leq \frac{a^2-4b}{4c^2}$$
+
+For each $\lambda_n$ associated with the spatial problem, we get a solution to the time problem:
+$$T_n(t)=C_n \exp{\left[\frac{t}{2}(-a-a^2-4b-4\lambda_n c^2)\right]}+D_n \exp{\left[\frac{t}{2}(-a+a^2-4b-4\lambda_n c^2)\right]} $$
+
+where $C_n, D_n \in \mathbb{R}$
+
+Therefore, the following are solutions of the PDE in (\ref{eqn:tele}):
+$u_n(t,x)=X_n(x)\;T_n(t), \quad n=1,2,3...$
+
+By the principle of superposition,
+\begin{align*}
+u(t,x) &= \sum^{\infty}_{n=1} c'_n \;u_n(t,x) \\
+       &=\sum^{\infty}_{n=1} c'_n \;T_n(t)\;X_n(x) \\
+       &=\sum^{\infty}_{n=1} A_n \;\exp{\left[\frac{t}{2}(-a-a^2-4b-4\lambda_n c^2)\right]}\;\sin{\left( \frac{n\pi x}{l}\right)}+ \\
+       &\sum^{\infty}_{n=1} B_n \;\exp{\left[\frac{t}{2}(-a+a^2-4b-4\lambda_n c^2)\right]}\;\sin{\left( \frac{n\pi x}{l}\right)}
+\end{align*}
+
+where $A_n = c'_n C_n$ and $B_n = c'_n D_n$, with $A_n, B_n \in \mathbb{R}$.
+
+We can get rid of these arbitrary constants by using our initial conditions,  and . First, let us simplify the notation by defining $\gamma=\frac{t}{2}(-a-a^2-4b-4\lambda_n c^2)$ and $\zeta=\frac{t}{2}(-a-a^2-4b-4\lambda_n c^2)$.
+
+Using our first initial condition, $u(0,x) = \phi(x)$:
+$$u(t,x)= \sum^{\infty}_{n=1} A_n \,e^{\gamma t} \sin{\left( \frac{n\pi x}{l}\right)}+ \\
+\sum^{\infty}_{n=1} B_n \,e^{\zeta t} \sin{\left( \frac{n\pi x}{l}\right)}$$
+
+$$u(0,x) = \phi(x) = \sum^{\infty}_{n=1} \left(A_n+B_n\right) \sin{\left( \frac{n\pi x}{l}\right)}$$
+
+We can use the equation for the coefficients inside a Fourier sine series to find $A_n+B_n$
+$$ A_n+B_n=\frac{2}{l} \int_{0}^{l}\phi(x)\sin{  \left(\frac{n\pi x}{l}\right) }dx$$
+
+Now repeating for our second initial condition, $u_t(0,x) = \psi(x)$:
+$$u_t(t,x)= \sum^{\infty}_{n=1} \gamma\, A_n \,e^{\gamma t} \;\sin{\left( \frac{n\pi x}{l}\right)}+  \sum^{\infty}_{n=1} \zeta\,B_n \,e^{\zeta t} \;\sin{\left( \frac{n\pi x}{l}\right)}$$
+
+$$u_t(0,x)= \psi(x) = \sum^{\infty}_{n=1} \left(\gamma A_n+\zeta B_n\right) \sin{\left( \frac{n\pi x}{l}\right)}$$
+
+$$\left(\gamma A_n+\zeta B_n\right)=\frac{2}{l} \int_{0}^{l}\psi(x)\sin{  \left(\frac{n\pi x}{l}\right) }dx$$
+Which can be rearranged as
+$$A_n= \frac{1}{\gamma}\left[-\zeta B_n +\frac{2}{l} \int_{0}^{l}\psi(x)\sin{  \left(\frac{n\pi x}{l}\right) }dx \right]$$
+
+Now we can solve for $B_n$:
+
+$$\frac{-\zeta B_n}{\gamma}+\frac{2}{\gamma l} \int_{0}^{l}\psi(x)\sin{  \left(\frac{n\pi x}{l}\right) }dx= -B_n+\frac{2}{l} \int_{0}^{l}\phi(x)\sin{  \left(\frac{n\pi x}{l}\right) }dx$$
+
+
+$$B_n-\frac{\zeta B_n}{\gamma}= \left(1-\frac{\zeta}{\gamma}\right)B_n=
+\frac{2}{l} \int_{0}^{l}\phi(x)\sin{  \left(\frac{n\pi x}{l}\right) }dx-\frac{2}{\gamma l} \int_{0}^{l}\psi(x)\sin{  \left(\frac{n\pi x}{l}\right) }dx$$
+
+
+Therefore, our solution is:
+\begin{tcolorbox}[colback=white, title=Solution]
+$$u(t,x)= \sum^{\infty}_{n=1} A_n \,e^{\gamma t} \sin{\left( \frac{n\pi x}{l}\right)}+ \\
+\sum^{\infty}_{n=1} B_n \,e^{\zeta t} \sin{\left( \frac{n\pi x}{l}\right)}, \quad \text{where}$$
+
+
+$$ A_n=\frac{2}{l} \int_{0}^{l}\phi(x)\sin{  \left(\frac{n\pi x}{l}\right) }dx-B_n$$
+$$B_n=\frac{2\gamma}{(\gamma-\zeta)l} \int_{0}^{l}\phi(x)\sin{  \left(\frac{n\pi x}{l}\right) }dx-\frac{2(\gamma-\zeta)}{l} \int_{0}^{l}\psi(x)\sin{  \left(\frac{n\pi x}{l}\right) }dx,$$
+$$\gamma=\frac{t}{2}(-a-a^2-4b-4\lambda_n c^2)$$
+$$\zeta=\frac{t}{2}(-a-a^2-4b-4\lambda_n c^2)$$
+$$\lambda_n= \left(\frac{n\pi}{l}\right)^2, \quad n=1,2,3...$$
+\end{tcolorbox}
 
 
 
-$$u(0,x)=b_0(0)+\sum_{n=1}^{\infty} \left[e^{-n^2}b_n(0)+\int_{0}^{0} e^{n^2(s-0)}q_n(s)\;ds   \right] \sin{(nx)}$$
-
-
-$$u(0,x)=b_0(0)+\sum_{n=1}^{\infty}e^{-n^2}b_n(0) \sin{(nx)}$$

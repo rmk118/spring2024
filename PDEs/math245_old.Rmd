@@ -349,3 +349,6 @@ Where again we cannot cancel terms to simplify our equation as we could with con
 
 <!-- paste0("(", "x[0]","','","t[0]", ")")) -->
 
+### HW5
+
+Then the time problem has repeated real roots $r=\frac{-a}{2}$, giving us $T(t)=C_1 e^{-a/2}+C_2te^{-a/2}$.
