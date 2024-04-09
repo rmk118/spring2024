@@ -1,7 +1,7 @@
 ---
 title: "MATH 245 Homework 5"
 author: "Ruby Krasnow and Tommy Thach"
-date: "2024-04-07"
+date: "2024-04-08"
 output:
   pdf_document:
     extra_dependencies: ["tcolorbox", "xcolor"]
@@ -51,6 +51,31 @@ Using the method of separation of variables, solve the damped heat equation:
 
 for constants $a$ and $k>0$
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 ## Problem 4: Beam Equation
 
 Using the method of separation of variables, solve the beam equation:
@@ -63,6 +88,147 @@ Using the method of separation of variables, solve the beam equation:
      u_{xx}(t,0)=u_{xx}(t,L)=0
     \end{cases}       
 \end{equation}
+
+Suppose we have a separated solution of the form $u(t,x)=X(x)T(t)$. 
+
+If we plug this into the homogeneous Dirichlet BCs for $u$, we find $u(t,0)=T(t)X(0)=0, u(t,L)=T(t)X(L)=0$. In order for both of these to be true, we must have either $T(t)=0$ or $X(0)=X(L)=0$. But if $T(t)=0$, then $u(t,x)=0$ for all $x$, which contradicts our ICs. Thus, we must have $X(0)=X(L)=0$. Similarly, from our other BCs we find that $$X''(0)=X''(L)=0$$.
+
+Plugging our expression $u(t,x)=X(x)T(t)$ into the PDE in (\ref{eqn:beam}), it becomes $$T''(t)X(x)=c^2T(t)X^{(4)}(x)$$
+$$\frac{T''(t)}{c^2 T(t)}=\frac{X^{(4)}(x)}{X(x)}=\lambda$$
+$$X^{(4)}-\lambda X=0 $$
+$$r^4-\lambda =0 $$
+
+
+### Case 1: Zero eigenvalues, $\lambda=0$
+
+By the PDE, $X^{(4)}(x)=0$ implies that $u_{xxxx}=0$, and thus that $X(x)$ is of the form $Ax^3+Bx^2+Cx+D$. Now plugging in our initial conditions:
+
+$$X(0) = 0 \quad\Longrightarrow\quad D=0$$
+
+$$X''(x)=6Ax+2B \quad\Longrightarrow\quad X''(0)=2B=0 \quad\Longrightarrow\quad B=0$$
+
+$$X''(l)=6Al=0 \quad\Longrightarrow\quad A=0$$
+
+$$X(l)=Cl=0 \quad\Longrightarrow\quad C=0$$
+
+Therefore, we would have $X(x)=0$, so there are no eigenfunctions $X(x)$ that satisfy $X^{(4)}+\lambda X=0$ when $\lambda=0$ and hence no zero eigenvalues.
+
+### Case 2: Negative eigenvalues, $\lambda = -\beta^4 <0$
+
+We will use Green's second identity to show that we cannot have any negative eigenvalues. Start with $X^{(4)}=\lambda X$, multiply by $\bar{X}$, and integrate both sides from 0 to $l$:
+
+\begin{align*}
+X^{(4)} &=\lambda X \\
+\int_0^l X^{(4)} \bar{X}\,dx &=\lambda \int_0^l  X \bar{X}\,dx \\
+&=\lambda \int_0^l  \lvert X \rvert ^2\,dx \end{align*}
+
+
+Now Green's second identity states that for any $u,v \in C^2 [a,b]$, we have
+$$\int_a^bvu'' dx=\int_a^buv'' dx + [vu'-uv']^{x=b}_{x=a}$$
+
+Letting $u= X^{(4)}$ and $v=\bar{X}$, 
+
+$$\int_0^l X^{(4)} \bar{X}\; dx= \int_0^l \lvert X^{''} \rvert ^2 \;dx \;+ \left[ \bar{X}X^{(5)}-X^{(4)}\bar{X}' \right]^{x=l}_{x=0}$$
+But since $X(0)=X(L)=0$, the boundary terms disappear and we have 
+
+$$\int_0^l \lvert X^{''} \rvert ^2 \;dx =\lambda \int_0^l  \lvert X \rvert ^2\,dx$$
+
+$$\lambda = \frac{\int_0^l \lvert X^{''} \rvert ^2 \;dx }{\int_0^l  \lvert X \rvert ^2\,dx} \quad\Longrightarrow\quad \lambda \geq 0$$
+Therefore, we have only positive eigenvalues.
+
+### Case 3: Positive eigenvalues, $\lambda = \beta^4 >0$
+This case gives us the characteristic equation: $r^4-\beta^4=0$, or $r^2= \pm \beta^2, r=\pm \beta, \pm \beta i$
+
+$$X(x)=Ae^{\beta x}+Be^{-\beta x}+C\sin{(\beta x)}+D\cos{(\beta x)}$$
+\begin{equation}\label{eqn:x0}
+X(0)=A+B+D=0
+\end{equation}
+
+$$X''(x)=\beta^2Ae^{\beta x}+\beta^2Be^{-\beta x}-\beta^2C\sin{(\beta x)}-\beta^2D\cos{(\beta x)}$$
+Since we are in a case where we defined $\beta$ to be non-zero, we can divide by it to find that
+$$X''(0)=\beta^2A+\beta^2B-\beta^2D=0 \quad\Longrightarrow\quad A+B=D$$
+Combining this with (\ref{eqn:x0}), we find that $D=0$.
+
+$$X(L)=Ae^{\beta L}+Be^{-\beta L}+C\sin{(\beta L)}=0$$
+
+$$X''(L)=\beta^2Ae^{\beta L}+\beta^2Be^{-\beta L}-\beta^2C\sin{(\beta L)}=0$$
+
+$$C\sin{(\beta L)}=-C\sin{(\beta L)}, \quad 2C\sin{(\beta L)}=0$$
+Either $C=0$ or $\sin{(\beta L)}=0$. Say $C=0$, then $X(0)=A+B=0$ implies $A=-B$. Then the boundary condition gives
+$$X(L)=Be^{\beta L}-Be^{-\beta L}=0, \quad B(e^{\beta L}-e^{-\beta L})=0$$
+
+Since $e^{\beta L}$ and $e^{-\beta L}$ are only equal when $L=0$ and we defined $L>0$, we must have $B=A=0$, which would imply that $X(x)=0$, the trivial solution. Therefore, we must have $\sin{(\beta L)}=0$, such that $\beta = \frac{n\pi}{L}$.
+
+Returning to our boundary conditions,
+
+$$X(0)=Ae^0+Be^0+C\sin{0}=0$$
+
+$$A+B=0, \quad A=-B$$
+
+$$X(L)=Ae^{\left(\frac{n\pi}{L}\right) L}-Ae^{-\left(\frac{n\pi}{L}\right) L}+C\sin{\left(\left(\frac{n\pi}{L}\right) L\right)}=0$$
+
+$$X(L)=Ae^{n\pi}-Ae^{-n\pi}+C\sin{(n\pi)}=0$$
+
+$$Ae^{n\pi}=Ae^{-n\pi}$$
+
+But for $n=1,2,3...$, this is only true if $A=0$, which means $B$ is also zero.
+
+Thus, we have eigenvalues of $\lambda_n= \left(\frac{n\pi}{L}\right)^4$ with eigenfunctions 
+$$\quad X_n(x)=\sin{\left( \frac{n\pi x}{L}\right)},\quad n=1,2,3...$$
+
+
+
+Now we return to the time equation,
+
+$$T''(t)-\lambda c^2 T(t)=0$$
+
+
+$$T''-\left(\frac{n\pi}{L}\right)^4 c^2 T=0$$
+
+$$r^2-\left(\frac{n\pi}{L}\right)^4 c^2 =0$$
+
+$$T_n(t)=Ae^{\left(\frac{n\pi}{L}\right)^2 ct}+Be^{-\left(\frac{n\pi}{L}\right)^2 ct} $$
+
+
+$$u_n(t,x)=\left[Ae^{\left(\frac{n\pi}{L}\right)^2 ct}+Be^{-\left(\frac{n\pi}{L}\right)^2 ct} \right]\sin{\left( \frac{n\pi x}{L}\right)},\quad n=1,2,3... $$
+
+
+Check if this actually satisfies our PDE:
+$$u_{tt} =c^2 u_{xxxx} $$
+
+$$u\left(\frac{n\pi}{L}\right)^4c^2 =c^2 \left(\frac{n\pi}{L}\right)^4 u $$
+
+Now we can use the principle of superposition to find our general solution:
+
+$$u(t,x)= \sum_{n=1}^{\infty} \left[Ae^{\left(\frac{n\pi}{L}\right)^2 ct}+Be^{-\left(\frac{n\pi}{L}\right)^2 ct} \right]\sin{\left( \frac{n\pi x}{L}\right)}$$
+
+$$u(0,x)= \phi(x)=\sum_{n=1}^{\infty} \left[A+B \right]\sin{\left( \frac{n\pi x}{L}\right)}$$
+
+$$A+B = \frac{2}{L} \int_{0}^{L}\phi(x)\sin{  \left(\frac{n\pi x}{L}\right) }dx$$
+
+$$u_t(0,x)= \psi(x)=\sum_{n=1}^{\infty} \left(\frac{n\pi}{L}\right)^2 c\left[A-B \right]\sin{\left( \frac{n\pi x}{L}\right)}$$
+
+$$A-B =  \left(\frac{n\pi}{L}\right)^2 \frac{2c}{L} \int_{0}^{L}\psi(x)\sin{  \left(\frac{n\pi x}{L}\right) }dx$$
+$$-2B +\frac{2}{L} \int_{0}^{L}\phi(x)\sin{  \left(\frac{n\pi x}{L}\right) }dx=  \left(\frac{n\pi}{L}\right)^2 \frac{2c}{L} \int_{0}^{L}\psi(x)\sin{  \left(\frac{n\pi x}{L}\right) }dx$$
+\begin{align*}
+B & =\frac{1}{L} \int_{0}^{L}\phi(x)\sin{  \left(\frac{n\pi x}{L}\right) }dx-  \left(\frac{n\pi}{L}\right)^2 \frac{c}{L} \int_{0}^{L}\psi(x)\sin{  \left(\frac{n\pi x}{L}\right) }dx \\
+&=\frac{1}{L} \int_{0}^{L} \left[\phi(x)- c\left(\frac{n\pi}{L}\right)^2  \psi(x)\right]\sin{  \left(\frac{n\pi x}{L}\right) }dx \end{align*}
+
+$$A=-B + \frac{2}{L} \int_{0}^{L}\phi(x)\sin{  \left(\frac{n\pi x}{L}\right) }dx$$
+
+
+Therefore, our solution to (\ref{eqn:beam}) is:
+\begin{tcolorbox}[colback=white, title=Solution]
+\begin{align*}
+& u(t,x)= \sum_{n=1}^{\infty} \left[Ae^{\left(\frac{n\pi}{L}\right)^2 ct}+Be^{-\left(\frac{n\pi}{L}\right)^2 ct} \right]\sin{\left( \frac{n\pi x}{L}\right)}, \quad \text{where} \\ 
+& B=\frac{1}{L} \int_{0}^{L} \left[\phi(x)- c\left(\frac{n\pi}{L}\right)^2  \psi(x)\right]\sin{  \left(\frac{n\pi x}{L}\right) }dx\\
+& A=\frac{1}{L} \int_{0}^{L} \left[\phi(x)+ c\left(\frac{n\pi}{L}\right)^2  \psi(x)\right]\sin{  \left(\frac{n\pi x}{L}\right) }dx
+\end{align*}
+\end{tcolorbox}
+
+
+
+
 
 ## Problem 5: Radioactive Decay Problem
 
@@ -291,11 +457,12 @@ $$B_n-\frac{\zeta B_n}{\gamma}= \left(1-\frac{\zeta}{\gamma}\right)B_n=
 
 Therefore, our solution is:
 \begin{tcolorbox}[colback=white, title=Solution]
-$$u(t,x)= \sum^{\infty}_{n=1} A_n \,e^{\gamma t} \sin{\left( \frac{n\pi x}{l}\right)}+ \\
-\sum^{\infty}_{n=1} B_n \,e^{\zeta t} \sin{\left( \frac{n\pi x}{l}\right)}, \quad \text{where}$$
+\begin{equation}\label{eqn:teleSol}
+u(t,x)= \sum^{\infty}_{n=1} A_n \,e^{\gamma t} \sin{\left( \frac{n\pi x}{l}\right)}+ \\
+\sum^{\infty}_{n=1} B_n \,e^{\zeta t} \sin{\left( \frac{n\pi x}{l}\right)},\end{equation}
 
 
-$$ A_n=\frac{2}{l} \int_{0}^{l}\phi(x)\sin{  \left(\frac{n\pi x}{l}\right) }dx-B_n$$
+$$\text{where}  \quad A_n=\frac{2}{l} \int_{0}^{l}\phi(x)\sin{  \left(\frac{n\pi x}{l}\right) }dx-B_n$$
 $$B_n=\frac{2\gamma}{(\gamma-\zeta)l} \int_{0}^{l}\phi(x)\sin{  \left(\frac{n\pi x}{l}\right) }dx-\frac{2(\gamma-\zeta)}{l} \int_{0}^{l}\psi(x)\sin{  \left(\frac{n\pi x}{l}\right) }dx,$$
 $$\gamma=\frac{t}{2}(-a-a^2-4b-4\lambda_n c^2)$$
 $$\zeta=\frac{t}{2}(-a-a^2-4b-4\lambda_n c^2)$$
@@ -303,4 +470,41 @@ $$\lambda_n= \left(\frac{n\pi}{l}\right)^2, \quad n=1,2,3...$$
 \end{tcolorbox}
 
 
+Now we use an energy argument to show that the telegraph equation has a unique solution. We start with the given energy equation and differentiate:
+\begin{align*}
+\frac{d}{dt} E(t) &=\frac{1}{2} \int_{0}^{l} \frac{d}{dt}(u_t^2+c^2u_x^2+bu^2)\;dx \\
+                  &=\frac{1}{2} \int_{0}^{l} 2u_tu_{tt}+2c^2u_xu_{xt}+2buu_t)\;dx \\
+                  &=\int_{0}^{l} u_tu_{tt}+\int_{0}^{l}c^2u_xu_{xt}+\int_{0}^{l}buu_t \\
+                  &= \int_{0}^{l}c^2u_xu_{xt}\; dx = c^2u_xu_t \Bigr\rvert^{l}_0- \int_{0}^{l}c^2u_tu_{xx}\;dx
+\end{align*}
 
+The term $c^2u_xu_t \Bigr\rvert^{l}_0$ disappears because of our boundary conditions, so we now have
+$$\frac{d}{dt} E(t)=\int_{0}^{l} u_tu_{tt}+buu_t-c^2u_tu_{xx}\;dx = \int_{0}^{l}u_t(u_{tt}+bu-c^2u_{xx})\;dx $$
+
+But our PDE, $u_{tt} + au_t + bu = c^2 u_{xx}$, can be re-written as $u_{tt} + bu - c^2 u_{xx}=-au_t$, which means
+
+$$\frac{d}{dt} E(t)=-\int_{0}^{l}a(u_t^2) \;dx $$
+
+Since $a$ and $u_t^2$ are necessarily non-negative, $\int_{0}^{l}a(u_t^2) \;dx \geq 0$ which means that 
+$$\frac{d}{dt} E(t)=-\int_{0}^{l}a(u_t^2) \;dx \leq 0$$.
+
+Since we just showed that the derivative of $E(t)$ is less than or equal to zero for all $t$, we have that $E(t) \leq E(0)$ for all $t>0$.
+
+Let $u$ and $v$ be two solutions to (\ref{eqn:tele}) and define $w=u-v$. Then $w$ satisfies the problem
+
+\begin{equation}\label{eqn:teleW}
+    \begin{cases}
+     w_{tt} + aw_t + bw = c^2 w_{xx}   & 0<x<l, \quad t>0 \\
+     w(0,x) = 0             & 0 \leq x \leq l\\
+     w_t(0,x) = 0           & 0 \leq x \leq l\\
+     w(t,0)=w(t,l)=0 & t>0
+    \end{cases}       
+\end{equation}
+
+$$E(0)=\frac{1}{2} \int_{0}^{l}(w_t(0,x))^2+c^2(w_x(0,x))^2+b(w(0,x)^2)\;dx = \frac{1}{2} \int_{0}^{l}(0+0+0)\;dx=0$$
+
+So $E(t) \leq E(0)$ for all $t>0$ but $E(0)=0$ for our solution $w(t,x)$, which means that 
+
+$$E(t)=\frac{1}{2} \int_{0}^{l}(w_t^2+c^2w_x^2+bw^2)\;dx \leq 0$$
+
+Since all of the terms under the integrand are non-negative, this is only possible if $w_t=w_x=w=0$ for all $t>0$. Thus, $w=u-v=0 \quad\Rightarrow\quad u=v$, meaning any solution to (\ref{eqn:tele}) is in fact the unique solution.
