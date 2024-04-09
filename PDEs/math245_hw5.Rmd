@@ -1,7 +1,7 @@
 ---
 title: "MATH 245 Homework 5"
 author: "Ruby Krasnow and Tommy Thach"
-date: "2024-04-08"
+date: "2024-04-09"
 output:
   pdf_document:
     extra_dependencies: ["tcolorbox", "xcolor"]
@@ -11,6 +11,10 @@ output:
 knitr::opts_chunk$set(echo = TRUE)
 library(tidyverse)
 ```
+
+## Done: 2, 4, 5, 6
+## Not started: 1, 3
+
 
 ## Problem 1: Inhomogeneous Heat Equation
 
@@ -35,7 +39,180 @@ Using the method of separation of variables, solve the inhomogeneous wave equati
     \end{cases}       
 \end{equation}
 
-for constants $a$ and $k>0$
+### Step 1   
+
+We will use the principle of superposition and write $u(t,x)=v(t,x)+w(t,x)$, so $v=u-w$. Then for $v(t,x)$, we have
+
+\begin{equation}\label{eqn:inhomowaveV1}
+    \begin{cases}
+     \square v =F(t,x) - \square w = F(t,x)-w_{tt}+c^2 w_{xx} =H(t,x)    & 0<x<L, \quad t>0 \\
+     v(0,x) = u(0,x)-w(0,x) = \phi(x) -w(0,x)  = \Phi(x)          & 0<x<L\\
+     v_t(0,x) = u_t(0,x)-w_t(0,x)= \psi(x)  -  w_t(0,x)  = \Psi(x)      & 0<x<L\\
+     v_x(t,0)=u_x(t,0)-w_x(t,0) = h(t)-h(t)=0 \\
+     v_x(t,L)=u_x(t,L)-w_x(t,L) = g(t)-g(t)=0 & t>0
+    \end{cases}       
+\end{equation}
+
+\begin{equation}\label{eqn:inhomowaveV}
+    \begin{cases}
+     \square v =H(t,x)   & 0<x<L, \quad t>0 \\
+     v(0,x) =  \Phi(x)          & 0<x<L\\
+     v_t(0,x) =\Psi(x)      & 0<x<L\\
+     v_x(t,0)=0 \\
+     v_x(t,L)=0 & t>0
+    \end{cases}       
+\end{equation}
+
+and for $w$, we have
+\begin{equation}\label{eqn:inhomowaveW}
+    \begin{cases}
+     w_{xx}=0 \\
+     w_x(t,0)=h(t) \\
+     w_x(t,L)=g(t)
+    \end{cases}       
+\end{equation}
+
+
+For $w(t,x)$, we will use a function of the form 
+$$w(t,x)= \left(x-\frac{x^2}{2L}\right)h(t)+\frac{x^2}{2L}g(t)$$
+$$ w_{x}=h(t)- \frac{x}{L} h(t) + \frac{x}{L}g(t)$$
+$$ w_{xx}=\frac{1}{L} \Bigl( g(t)- h(t) \Bigr) $$
+So that we will have $w_x(t,0)= h(t), w_x(t,L)=g(t)$.
+
+### Step 2:  Solve (\ref{eqn:inhomowaveV})
+
+Assume (\ref{eqn:inhomowaveV}) has the separated solution $v(t,x)=X(x)T(t)$ and consider the following eigenvalue problem
+
+\begin{equation*}
+    \begin{cases}
+     x''+\lambda X = 0 \\
+     X'(0)=X'(L)=0
+    \end{cases}       
+\end{equation*}
+
+W know that the solution to this eigenvalue problem is
+$$\lambda_n= \left(\frac{n\pi}{L}\right)^2, \quad X_n(x)=\cos{\left( \frac{n \pi x}{L}\right)},  \quad n=0,1,2,3... $$  
+
+### Step 3  
+
+Now, let's write $v(t,x)$ as 
+
+$$v(t,x)= a_0(t)+\sum_{n=1}^{\infty}  a_n(t) \cos{  \left(\frac{n\pi x}{L}\right) } $$
+and substitute this into the PDE of (\ref{eqn:inhomowaveV}).
+
+$$v_{tt}(t,x)= a_0''(t)+\sum_{n=1}^{\infty}  a_n''(t) \cos{  \left(\frac{n\pi x}{L}\right) } $$
+$$c^2 v_{xx}(t,x)= -\sum_{n=1}^{\infty} \left(\frac{n\pi c}{L}\right)^2 a_n(t) \cos{  \left(\frac{n\pi x}{L}\right) } $$
+
+\begin{equation}\label{eqn:step3}
+H(t,x)=a_0''(t)+ \sum_{n=1}^{\infty}\left[  a_n''(t) +  \left(\frac{n\pi c}{L}\right)^2 a_n(t)    \right] \cos{  \left(\frac{n\pi x}{L}\right) }
+\end{equation}
+
+### Step 4
+
+For a fixed $t$, we write $H(t,x)$ as the Fourier cosine series
+\begin{equation}\label{eqn:step4}
+H(t,x)=q_0(t)+ \sum_{n=1}^{\infty}q_n(t) \cos{  \left(\frac{n\pi x}{l}\right) } \end{equation}
+
+Such that
+$$q_n (t)= \frac{2}{L} \int_{0}^{L}H(t,x)\cos{  \left(\frac{n\pi x}{L}\right) }dx $$
+$$q_0(t)=\frac{1}{L} \int_{0}^{L}H(t,x)dx$$ 
+
+### Step 5
+
+\begin{tcolorbox}[colback=white, title=Variation of Parameters]
+Consider an ODE $$(\ast)\quad y''+a(x)y'+b(x)y=c(x) $$
+and assume $\{ y_1(x), y_2(x)\}$ are fundamental solutions of the associated homogeneous equation $$(\ast \ast)\quad y''+a(x)y'+b(x)y=0 $$
+Then the general solution of $(\ast \ast)$ is 
+$y_h(x)=c_1y_1(x)+c_2y_2(x)$ for $c_1, c_2 \in \mathbb{R}$ and the solution of $(\ast)$ is the sum of the general and particular solutions, $y=y_h+y_p$, where
+$$y_p = -y_1(x) \int \frac{y_2(s)c(s)}{W(y_1,y_2)}ds+ y_2(x) \int \frac{y_1(s)c(s)}{W(y_1,y_2)}ds$$
+where $$W(y_1,y_2)= \begin{vmatrix}
+y_1 & y_2\\
+y_1' & y_2'
+\end{vmatrix}$$ \end{tcolorbox}
+
+Combine (\ref{eqn:step3}) and (\ref{eqn:step4}):
+
+$$q_0(t)=a_0''(t)$$
+$$q_n (t)=  a_n''(t) +  \left(\frac{n\pi c}{L}\right)^2 a_n(t)   $$
+First we find the fundamental solution of 
+$$ a_0''(t) =0$$
+$$a_0^H=A_0t+B_0$$
+for $A_0, B_0 \in \mathbb{R}$. Call $y_1=1, y_2=t$.
+
+$$W(1,t)= \begin{vmatrix}
+1 & t\\
+0 & 1 \end{vmatrix}= 1 $$ 
+
+$$a_0^P(t) = -\int_0^t s \,q_n(s)\,ds+ t \int_0^t q_n(s)\,ds=\int_0^t(t-s)q_n(s)\,ds$$
+
+$$a_0(t)=A_0t+B_0+\int_0^t(t-s)q_n(s)\,ds$$
+
+Now we find the fundamental solutions of
+
+$$ a_n''(t) +  \left(\frac{n\pi c}{L}\right)^2 a_n(t) =0$$
+This has the characteristic equation
+$r^2+  \left(\frac{n\pi c}{L}\right)^2 =0$, giving us $\{y_1,y_2\}=\left\{ \cos{\left(\frac{n\pi ct}{L}\right)}, \sin{\left(\frac{n\pi ct}{L}\right)} \right\}$.
+Thus, the general solution to the homogeneous problem is
+
+$$a_n^H(t)=A_n\cos{\left(\frac{n\pi ct}{L}\right)}+B_n\sin{\left(\frac{n\pi ct}{L}\right)}$$
+for $A_n, B_n \in \mathbb{R}, n \in \mathbb{N}$.
+
+$$W(y_1,y_2)(s)= \begin{vmatrix}
+\cos{\left(\frac{n\pi cs}{L}\right)} & \sin{\left(\frac{n\pi cs}{L}\right)}\\
+-\frac{n\pi c}{L}\sin{\left(\frac{n\pi cs}{L}\right)} & \frac{n\pi c}{L}\cos{\left(\frac{n\pi cs}{L}\right)}
+\end{vmatrix}= \frac{n\pi c}{L}$$
+
+\begin{align*}
+a_n^P(t)& = -\cos{\left(\frac{n\pi ct}{L}\right)} \int_0^t \frac{\sin{\left(\frac{n\pi cs}{L}\right)}q_n(s)}{W(y_1,y_2)}ds + \sin{\left(\frac{n\pi ct}{L}\right)} \int_0^t \frac{\cos{\left(\frac{n\pi cs}{L}\right)}q_n(s)}{W(y_1,y_2)}ds \\
+& =\int_0^t\frac{\sin{\left(\frac{n\pi c}{L} (t-s)\right)}q_n(s)}{W(y_1,y_2)}ds \\ &=\int_0^t\frac{\sin{\left(\frac{n\pi c}{L} (t-s)\right)}q_n(s)}{\frac{n\pi c}{L}}ds
+\end{align*}
+
+Therefore, $a_n(t)= a_n^H(t)+a_n^P(t)$, but the $A_n, B_n$ in $a_n^H(t)$ and the $A_0, B_0$ in $a_0^H(t)$ are still unknown.
+
+### Step 6
+
+To find $A_0, B_0, A_n, B_n$, we use the initial conditions from (\ref{eqn:inhomowaveV}).
+
+$$\Phi(x)=v(0,x)= a_0(0)+\sum_{n=1}^{\infty}  a_n(0) \cos{  \left(\frac{n\pi x}{L}\right) } =B_0+\sum_{n=1}^{\infty}  A_n \cos{  \left(\frac{n\pi x}{L}\right) }$$
+
+$$\Psi(x)=v_t(0,x)= A_0+\sum_{n=1}^{\infty} \frac{n\pi c}{L} B_n \cos{  \left(\frac{n\pi x}{L}\right) }$$
+
+$$A_0= \frac{1}{L} \int_{0}^{L}\Psi(x)dx$$
+$$B_0= \frac{1}{L} \int_{0}^{L}\Phi(x)dx$$
+$$A_n= \frac{2}{L} \int_{0}^{L}\Phi(x)\cos{  \left(\frac{n\pi x}{L}\right) }dx$$
+$$ \frac{n\pi c}{L}B_n= \frac{2}{L} \int_{0}^{L}\Psi(x)\cos{  \left(\frac{n\pi x}{L}\right) }dx$$  
+
+### Step 7: Solution 
+
+The solution of (\ref{eqn:inhomowave}) is then
+$$u(t,x)= a_0(t)+\sum_{n=1}^{\infty}  a_n(t) \cos{  \left(\frac{n\pi x}{L}\right) }$$
+where $$a_0(t)=\frac{1}{L} \int_{0}^{L} \left[t\,\Psi(x)+\Phi(x) \right]dx+\int_0^t(t-s)q_n(s)\,ds$$
+
+$$a_n(t)=A_n\cos{\left(\frac{n\pi ct}{L}\right)}+B_n\sin{\left(\frac{n\pi ct}{L}\right)}+\int_0^t\frac{\sin{\left(\frac{n\pi c}{L} (t-s)\right)}q_n(s)}{\frac{n\pi c}{L}}ds$$
+$$A_n= \frac{2}{L} \int_{0}^{L}\Phi(x)\cos{  \left(\frac{n\pi x}{L}\right) }dx, \quad B_n=\frac{2}{n\pi c}\int_{0}^{L}\Psi(x)\cos{  \left(\frac{n\pi x}{L}\right) }dx$$
+$$q_n (t)= \frac{2}{L} \int_{0}^{L}H(t,x)\cos{  \left(\frac{n\pi x}{L}\right) }dx$$
+\begin{align*}
+H(t,x)&=F(t,x)-w_{tt}+c^2w_{xx} \\
+&=F(t,x)-\left[\left(x-\frac{x^2}{2L}\right)h''(t)+\frac{x^2}{2L}g''(t)\right]
++\frac{c^2}{L} \Bigl( g(t)- h(t) \Bigr) \\
+\Phi(x)  &= u(0,x)-w(0,x) \\
+&= \phi(x) -w(0,x)  \\
+&= \phi(x) -\left(x-\frac{x^2}{2L}\right)h(0)-\frac{x^2}{2L}g(0) \\
+\Psi(x) &=u_t(0,x)-w_t(0,x) \\
+&= \psi(x)  -  w_t(0,x)  \\
+&= \psi(x)- \left(x-\frac{x^2}{2L}\right)h'(0)-\frac{x^2}{2L}g'(0)
+\end{align*}
+
+
+
+
+
+
+
+
+
+
+
 
 ## Problem 3: Damped Heat Equation
 
