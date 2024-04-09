@@ -12,8 +12,8 @@ knitr::opts_chunk$set(echo = TRUE)
 library(tidyverse)
 ```
 
-## Done: 2, 4, 5, 6
-## Not started: 1, 3
+## Done: 1, 2, 4, 5, 6
+## Not started: 3
 
 
 ## Problem 1: Inhomogeneous Heat Equation
@@ -26,6 +26,97 @@ Using the method of separation of variables, solve the inhomogeneous heat equati
      u(t,0)=t^2, \;\; u(t,\pi)=2t       & t>0
     \end{cases}       
 \end{equation}
+
+### Step 1   
+
+We will use the principle of superposition and write $u(t,x)=v(t,x)+w(t,x)$, so $v=u-w$. Then for $v(t,x)$, we have
+
+\begin{equation}\label{eqn:inhomoheatV1}
+    \begin{cases}
+     v_t-kv_{xx} = x \cos{t}-w_t+kw_{xx}                  & 0<x<\pi, \quad t>0 \\
+     v(0,x) = u(0,x)-w(0,x) = \sin{(\pi x)}-w(0,x)  & 0<x<\pi\\
+     v(t,0)=u(t,0)-w(t,0) = t^2-t^2=0                         & t>0       \\
+     v(t,\pi)=u(t,\pi)-w(t,\pi) = 2t-2t=0                     & t>0
+    \end{cases}       
+\end{equation}
+
+So we want a function $w(t,x)$ such that $w(t,0)=t^2$ and $w(t,\pi)=2t$. The following function satisfies these requirements, and also has the convenient properties that $w_{xx}(t,x)=0$ and $w(0,x)=0$.
+
+$$w(t,x)=t^2+ \frac{2t-t^2}{\pi}x $$
+$$w_t(t,x)=2t+ \frac{2-2t}{\pi}x $$
+
+Thus, set $H(t,x)=x \cos{t}-2t-\frac{2-2t}{\pi}x$, and our problem simplifies to
+\begin{equation}\label{eqn:inhomoheatV}
+    \begin{cases}
+     v_t-kv_{xx} = H(t,x) & 0<x<\pi, \quad t>0 \\
+     v(0,x) = \sin{(\pi x)}  & 0<x<\pi\\
+     v(t,0)=0                & t>0       \\
+     v(t,\pi)=0              & t>0
+    \end{cases}       
+\end{equation}
+
+### Step 2 
+
+Assume (\ref{eqn:inhomoheatV}) has a separated solution $v(t,x)=X(x)T(t)$. Based on the Dirichlet BCs, we will assume the solution takes the form
+
+$$v(t,x)= \sum_{n=1}^{\infty}  b_n(t) \sin{(nx)} $$
+Where the $\pi$ in the numerator cancels with $L=\pi$ in the denominator of $\sin{  \left(\frac{n\pi x}{L}\right) }$. Now we substitute this into the PDE in (\ref{eqn:inhomoheatV}):
+
+\begin{equation}\label{eqn:step2a}
+H(t,x)=\sum_{n=1}^{\infty}\left[b_n''(t) +  kn^2 b_n(t)\right] \sin{(nx))}
+\end{equation}
+
+### Step 3
+
+For each fixed $t$, we write $H(t,x)$ as the Fourier sine series
+\begin{equation}\label{eqn:step3a}
+H(t,x)=\sum_{n=1}^{\infty}q_n(t) \sin{(nx)} \end{equation}
+
+Such that
+\begin{align*}
+q_n (t)&= \frac{2}{L} \int_{0}^{L}H(t,x)\sin{  \left(\frac{n\pi x}{L}\right) }dx \\
+      &= \frac{2}{\pi} \int_{0}^{\pi}H(t,x)\sin{ (nx)}dx
+\end{align*}
+
+### Step 4   
+
+By (\ref{eqn:step2a}) and (\ref{eqn:step3a}), we get
+$$b_n''(t) +  kn^2 b_n(t)=q_n(t) $$
+
+$$\mu(t) = \exp\left(\int_0^t kn^2ds\right)=e^{kn^2t} $$
+
+$$b_n(t)= \frac{1}{\mu (t)} \left[\int_0^t \mu (s) q_n (s)+b_n(0)\right] $$
+
+$$b_n(t)= e^{-kn^2t}\;b_n(0)+ \int_0^t e^{kn^2(s-t)} q_n (s)$$
+
+### Step 5   
+
+To find $b_n(0)$, we use the IC from (\ref{eqn:inhomoheatV}):
+
+$$v(0,x)= \sin{(\pi x)}=\sum_{n=1}^{\infty}  b_n(0) \sin{(nx)} $$
+
+\begin{align*}
+b_n(0)& =\frac{2}{\pi} \int_{0}^{\pi} \sin{(\pi x)} \cos{(nx)}dx \\ 
+      &=\frac{1}{\pi} \int_{0}^{\pi} \sin{(x(\pi+n))} +\sin{(x(\pi-n))}dx \\                   &=\left[\frac{-\cos{(x(\pi+n))}}{\pi(\pi+n)}\right]^\pi_0+\left[\frac{-\cos{(x(\pi-n))}}{\pi(\pi-n)}\right]^\pi_0 \\
+      &=\left[\frac{1-\cos{(\pi(\pi+n))}}{\pi(\pi+n)}\right]+\left[\frac{1-\cos{(\pi(\pi-n))}}{\pi(\pi-n)}\right]\\
+      &=2\left[\frac{1+\cos(\pi^2)(-1)^{n+1}}{\pi(\pi+n)}\right]
+\end{align*}
+
+Where we used $\cos(\alpha+\beta)=\cos\alpha\cos\beta-\sin\alpha\sin\beta$ to find that
+$$\cos{(\pi^2+n\pi)}=\cos(\pi^2)\cos(n\pi)-\sin(\pi^2)\sin(n\pi)=\cos(\pi^2)(-1)^n$$
+$$\cos{(\pi^2-n\pi)}=\cos(\pi^2)\cos(n\pi)+\sin(\pi^2)\sin(n\pi)=\cos(\pi^2)(-1)^n$$
+
+
+### Step 6
+
+\begin{tcolorbox}[colback=blue!5!white,colframe=blue!75!black,title=Solution]
+The solution of (\ref{eqn:inhomoheat}) is then
+$$u(t,x)= \sum_{n=1}^{\infty} \Bigl[ b_n(t) \sin{(nx)}\Bigr]+ t^2+ \frac{2t-t^2}{\pi}x$$
+where 
+$$b_n(t)= 2e^{-kn^2t}\;\left[\frac{1+\cos(\pi^2)(-1)^{n+1}}{\pi(\pi+n)}\right]+ \int_0^t e^{kn^2(s-t)} q_n (s)$$
+$$q_n (t)= \frac{2}{\pi} \int_{0}^{\pi}H(t,x)\sin{ (nx)}dx, \quad \quad H(t,x)=x \cos{t}-2t-\frac{2-2t}{\pi}x$$
+\end{tcolorbox}
+
 
 ## Problem 2: Inhomogeneous Wave Equation
 
@@ -182,10 +273,11 @@ $$B_0= \frac{1}{L} \int_{0}^{L}\Phi(x)dx$$
 $$A_n= \frac{2}{L} \int_{0}^{L}\Phi(x)\cos{  \left(\frac{n\pi x}{L}\right) }dx$$
 $$ \frac{n\pi c}{L}B_n= \frac{2}{L} \int_{0}^{L}\Psi(x)\cos{  \left(\frac{n\pi x}{L}\right) }dx$$  
 
-### Step 7: Solution 
+### Step 7: Solution   
 
+\begin{tcolorbox}[colback=blue!5!white,colframe=blue!75!black,title=Solution]
 The solution of (\ref{eqn:inhomowave}) is then
-$$u(t,x)= a_0(t)+\sum_{n=1}^{\infty}  a_n(t) \cos{  \left(\frac{n\pi x}{L}\right) }$$
+$$u(t,x)= a_0(t)+\sum_{n=1}^{\infty}  a_n(t) \cos{  \left(\frac{n\pi x}{L}\right) }+\left(x-\frac{x^2}{2L}\right)h(t)+\frac{x^2}{2L}g(t)$$
 where $$a_0(t)=\frac{1}{L} \int_{0}^{L} \left[t\,\Psi(x)+\Phi(x) \right]dx+\int_0^t(t-s)q_n(s)\,ds$$
 
 $$a_n(t)=A_n\cos{\left(\frac{n\pi ct}{L}\right)}+B_n\sin{\left(\frac{n\pi ct}{L}\right)}+\int_0^t\frac{\sin{\left(\frac{n\pi c}{L} (t-s)\right)}q_n(s)}{\frac{n\pi c}{L}}ds$$
@@ -202,13 +294,7 @@ H(t,x)&=F(t,x)-w_{tt}+c^2w_{xx} \\
 &= \psi(x)  -  w_t(0,x)  \\
 &= \psi(x)- \left(x-\frac{x^2}{2L}\right)h'(0)-\frac{x^2}{2L}g'(0)
 \end{align*}
-
-
-
-
-
-
-
+\end{tcolorbox}
 
 
 
@@ -395,7 +481,7 @@ $$A=-B + \frac{2}{L} \int_{0}^{L}\phi(x)\sin{  \left(\frac{n\pi x}{L}\right) }dx
 
 
 Therefore, our solution to (\ref{eqn:beam}) is:
-\begin{tcolorbox}[colback=white, title=Solution]
+\begin{tcolorbox}[colback=blue!5!white,colframe=blue!75!black,title=Solution]
 \begin{align*}
 & u(t,x)= \sum_{n=1}^{\infty} \left[Ae^{\left(\frac{n\pi}{L}\right)^2 ct}+Be^{-\left(\frac{n\pi}{L}\right)^2 ct} \right]\sin{\left( \frac{n\pi x}{L}\right)}, \quad \text{where} \\ 
 & B=\frac{1}{L} \int_{0}^{L} \left[\phi(x)- c\left(\frac{n\pi}{L}\right)^2  \psi(x)\right]\sin{  \left(\frac{n\pi x}{L}\right) }dx\\
@@ -524,7 +610,7 @@ $$b_n(0)=\frac{1}{2\pi} \int_{0}^{\pi} \cos{(x)}-\cos{(3x)}dx=0$$
 Because $\sin{0}, \sin{\pi}$, and $\sin{3\pi}$ all equal zero.
 
 Therefore, our solution to (\ref{eqn:radio}) is:
-\begin{tcolorbox}[colback=white, title=Solution]
+\begin{tcolorbox}[colback=blue!5!white,colframe=blue!75!black,title=Solution]
 \begin{align*}
 & u(t,x)= b_0(t)+\sum_{n=1}^{\infty} b_n(t) \sin{(nx)}, \quad \text{where} \\ 
 & b_n(t)=\int_{0}^{t} e^{n^2(s-t)}q_n\;ds,\\
@@ -632,8 +718,8 @@ $$B_n-\frac{\zeta B_n}{\gamma}= \left(1-\frac{\zeta}{\gamma}\right)B_n=
 \frac{2}{l} \int_{0}^{l}\phi(x)\sin{  \left(\frac{n\pi x}{l}\right) }dx-\frac{2}{\gamma l} \int_{0}^{l}\psi(x)\sin{  \left(\frac{n\pi x}{l}\right) }dx$$
 
 
-Therefore, our solution is:
-\begin{tcolorbox}[colback=white, title=Solution]
+Therefore, our solution to (\ref{eqn:tele}) is:
+\begin{tcolorbox}[colback=blue!5!white,colframe=blue!75!black,title=Solution]
 \begin{equation}\label{eqn:teleSol}
 u(t,x)= \sum^{\infty}_{n=1} A_n \,e^{\gamma t} \sin{\left( \frac{n\pi x}{l}\right)}+ \\
 \sum^{\infty}_{n=1} B_n \,e^{\zeta t} \sin{\left( \frac{n\pi x}{l}\right)},\end{equation}
