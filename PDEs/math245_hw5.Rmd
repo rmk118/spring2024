@@ -1,7 +1,7 @@
 ---
 title: "MATH 245 Homework 5"
 author: "Ruby Krasnow and Tommy Thach"
-date: "2024-04-09"
+date: "2024-04-10"
 output:
   pdf_document:
     extra_dependencies: ["tcolorbox", "xcolor"]
@@ -11,10 +11,6 @@ output:
 knitr::opts_chunk$set(echo = TRUE)
 library(tidyverse)
 ```
-
-## Done: 1, 2, 4, 5, 6
-## Not started: 3
-
 
 ## Problem 1: Inhomogeneous Heat Equation
 
@@ -298,8 +294,6 @@ H(t,x)&=F(t,x)-w_{tt}+c^2w_{xx} \\
 
 
 
-
-
 ## Problem 3: Damped Heat Equation
 
 Using the method of separation of variables, solve the damped heat equation:
@@ -315,27 +309,94 @@ Using the method of separation of variables, solve the damped heat equation:
 for constants $a$ and $k>0$
 
 
+Assume (\ref{eqn:dampheat}) has a separated solution $u(t,x)=X(x)T(t)$.
+
+From our boundary conditions, $X(\pi)T(t)=X(-\pi)T(t)$ and $X'(\pi)T(t)=X'(-\pi)T(t)$. Since we do not want the trivial solution $T(t)=0 \rightarrow u(t,x)=0$, we must have $X(\pi)=X(-\pi), \; X'(\pi)=X'(-\pi)$.
+
+Plugging $u(t,x)=X(x)T(t)$ into the PDE in (\ref{eqn:dampheat}), we get $$X(x)T'(t)+aX(x)T(t)=kX''(x)T(t)$$
+
+$$\frac{T'}{kT} +\frac{a}{k} =\frac{X''}{X}=-\lambda  $$
+
+This gives us the following (eigenvalue) time problem:
+\begin{equation*}
+    \begin{cases}
+     X''+\lambda X = 0 \\
+     X(\pi)=X(-\pi)\\
+     X'(\pi)=X'(-\pi)\\
+    \end{cases}       
+\end{equation*}
+
+### Case 1: Zero eigenvalues, $\lambda=0$
+
+$X''=0$ implies that $X(x)$ is of the form $Ax+B$. Now plugging in our initial conditions: $X(\pi)=A\pi+B= -A\pi+B=X(-\pi)$ means we must have $A=0$, so that $X(x)=B$. 
+
+From our time equation, we would get $\frac{T'}{T}=-a$, meaning that $T(t)=e^{-at}$.
+
+$u(t,x)=Be^{-at}$.
+$u(0,x)=B=\phi(x)$.
+$u(t,x)=\phi e^{-at}$.
+$-a\phi e^{-at}+a\phi e^{-at}=0$ so this satisfies our PDE and BCs, but I don't think it satisfies the IC because $B$ is not a function of $x$.
+
+### Case 2: Negative eigenvalues, $-\lambda^2<0$
+
+This case gives us the characteristic equation: $r^2-\beta^2=0$. Since our characteristic equation has distinct real roots $r= \pm \beta$, our solutions take the form 
+$$X(x)=Ae^{\beta x}+Be^{-\beta x}$$
+From our BCs,
+$X(\pi)=Ae^{\beta \pi}+Be^{-\beta \pi}$ must equal $X(-\pi)=Ae^{-\beta \pi}+Be^{\beta \pi}$ and $X'(\pi)=\beta Ae^{\beta \pi}-\beta Be^{-\beta \pi}$ must equal $X'(-\pi)=\beta Ae^{\beta \pi}-\beta Be^{\beta \pi}$. Since we have assumed $\beta \neq 0$, we can divide by it to give the following system of equations:
+
+\begin{equation*}
+    \begin{cases}
+     Ae^{\beta \pi}+Be^{-\beta \pi} = Ae^{-\beta \pi}+Be^{\beta \pi} \\
+     Ae^{\beta \pi}-Be^{-\beta \pi} = Ae^{-\beta \pi}-Be^{\beta \pi}
+    \end{cases}       
+\end{equation*}
+
+Solve for $Ae^{\beta \pi}$ in the first equation:
+$$Ae^{\beta \pi} = Ae^{-\beta \pi}+Be^{\beta \pi}-Be^{-\beta \pi} $$
+Plug it into the second equation:
+$$Ae^{-\beta \pi}+Be^{\beta \pi}-Be^{-\beta \pi}-Be^{-\beta \pi} = Ae^{-\beta \pi}-Be^{\beta \pi} $$
+This simplifies to $Be^{\beta \pi}=Be^{-\beta \pi}$, which for non-zero $\beta$ only holds when $B=0$. If $B=0$, our boundary conditions then indicate $Ae^{\beta \pi} = Ae^{-\beta \pi}$ and so $A$ is similarly zero, meaning we have only the trivial solution and we do not have any negative eigenvalues.
+
+### Case 3: Positive eigenvalues, $\lambda^2>0$
+
+We will get the characteristic equation $r^2+\beta^2=0$. Since our characteristic equation has complex roots $r= \pm i\beta$, our solutions take the form 
+$$X(x)=A\sin{(\beta x)}+B\cos{(\beta x)}$$
+Differentiating, we find that 
+$$X'(x)=\beta A\cos{(\beta x)}-\beta B\sin{(\beta x)}$$
 
 
+$$X(\pi)=A\sin{(\beta \pi)}+B\cos{(\beta \pi)}$$
+$$X(-\pi)=A\sin{(-\beta \pi)}+B\cos{(-\beta \pi)}$$
+$$=-A\sin{(\beta \pi)}+B\cos{(\beta \pi)}$$
+So we have
+$$A\sin{(\beta \pi)}+B\cos{(\beta \pi)}=-A\sin{(\beta \pi)}+B\cos{(\beta \pi)}$$
+$$2A\sin{(\beta \pi)}=0 $$
 
+This is only true if $A=0$ or $\beta=n$. Let $A=0$. Then
 
+$$X(x)=B\cos{(\beta x)}, \quad X'(x)=-B\sin{(\beta x)}$$
+$$\quad X'(\pi)=-B\sin{(\beta \pi)}, \quad X'(-\pi)=B\sin{(\beta \pi)} $$
+$$2B\sin{(\beta \pi)}=0 $$
+Since if $\sin{(\beta \pi)}=0$ we would not be able to determine anything about $A$, if $A=0$ we must also have $B=0$, giving us just the trivial solution. Thus, we have found
+$\sin{(\beta \pi)}=0$ so $\beta=n$.
+$$\lambda_n = \beta^2=n^2, \quad X_n(x)=A\cos{(nx)}+B\sin{(nx)} $$
 
+Now we return to our time problem.
 
+$$\frac{T'}{kT}+\frac{a}{k}=-\lambda $$
 
+$$\int \frac{T'}{T} dt= \int (-\lambda k-a)\; dt$$
+$$T_n(t)=e^{-(kn+a)t} $$
+$$u_n(t,x)= e^{-(kn+a)t}\Bigl[A_n\cos{(nx)}+B_n\sin{(nx)}\Bigr], \quad n=0,1,2,3...$$
+\begin{tcolorbox}[colback=blue!5!white,colframe=blue!75!black,title=Solution]
+$$u(t,x)= A_0+\sum^{\infty}_{n=1}e^{-(kn+a)t}\Bigl[A_n\cos{(nx)}+B_n\sin{(nx)}\Bigr] $$
 
+From from our initial condition $u(0,x)= \phi(x)$ and the equations for the coefficients of Fourier series, we find that:
 
-
-
-
-
-
-
-
-
-
-
-
-
+$$A_0=\frac{1}{2\pi} \int_{-\pi}^{\pi}\phi(x)dx$$ 
+$$ A_n=\frac{1}{\pi} \int_{-\pi}^{\pi}\phi(x)\cos{(nx)}dx$$
+$$ B_n=\frac{1}{\pi} \int_{-\pi}^{\pi}\phi(x)\sin{(nx)}dx$$
+\end{tcolorbox}
 
 
 

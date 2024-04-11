@@ -426,3 +426,44 @@ $$T(t)=Ae^{\beta t}+Be^{-\beta t}$$
 
 $\beta A - \beta B = \psi(x)$
 $A+B=\phi(x)$
+
+### Paper
+
+
+We assume that *B violaceus* occupies a section of the New England coastline of length $L$, so that $0<X<L$, and that environmental conditions outside this domain are unfavorable to *B. violaceus*; for instance, temperatures are above or below the tunicate's thermal tolerance. This gives us the homogeneous Dirichlet boundary conditions, $u(0,t)=u(0,L)=0$.
+
+"Our central thesis has been that the principal objective of any modeling effort is to abstract those details that are relevant to patterns on particular
+scales of investigation, separating signal from noise
+by suppressing unnecessary detail. Thus, the adequacy of a particular model can be evaluated only
+relevant to the purposes at hand, and to particular
+scales of investigation.
+When this philosophy is applied to models of
+spread, it is clear that the most useful models are
+not necessarily those that retain great detail at the
+level of the individual behavior. 
+
+```{r}
+library(tidyverse)
+library(spocc)
+
+#tunicate<-st_as_sf(df_cleaned, coords=c("longitude", "latitude"), crs=4326)
+# ggplot()+
+#   geom_sf(data=poly)+
+#   geom_polygon(data=map_data("usa"), aes(x=long, y = lat, group = group))+
+#   geom_sf(data=tunicate_inat, aes(color=date))
+```
+
+<!-- # iNaturalist map -->
+<!-- df_inat <- occ(query = 'Botrylloides violaceus', from = 'inat', has_coords = TRUE, geometry = poly, limit = 1000) -->
+<!-- df_inat_cleaned <- occ2df(df_inat) %>%  -->
+<!--   mutate(lon=as.numeric(longitude), lat=as.numeric(latitude)) %>% -->
+<!--   filter(!is.na(date)) -->
+
+<!-- tunicate_inat <- df_inat_cleaned %>%  -->
+<!--   mutate(lon=as.numeric(longitude), lat=as.numeric(latitude), date=ymd(date), .keep="unused") -->
+
+<!-- bbox <- make_bbox(lon, lat, data = df_inat_cleaned) -->
+<!-- map <- get_stadiamap(bbox = bbox, maptype = "stamen_toner_lite", zoom=6) -->
+
+<!-- ggmap(map) + -->
+<!--   geom_point(data = df_inat_cleaned, aes(color=year(date))) -->
