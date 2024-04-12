@@ -1,0 +1,152 @@
+---
+title: "MATH 245 Homework 6"
+author: "Ruby Krasnow and Tommy Thach"
+date: "2024-04-12"
+format: 
+  pdf:
+    fig-width: 4
+    fig-height: 3
+execute: 
+  echo: false
+---
+
+```{r}
+#| label: load_packages
+#| warning: false
+#| message: false
+
+library(tidyverse)
+```
+
+## Done: 1,2
+## Not started: 3-9
+
+## Problem 1
+
+The function $u: D \subset \mathbb{R^2} \rightarrow \mathbb{R}$ is subharmonic if $\Delta u = u_{xx}+u_{yy} \geq 0$ and superharmonic if $\Delta u = u_{xx}+u_{yy} \leq 0$. Does the maximum and minimum principle hold for subharmonic functions or superharmonic on a connected bounded domain $D \subset \mathbb{R^2}$? If yes, state and prove it, otherwise give a counterexample.
+
+### Subharmonic
+
+**Minimum - No**  
+Take $u(x,y)=x^2$ on the connected bounded domain $D=\{(x,y):-1\leq x \leq 1, -1\leq y \leq 1\}$. Then $\Delta u = 2 >0$, so $u$ is subharmonic. However, the minimum of $u$ on $D$ occurs at $x=0$ where $u(0,y)=0$ and not on the boundary of $D$, where $u=1$.
+
+```{r}
+#| label: counterexample1
+#| fig-align: "center"
+
+x<- seq(-1,1, by=0.1)
+y<-x^2
+ggplot()+
+  geom_line(aes(x=x,y=y))+
+  theme_light()
+```
+
+**Maximum - Yes**
+
+Let $D$ be a bounded domain in $\mathbb{R^2}$ and $u: D \subset \mathbb{R^2} \rightarrow \mathbb{R}$. Assume $u$ is continuous on $\bar{D}$, where $\bar{D}=D \cup \partial D$, and is a continuous subharmonic function such that $\Delta u = u_{xx}+u_{yy} \geq 0$. 
+
+
+Then because $D$ is bounded and $u$ is continuous on $\bar{D}$, $u$ must attain its maximum and minimum in $\bar{D}$. Define $M=\max_{\partial D} u=u(x_0)$ on $\partial D$. Our goal is to show that $\max_{D}u \leq \max_{\partial D}u=M$.
+
+For every $\varepsilon >0$, we define $v(x)=u(x)+\varepsilon \lvert x \rvert^2$. Then
+\begin{align*}
+\Delta v& = \Delta u + \varepsilon \Delta \lvert x \rvert^2 \\
+        &= \Delta u+\varepsilon \sum_{i=1}^{n} \frac{\partial^2 \Delta \lvert x\rvert^2}{\partial x_{i}^2} \\
+        &= \Delta u+ \varepsilon(2+2+...+2) \\
+        & = \Delta u+ 2n\varepsilon
+\end{align*}
+
+And since $u$ is subharmonic, we have that
+\begin{equation}\label{eqn:max_princ}
+\Delta v = \Delta u+ 2n\varepsilon > 0
+\end{equation}
+
+Now assume the max of $v$ is inside $D$, at some $x_1 \in D$. Then by (\ref{eqn:max_princ}), we have $\Delta v(x_1)>0$. By generalization of the second derivative theorem, we know that at the maximum of a function $v:\mathbb{R^n} \rightarrow \mathbb{R}$, the Hessian of $v$, $\nabla^2 v(x_1)$, should be negative semi-definite, meaning that all eigenvalues $\lambda_i$ are less than or equal to zero. But $\lambda_i \leq 0$ implies that
+$$\Delta v(x_1)=\text{tr}\left(\nabla^2 v(x_1)\right)=(\lambda_1+\lambda_2+...+\lambda_n)(x_1) \leq 0$$
+which is a contradiction of (\ref{eqn:max_princ}). Therefore, the maximum of $v$ is at the boundary,
+$$v(x) \leq \max_{\partial D}v \quad \forall \;x \in D $$
+So, $\forall \;x \in D,$
+\begin{align*}
+u(x)&=v(x)-\varepsilon\lvert x\rvert^2 \\
+&\leq \max_{\partial D}v-\varepsilon\lvert x\rvert^2
+\end{align*}
+But since we can write
+\begin{align*}
+\max_{\partial D}v-\varepsilon\lvert x\rvert^2& = \max_{\partial D} \left(u(x)+\varepsilon\lvert x\rvert^2  \right)-\varepsilon\lvert x\rvert^2 \\
+&= \max_{\partial D} u+\varepsilon\left(R-\lvert x\rvert^2 \right),
+\end{align*}
+where $R$ is the largest radius of the domain, we must have
+$$u(x)\leq \max_{\partial D} u+\varepsilon\left(R-\lvert x\rvert^2 \right). $$
+Since this is true for any $\varepsilon$, we take $\varepsilon \rightarrow 0$ to find that 
+$u(x) \leq \max_{\partial D} u.\quad \square$
+
+### Superharmonic
+
+**Maximum - No**  
+Take $u(x,y)=-x^2$ on the connected bounded domain $D=\{(x,y):-1\leq x \leq 1, -1\leq y \leq 1\}$. Then $\Delta u = -2 < 0$, so $u$ is superharmonic. However, the maximum of $u$ on $D$ occurs at $x=0$ where $u(0,y)=0$ and not on the boundary of $D$, where $u=-1$.
+
+```{r}
+#| label: counterexample2
+#| fig-align: "center"
+
+y<-(-1)*(x^2)
+ggplot()+
+  geom_line(aes(x=x,y=y))+
+  theme_light()
+```
+
+**Minimum - Yes**
+
+Let $D$ be a bounded domain in $\mathbb{R^2}$ and $u: D \subset \mathbb{R^2} \rightarrow \mathbb{R}$. Assume $u$ is continuous on $\bar{D}$, where $\bar{D}=D \cup \partial D$, and is a continuous superharmonic function such that $\Delta u = u_{xx}+u_{yy} \leq 0$. 
+
+Then because $D$ is bounded and $u$ is continuous on $\bar{D}$, $u$ must attain its maximum and minimum in $\bar{D}$. Define $m=\min_{\partial D} u=u(x_0)$ on $\partial D$. Our goal is to show that $\min_{D}u \geq \min_{\partial D}u=m$. For every $\varepsilon >0$, we define $v(x)=u(x)-\varepsilon \lvert x \rvert^2$. Then
+\begin{align*}
+\Delta v& = \Delta u - \varepsilon \Delta \lvert x \rvert^2 \\
+        &= \Delta u-\varepsilon \sum_{i=1}^{n} \frac{\partial^2 \Delta \lvert x\rvert^2}{\partial x_{i}^2} \\
+        &= \Delta u- \varepsilon(2+2+...+2) \\
+        & = \Delta u- 2n\varepsilon
+\end{align*}
+And since $u$ is superharmonic, we have that
+\begin{equation}\label{eqn:min_princ}
+\Delta v = \Delta u- 2n\varepsilon <0
+\end{equation}
+
+Now assume the min of $v$ is inside $D$, at some $x_1 \in D$. Then by (\ref{eqn:min_princ}), we have $\Delta v(x_1)<0$. By generalization of the second derivative theorem, we know that at the minimum of a function $v:\mathbb{R^n} \rightarrow \mathbb{R}$, the Hessian of $v$, $\nabla^2 v(x_1)$, should be positive semi-definite, meaning that all eigenvalues $\lambda_i$ are greater than or equal to zero. But $\lambda_i \geq 0$ implies that
+$$\Delta v(x_1)=\text{tr}\left(\nabla^2 v(x_1)\right)=(\lambda_1+\lambda_2+...+\lambda_n)(x_1) \geq 0$$
+which is a contradiction of (\ref{eqn:min_princ}). Therefore, the minimum of $v$ is at the boundary,
+$$v(x) \geq \min_{\partial D}v \quad \forall \;x \in D $$
+So, $\forall \;x \in D,$
+\begin{align*}
+u(x)&=v(x)+\varepsilon\lvert x\rvert^2 \\
+&\leq \min_{\partial D}v+\varepsilon\lvert x\rvert^2
+\end{align*}
+But since we can write
+\begin{align*}
+\min_{\partial D}v+\varepsilon\lvert x\rvert^2& = \min_{\partial D} \left(u(x)-\varepsilon\lvert x\rvert^2  \right)+\varepsilon\lvert x\rvert^2 \\
+&= \min_{\partial D} u+\varepsilon\left(\lvert x\rvert^2 -R\right),
+\end{align*}
+
+where $R$ is the largest radius of the domain, we must have
+$$u(x) \leq \min_{\partial D} u+\varepsilon\left(\lvert x\rvert^2-R \right). $$
+Since this is true for any $\varepsilon$, we take $\varepsilon \rightarrow 0$ to find that 
+$u(x) \geq \min_{\partial D} u.\quad \square$
+
+## Problem 2  
+
+Suppose $u$ is harmonic on the disk $D=\{(x, y):x^2+y^2< 4\}$ and $u = \sin{(\theta)} + 1$ on
+$\partial D$. Without finding the solution $u$, find the maximum value of $u$ in $D \cup \partial D$ and value of $u$ at the origin.
+
+By the maximum principle, $u$ obtains its maximum in $D \cup \partial D$ on the boundary $\partial D$ and not inside. The maximum of $u=\sin{\theta}+1$ on $\partial D$ is at $\theta=\frac{\pi}{2}$, where $\sin{\theta}$ is at its maximum. Therefore, the maximum value of $u$ in $D \cup \partial D$ is $u=\sin{\left(\frac{\pi}{2}\right)}+1=1+1=2$.  
+
+The mean value property says that for a harmonic function $u$ in a disk $D$, continuous in its closure $\bar{D}$, the value of $u$ at the center of $D$ equals the average of $u$ on its circumference. The average value of a continuous function $f(x)$ over the interval $[a,b]$ is given by 
+$$f_{avg}(x)=\frac{1}{b-a}\int_a^b f(x)\;dx$$
+Here,
+\begin{align*}
+u_{avg}(\theta)& =\frac{1}{2\pi}\int_0^{2\pi} (\sin\theta+1)\;d\theta \\
+&=\frac{1}{2\pi}\Bigl[(\cos\theta+\theta) \Bigr]_0^{2\pi} \\
+&=\frac{1}{2\pi}\Bigl[(\cos{2\pi}+2\pi)-\cos{0} \Bigr] \\
+&= \frac{1}{2\pi}(1+2\pi-1)=1
+\end{align*}
+Therefore, the value of $u$ at the origin is 1.
+
+## Problem 3
