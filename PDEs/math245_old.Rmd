@@ -467,3 +467,8 @@ library(spocc)
 
 <!-- ggmap(map) + -->
 <!--   geom_point(data = df_inat_cleaned, aes(color=year(date))) -->
+
+<!-- # tunicate_gbif <- df_gbif_cleaned %>%  -->
+<!-- #   mutate(lon=as.numeric(longitude),  -->
+<!-- #          lat=as.numeric(latitude), -->
+<!-- #          date=ymd(date), .keep="unused") -->

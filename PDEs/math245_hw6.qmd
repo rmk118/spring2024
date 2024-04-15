@@ -1,7 +1,7 @@
 ---
 title: "MATH 245 Homework 6"
 author: "Ruby Krasnow and Tommy Thach"
-date: "2024-04-12"
+date: "2024-04-14"
 format: 
   pdf:
     fig-width: 4
@@ -18,8 +18,8 @@ execute:
 library(tidyverse)
 ```
 
-## Done: 1,2
-## Not started: 3-9
+## Done: 1-4
+## Not started: 5-9
 
 ## Problem 1
 
@@ -149,4 +149,125 @@ u_{avg}(\theta)& =\frac{1}{2\pi}\int_0^{2\pi} (\sin\theta+1)\;d\theta \\
 \end{align*}
 Therefore, the value of $u$ at the origin is 1.
 
-## Problem 3
+## Problem 3  
+
+Use the maximum principle to show that the solution of the Dirichlet problem for $\Delta u=0$ depends continuously on the boundary data.
+
+Define $u_1$ and $v$ to be two solutions to the Dirichlet problems
+\begin{equation*}
+    \begin{cases}
+     \Delta u_1 =0         & \text{in }D \\
+      u_1=h(x)       & \text{on }\partial D
+    \end{cases}       
+\end{equation*}
+
+\begin{equation*}
+    \begin{cases}
+     \Delta u_2 =0         & \text{in }D \\
+      u_2=h(x)+\varepsilon(x)      & \text{on }\partial D
+    \end{cases}       
+\end{equation*}
+
+where $\varepsilon(x)$ is small $\forall x$ on $\partial D$. Now let $w=u_1-u_2$. Then $w$ solves the following Dirichlet problem:
+\begin{equation*}
+    \begin{cases}
+     \Delta w =0         & \text{in }D \\
+      w=\varepsilon(x)       & \text{on }\partial D
+    \end{cases}       
+\end{equation*}
+
+By the maximum and minimum principles,
+$$\min_{\partial D}\varepsilon(x)\leq w\leq \max_{\partial D}\varepsilon(x)$$
+If $\varepsilon \rightarrow 0$ for all $x$ on $\partial D$, then $w=u_1-u_2$ approaches zero for all $x \in D$.
+
+## Problem 4  
+
+Solve the following problem on semi-annulus domain:
+\begin{equation}\label{eqn:semi}
+    \begin{cases}
+     u_{rr}+\frac{1}{r}u_r+ \frac{1}{r^2}u_{\theta\theta}=0  & 0<a<r<b, 0<\theta<\pi \\
+     u(r,0)=u(r,\pi)=0       & 0<a<r<b \\
+    u_r(a, \theta)=\theta       &  0<\theta<\pi\\
+     u_r(b, \theta)=0      &  0<\theta<\pi\\
+    \end{cases}       
+\end{equation}
+
+We look for a separated solution of the form $u=\Theta(\theta)R(r)$. First, we rewrite $u_{rr}+\frac{1}{r}u_r+ \frac{1}{r^2}u_{\theta\theta}=0$ as 
+$$R''\Theta + \frac{1}{r}R'\Theta+\frac{1}{r^2}R\Theta''=0$$
+
+Separating variables, we get
+$$\frac{R''}{R}r^2 + \frac{R'}{R}r=-\frac{\Theta''}{\Theta}$$
+Since the left-hand side is a function of only $R$ and the right-hand side is a function of only $\Theta$, we can set both sides equal to a constant $\lambda$ and separate this into two problems, one in $\Theta$ and one in $R$. Start with $\theta$:
+$$\Theta''+\Theta\lambda=0$$
+From our boundary conditions, 
+$$R(r)\Theta(0)=R(r)\Theta(\pi)=0 \quad\Longrightarrow\quad  \Theta(\pi)=\Theta(0)=0$$
+So we have an eigenvalue problem with homogenous Dirichlet BCs, which we have shown to have the eigenvalues and eigenvectors
+$$\lambda_n= \left(\frac{n\pi}{l}\right)^2, \quad X_n(x)=\sin{\left(\frac{n\pi x}{l}\right)},\quad n=1,2,3...$$
+Here, that means
+$$\lambda_n=n^2, \quad X_n(x)=\sin{(n\theta)},\quad n=1,2,3... $$
+
+Now onto the $R$ problem:
+$$\frac{R''}{R}r^2 + \frac{R'}{R}r=\lambda$$
+$$R''r^2 + R'r-\lambda R=0$$
+This is an Euler ODE of the form $ax^2y''+bxy'+cy=0$, which has the characteristic equation $am(m-1)+bm+c$ and, if $m_1, m_2$ are distinct real roots, the general solution $y=. (Note that I have used $m$ instead of the standard $r$ to avoid confusion with the variable $r$ from (\ref{eqn:semi}).  
+
+Here, $a=1, b=1, c=-\lambda$, so the characteristic equation becomes $m(m-1)+m-\lambda$, which simplifies to $m^2-\lambda$. Thus, our roots are $\pm \sqrt{\lambda}=\pm n$. Thus, $R(r)=Cr^n+Dr^{-n}$.
+
+Our separated solutions thus take the form
+$$u_n(r,\theta)=\left(Cr^n+Dr^{-n}\right)\sin{(n\theta)}, \quad n=1,2,3... $$
+$$u(r,\theta)=\sum_{n=1}^{\infty} \left(Cr^n+Dr^{-n}\right)\sin{(n\theta)} $$
+
+Now we use our boundary conditions $u_r(a, \theta)=\theta$ and $u_r(b, \theta)=0$:
+$$u_r(r,\theta)=\sum_{n=1}^{\infty} \left(nCr^{n-1}-nDr^{-n-1}\right)\sin{(n\theta)} $$
+$$u_r(b,\theta)=0=\sum_{n=1}^{\infty} \left(nCb^{n-1}-nDb^{-n-1}\right)\sin{(n\theta)} $$
+$$Cb^{n}=Db^{-n} \rightarrow C=Db^{-2n}$$
+$$u_r(a,\theta)=\theta=\sum_{n=1}^{\infty} \left(nDb^{-2n}a^{n-1}-nDa^{-n-1}\right)\sin{(n\theta)} $$
+$$\frac{nD}{a}\left(b^{-2n}a^{n}-a^{-n}\right)=\int_0^\pi \theta\sin{(n\theta)}d\theta$$
+$$\int_0^\pi \theta\sin{(n\theta)}d\theta=\theta(-1/n\cos{n\theta})\Bigr\rvert^\pi_0=\pi(-1/n)(-1)^n=\frac{\pi(-1)^{n+1}}{n}$$
+$$\frac{nD}{a}\left(b^{-2n}a^{n}-a^{-n}\right)=\frac{\pi(-1)^{n+1}}{n}$$
+
+
+Therefore, our solution to (\ref{eqn:semi}) is
+\begin{tcolorbox}[colback=blue!5!white,colframe=blue!75!black,title=Solution]
+$$u(r,\theta)=\sum_{n=1}^{\infty} \left(Cr^n+Dr^{-n}\right)\sin{(n\theta)}$$
+where 
+$$D=\frac{a\pi(-1)^{n+1}}{n^2\left(b^{-2n}a^{n}-a^{-n}\right)}$$
+$$C=Db^{-2n}$$
+\end{tcolorbox}
+
+
+## Problem 5   
+
+Consider the Neumann problem with periodic BC:
+\begin{equation}\label{eqn:prob5}
+    \begin{cases}
+     \Delta u=0 & r^2>a^2 \\
+     u_r(a,\theta)=g(\theta)     & r^2=a^2
+    \end{cases}       
+\end{equation}
+
+Find the necessary condition for the existence of a solution and then solve the problem. Hint: Use Green's identity
+$$\iint\limits_{D}(u\Delta v-v\Delta u)\,dA=\int\limits_{\partial D} \left(u\frac{\partial v}{\partial n} - v\frac{\partial u}{\partial n}\right)\,ds $$
+where $D$ is a domain and $n$ is a unit normal vector. Note that for a 2-dimensional domain $D$, $dA=dx\,dy$ and $ds$ is arc length.
+
+## Problem 6. 
+
+Prove the uniqueness of the Neumann problem on $D \subset \mathbb{R}$
+\begin{equation}\label{eqn:unique}
+    \begin{cases}
+     \Delta u=f  & \text{in }D \\
+     \frac{\partial u}{\partial n}=g    & \text{on }\partial D
+    \end{cases}       
+\end{equation}
+
+up to a constant. Use the following energy and Green's identity:
+$$E(u)=\frac{1}{2}\int_D\lvert \nabla u\rvert^2\,dA$$
+
+
+Suppose we have two solutions $u$ and $v$ to (\ref{eqn:unique}) and define $w=u-v$. Then we have a new Neumann problem
+\begin{equation}\label{eqn:unique2}
+    \begin{cases}
+     \Delta w=0  & \text{in }D \\
+     \frac{\partial w}{\partial n}=0   & \text{on }\partial D
+    \end{cases}       
+\end{equation}
