@@ -1,6 +1,6 @@
 # Ruby Krasnow
 # Code for PDE final project
-# Last modified: April 15, 2024
+# Last modified: April 16, 2024
 
 #load packages
 library(tidyverse)
@@ -8,42 +8,94 @@ library(spocc)
 library(sf)
 library(lwgeom)
 library(leaflet)
+library(PNWColors)
+library(gt)
 
-#define spatial boundary for observations
+# Define spatial boundary for observations
 polygon_list = list(rbind(c(-72, 41), c(-59.52, 41), c(-59.52, 50), c (-72, 50), c(-72, 41)))
 poly<- st_polygon(polygon_list)
 poly<-st_sfc(poly, crs=4326)
 
-
-# GBIF map
+# Query GBIF database
 df_gbif <- occ(query = 'Botrylloides violaceus',
                from = 'gbif', has_coords = TRUE,
                geometry = c(-72, 41, -59.52, 50), limit = 1000)
 
+# Convert lon and lat to numbers, remove observations with no date
 df_gbif_cleaned <- occ2df(df_gbif) %>% 
-  mutate(lng=as.numeric(longitude), lat=as.numeric(latitude), .keep="unused") %>% 
+  mutate(lng=as.doublelongitude, lat=as.double(latitude), .keep="unused") %>% 
   filter(!is.na(date))
 
+# Convert df to sf
 tunicate <- st_as_sf(df_gbif_cleaned %>% 
-                       select(date, lng, lat) %>% 
-                       mutate(year = year(date)),  
-                     coords = c("lng","lat"))
+                    select(date, lng, lat) %>% # Select relevant columns
+                    mutate(year = year(date)),  # Add year column
+                    coords = c("lng","lat")) # Specify which cols are coordinates
 
- years <- tunicate %>% group_by(year) %>% summarise(year=mean(year))
+years <- tunicate %>% group_by(year) %>% summarise(year=mean(year)) # Group by year of obs
  
-
- get_yrs <- function(yr) {
+# Define function to get and merge all obs from previous years
+get_yrs <- function(yr) { 
    out <- years %>% filter(year <= yr) %>% st_union()
    }
  
- 
-years_vec <- c(2005:2024)
+years_vec <- c(2005:2024) # Years with observations in the GBIF dataset
 
-years2<- years %>% mutate(years_agg = map_vec(year, get_yrs))
+years2 <- years %>% mutate(years_agg = map_vec(year, get_yrs))
+
+init_pt <- tunicate %>% 
+  st_set_crs(4326) %>% # Define CRS
+  filter(year==2005) %>% # Select only the year of introduction
+  pull(geometry) # Pull the coordinates
+
+dist <- tunicate %>% 
+  filter(year>2005) %>% # Remove year of introduction
+  st_set_crs(4326) %>% # Define CRS
+  ungroup() %>% 
+  mutate(dist = st_distance(geometry, init_pt)) %>% # Find the distance b/w the initial point and a given observation
+  group_by(year) %>% 
+  st_drop_geometry() %>% 
+  select(year, dist) %>%  # Select only year and distance columns
+  summarize(max_dist = max(dist)) %>% # Find the maximum distance b/w observations and initial point in each year
+  mutate(max_dist=cummax(max_dist)) # Maximum distance the species has been observed from the initial point before and during a given year
+
+speed <- dist %>% mutate(km=as.double(max_dist/1000), # Convert from m to km
+                         speed=km/(year-2005)) %>% # Speed = distance (km)/time (yr)
+                         na.omit()
+
+speed
+
+obs_r <- c(1.887,1.842,1.665,1.512,0.972,0.984, 0.867,0.778)
+test_v <- function(x) {
+  2*sqrt(x*D_raft)
+}
+preds <- map_vec(obs_r, test_v)
+summary(preds)
+summary(speed %>% filter(year>2006) %>% pull(speed))
+
+
+ggplot()+
+  geom_histogram(aes(x=speed %>% filter(year>2006) %>% pull(speed)), bins=22,
+                 color=pnw_palette("Starfish")[2], fill=pnw_palette("Starfish")[2], alpha=0.5)+
+  geom_vline(aes(xintercept = min(preds),lty="pred"), color="black")+
+  geom_vline(aes(xintercept = max(preds),lty="pred"), color="black")+
+  labs(x="Observed invasion speed (km/year)", y="Count", lty=NULL)+lims(x=c(0,NA))+
+  theme_classic()+
+  scale_linetype_manual(values=c("pred"="dashed"), labels=c("Predicted range"))+
+  theme(axis.title.y = element_text(margin = margin(t = 0, r = 10, b = 0, l = 0)),
+        axis.title.x = element_text(margin = margin(t = 10, r = 0, b = 0, l = 0)),
+        text = element_text(size = 13))
+     #   legend.key.width = unit(0.4, 'pct'),
+     #   legend.key.height = unit(0.9, 'pct'))
+#+ guides(lty = "none")
+
+  
+
+# Circles -----------------------------------------------------------------
 
 circles <- years2 %>%
   rowwise() %>%
-   mutate(circle = st_minimum_bounding_circle(years_agg), .keep="unused") %>% ungroup()
+  mutate(circle = st_minimum_bounding_circle(years_agg), .keep="unused") %>% ungroup()
 
 circles2 <- circles %>% st_drop_geometry() %>% 
   select(year, circle)
@@ -52,18 +104,52 @@ circles3 <- st_as_sf(circles2) %>% arrange(-year)
 
 ggplot()+geom_sf(data=circles3)
 
-
 # Create a continuous palette function
 pal <- colorNumeric(
   palette = "viridis",
   domain = circles3$year)
 
-m <- leaflet(circles3) %>% fitBounds(-72,41,-59.52,50)
+m <- leaflet() %>% fitBounds(-72,41,-59.52,50) %>% 
+  addProviderTiles(providers$Stadia.StamenTonerLite)
 
-m %>% 
+m  %>% 
+  addCircles(data=tunicate %>% slice_min(date), color="black") %>% 
+  addPolygons(data=circles3, fillOpacity = 0.2, color = ~pal(year))
+
+m  %>% 
+  addCircles(data=tunicate, color="black") %>% 
+  addPolygons(data=circles3, fillOpacity = 0.2, color = ~pal(year))
+  
+radii <- speed %>% select(year, max_dist, km) %>% arrange(-year)
+
+map <- leaflet(options = leafletOptions(zoomControl = FALSE)) %>% 
+  fitBounds(-72,41,-59.52,50) %>% 
   addProviderTiles(providers$Stadia.StamenTonerLite) %>% 
   addCircles(data=tunicate, color="black") %>% 
-  addPolygons(fillOpacity = 0.2,
-              color = ~pal(year))
+  addCircles(data=radii, 
+             lng=-70.03979, 
+             lat=43.75033, 
+             radius=~max_dist, color = ~pal(year), fillOpacity = 0.1) %>%
+
+  addLegend(data=radii, "bottomright", pal = pal, values = ~year,
+            title = "Year",
+            labFormat = labelFormat(big.mark = ""),
+            opacity = 1
+  )
+map
 
 
+table1 <- gt(params)  %>% 
+  fmt_number(
+    columns = Value,
+    decimals = 3,
+    use_seps = FALSE,
+    drop_trailing_zeros = TRUE
+  ) %>% 
+  cols_width(Parameter ~ pct(78),
+             Value ~pct(22)) %>% 
+  tab_header(title = "Table 1: Calculating the diffusion coefficient")  %>%  opt_align_table_header(align = "left") %>% 
+  tab_options(table.border.top.width = 0,table.font.size =12,
+              heading.title.font.size = 14)
+
+table1 %>% gt::as_latex()

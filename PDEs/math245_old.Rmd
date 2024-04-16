@@ -472,3 +472,25 @@ library(spocc)
 <!-- #   mutate(lon=as.numeric(longitude),  -->
 <!-- #          lat=as.numeric(latitude), -->
 <!-- #          date=ymd(date), .keep="unused") -->
+
+
+# m %>% 
+#   addProviderTiles(providers$Stadia.StamenTonerLite) %>% 
+#   addCircles(data=tunicate %>% slice_min(date), color="black") %>% 
+#   addCircles(lat=c(43.934945),lng= c(-69.580869), color="red")
+
+# allen_2017 <- 2*(10*52/(10^5))^2/pi # 10 cm/week
+# v_raft_allen <- 2*sqrt(1.9*allen_2017) #0.01 km/yr
+
+v_raft_low_r <- 2*sqrt(0.8*D_raft) # ~40 km/year
+v_raft_high_r <- 2*sqrt(1.9*D_raft) # ~60 km/year
+
+# 2 km/year observed by Hewitt (1993)
+
+#0.6m/day*180 days repro/yr
+2*sqrt(1.9*(2*((0.6*180)^2)/(pi))) #237 km/yr
+2*sqrt(0.8*(2*((0.6*180)^2)/(pi))) #154 km/yr
+
+#Grosholz for B. leachi predicted 114 km/year and observed 16
+
+We calculated $V$ to be between 39-60 km/year, depending on the population growth rate, with a mean of 49 km/year. Species occurrence data suggests that over the past two decades, *B. violaceus* has spread at rates around 27-84 km/year, with a mean of 46 km/year. While such accurate prediction

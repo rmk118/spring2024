@@ -1,15 +1,20 @@
 ---
 title: "Final paper outline"
 author: "Ruby Krasnow"
-date: "2024-04-11"
-output:
-  pdf_document:
-    extra_dependencies: ["tcolorbox", "xcolor"]
+date: "2024-04-16"
+format: pdf
+execute:
+  echo: false
 ---
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+```{r, include=FALSE}
+#| label: load_packages
+
 library(tidyverse)
+library(gt)
+library(sf)
+library(spocc)
+library(PNWColors)
 ```
 
 # Introduction
@@ -102,40 +107,174 @@ This relationship between $V, r$, and $D$ holds true for nonlinear forms of $F(u
 \end{equation}
 the radius of the species range should increase linearly with time, with the slope of the increase given by $\sqrt{4rD}$. This theory has been tested for numerous ecological systems and often agrees well with the empirical relationship between measured spread rates, per capita growth rates, and diffusion coefficients. Microscale observations can be used to parameterize (\ref{eqn:V}) and predict the spreading rate for a given species at a geographic scale. Such spreading-speed analyses have been conducted for a number of terrestrial animal species, including the muskrat, cereal leaf beetle, small cabbage white butterfly, grey squirrel (Andow et al., 1990; Gorsholz, 1996)
 
-Spreading speed theory has also been applied to numerous aquatic species, including the brown trout, green crab, hermit crab, periwinkle, barnacle, mussels, and molluscs (MacDonald et al., 2022; Grosholz, 1996; Marculis and Lui, 2016; Gharouni et al., 2015). Possibly the only application of this method to a tunicate was performed by Grozholz (1996) for *B. leachi*. His estimates of $r=1.8$ and $D=1,800$ yielded a predicted rate of spread of $114$ km/year, much faster than the observed rate of $16$ km/year. In addition to providing insight on the spread of a specific invasive species of commercial concern, comparing the accuracy of our estimation for *B. violaceus* to the previous results for *B. leachi* could allow for broader conclusions to be drawn regarding the applicability of this approach for colonial tunicates in general.
+Spreading speed theory has also been applied to numerous aquatic species, including the brown trout, green crab, hermit crab, periwinkle, barnacle, mussels, and molluscs (MacDonald et al., 2022; Grosholz, 1996; Marculis and Lui, 2016; Gharouni et al., 2015). Possibly the only application of this method to a tunicate was performed by Grozholz (1996) for *B. leachi*, but his estimates of $r=1.8$ and $D=1,800$ yielded a predicted rate of spread an order of magnitude larger than observed rates. In addition to providing insight on the spread of a specific invasive species of commercial concern, comparing the accuracy of our estimation for *B. violaceus* to the previous results for *B. leachi* could allow for broader conclusions to be drawn regarding the applicability of this approach for colonial tunicates in general.
 
 
 # Application
 
-Population growth rate was estimated from Grey (2011) to range from 0.8-1.9.
+## Predicting invasion speed
+The diffusion coefficient, $D$, was calculated using the formula
+$$D=\frac{2M_D(t)^2}{\pi t} $$
+where $M_D (t)$ is the mean displacement of tracked organisms $t$ time units after they begin moving (Andow et al., 1990; Skellam, 1973).
+
+We estimated $M_D$ using information on the dispersal potential of post-larval *Botrylloides sp.* colonies collected by Worcester (1994) (Table 1). We used the dispersal distance/speed of rafting colonies rather than swimming larvae to better reflect the likely mechanisms by which *B. violaceus* has spread along the coastline. Additionally, calculating dispersal potential from larval swimming speeds would be very difficult for a species with a complex reproduction cycle in which the timing and magnitude of spawning events varies between locations and can be highly affected by environmental conditions (SOURCES).
 
 ```{r}
+#| label: calc_D
 colony_day <- 0.225 #0.225 km per colony/day
 raft_prob <- (2/3) # probability that a given colony will raft
 hab_prob <- 0.5 # probability that a given rafting colony will reach a suitable habitat
 km_year_raft <- colony_day*raft_prob*hab_prob*365
 D_raft <- 2*(km_year_raft^2)/(pi)
 
-# allen_2017 <- 2*(10*52/(10^5))^2/pi # 10 cm/week
-# v_raft_allen <- 2*sqrt(1.9*allen_2017) #0.01 km/yr
-
-v_raft_low_r <- 2*sqrt(0.8*D_raft) # ~40 km/year
-v_raft_high_r <- 2*sqrt(1.9*D_raft) # ~60 km/year
-
-# 2 km/year observed by Hewitt (1993)
-
-#0.6m/day*180 days repro/yr
-2*sqrt(1.9*(2*((0.6*180)^2)/(pi))) #237 km/yr
-2*sqrt(0.8*(2*((0.6*180)^2)/(pi))) #154 km/yr
-
-#Grosholz for B. leachi predicted 114 km/year and observed 16
+obs_r <- c(1.887,1.842,1.665,1.512,0.972,0.984, 0.867,0.778)
+test_v <- function(x) {
+  2*sqrt(x*D_raft)
+}
+preds <- map_vec(obs_r, test_v)
 ```
 
+```{r}
+#| label: table1_setup
+
+params <- tribble(
+  ~Parameter, ~Value,
+  "Distance traveled per colony per day (km)", 0.225,
+  "Probability that a given colony will raft", 2/3,
+  "Probability that a given rafting colony will reach a suitable habitat", 0.5,
+  "Mean displacement (km/year)", 27.38,
+  "D (km\U00B2/year)", 477.1
+)
+table1 <- gt(params)  %>% 
+  fmt_number(
+    columns = Value,
+    decimals = 3,
+    use_seps = FALSE,
+   drop_trailing_zeros = TRUE
+  ) %>% 
+  cols_width(Parameter ~ pct(78),
+    Value ~pct(22)) %>% 
+  tab_header(title = "Table 1: Calculating the diffusion coefficient")  %>%  opt_align_table_header(align = "left") %>% 
+  tab_options(table.border.top.width = 0,table.font.size =12,
+              heading.title.font.size = 14)
+
+table1 %>% as_latex()
+```
+
+
+Eight estimates of population growth rate ($r$) were taken from Grey (2011), ranging from 0.87-1.89. Each $r$ value was combined with our estimate of $D$ to find a predicted invasion speed, $V$, in km/year.
+
+
+
+
+## Model validation
+
+We validated our invasion speed estimates by comparing
+
+We retrieved species occurrence data from the Global Biodiversity Information Facility using the package 'spocc' (SOURCE).
+
+We arbitrarily defined the region of interest to be 
+
+```{r}
+#| label: query_data
+
+# Define spatial boundary for observations
+polygon_list = list(rbind(c(-72, 41), c(-59.52, 41), c(-59.52, 50), c (-72, 50), c(-72, 41)))
+poly<- st_polygon(polygon_list)
+poly<-st_sfc(poly, crs=4326)
+
+# Query GBIF database
+df_gbif <- occ(query = 'Botrylloides violaceus',
+               from = 'gbif', has_coords = TRUE,
+               geometry = c(-72, 41, -59.52, 50), limit = 1000)
+
+# Convert lon and lat to numbers, remove observations with no date
+df_gbif_cleaned <- occ2df(df_gbif) %>% 
+  mutate(lng=as.double(longitude), lat=as.double(latitude), .keep="unused") %>% 
+  filter(!is.na(date))
+```
+
+
+```{r}
+#| label: calc_V
+
+
+# Convert df to sf
+tunicate <- st_as_sf(df_gbif_cleaned %>% 
+                    select(date, lng, lat) %>% # Select relevant columns
+                    mutate(year = year(date)),  # Add year column
+                    coords = c("lng","lat")) # Specify which cols are coordinates
+
+years <- tunicate %>% group_by(year) %>% summarise(year=mean(year)) # Group by year of obs
+ 
+# Define function to get and merge all obs from previous years
+get_yrs <- function(yr) { 
+   out <- years %>% filter(year <= yr) %>% st_union()
+   }
+ 
+years_vec <- c(2005:2024) # Years with observations in the GBIF dataset
+
+years2 <- years %>% mutate(years_agg = map_vec(year, get_yrs))
+
+init_pt <- tunicate %>% 
+  st_set_crs(4326) %>% # Define CRS
+  filter(year==2005) %>% # Select only the year of introduction
+  pull(geometry) # Pull the coordinates
+
+dist <- tunicate %>% 
+  filter(year>2005) %>% # Remove year of introduction
+  st_set_crs(4326) %>% # Define CRS
+  ungroup() %>% 
+  mutate(dist = st_distance(geometry, init_pt)) %>% # Find the distance b/w the initial point and a given observation
+  group_by(year) %>% 
+  st_drop_geometry() %>% 
+  select(year, dist) %>%  # Select only year and distance columns
+  summarize(max_dist = max(dist)) %>% # Find the maximum distance b/w observations and initial point in each year
+  mutate(max_dist=cummax(max_dist)) # Maximum distance the species has been observed from the initial point before and during a given year
+
+speed <- dist %>% mutate(km=as.double(max_dist/1000), # Convert from m to km
+                         speed=km/(year-2005)) %>% # Speed = distance (km)/time (yr)
+                         na.omit()
+
+```
+
+
+All calculations and data visualization were conducted in R version 4.3.2 (R Core Team 2023). Packages central to the analysis included 'spocc', 'sf', and the tidyverse collection (SOURCES).
+
+
+# Results
+
+```{r}
+# summary(speed$speed)
+# summary(preds)
+```
+
+```{r}
+#| label: histogram
+#| warning: false
+#| fig-align: "center"
+
+ggplot()+
+  geom_histogram(aes(x=speed %>% filter(year>2006) %>% pull(speed)), bins=22,
+                 color=pnw_palette("Starfish")[2], fill=pnw_palette("Starfish")[2], alpha=0.5)+
+  geom_vline(aes(xintercept = min(preds)),lty="dashed", color="black")+
+  geom_vline(aes(xintercept = max(preds)),lty="dashed", color="black")+
+  labs(x="Observed invasion speed (km/year)", y="Count", lty=NULL)+lims(x=c(0,NA))+
+  theme_classic()+
+ scale_linetype(guide=FALSE)+
+ # scale_linetype_manual(values=c("pred"="dashed"), labels=c("Predicted range"))+
+  theme(axis.title.y = element_text(margin = margin(t = 0, r = 10, b = 0, l = 0)),
+        axis.title.x = element_text(margin = margin(t = 10, r = 0, b = 0, l = 0)),
+        text = element_text(size = 13))
+```
+**Figure 1:** Histogram of observed invasion speeds for *B. violaceus* in the Northeast Atlantic, calculated from GBIF species occurrence data from 2006-2024. Dashed lines represent the minimum and maximum predicted invasion speeds when varying population growth rates were used as input values.
 
 
 # Discussion
 
-This model attempted to predict the macro-scale dispersal of an invasive tunicate using a simple reaction-diffusion model.
+This model attempted to predict the macro-scale dispersal of an invasive tunicate using a simple reaction-diffusion model. Given the low biological realism of our simple diffusion model, the very strong agreement between observed and predicted invasion speeds is quite remarkable. Most studies that have applied this method of predicting invasion speed characterized their results as successful if estimates were within the same order of magnitude as observed spreading speeds. For example, Grosholz (1994) predicted the spreading speed of the tunicate *B. leachi* (a member of the same genus as to be *B. violaceus*) to be $114$ km/year, which was much faster than the observed rate of $16$ km/year. 
+
+In contrast, our predicted speed of 49 km/year was extremely close to the mean of 46 km/year derived from observations of *B. violaceus* made in the Gulf of Maine over the past two decades. While such accurate prediction is unlikely to be replicable with other data sets, it does suggest that estimating spreading speed from empirical data on local diffusion potential and experimentally-derived population growth rates could be an underutilized approach in invasion ecology.
 
 Multiple avenues are apparent for future work modeling the spread of *B. violaceus* using diffusion-type equations. First, there exist many other possible formulations for the term representing population growth. The Fisher-KPP equation, which assumes logistic rather than exponential growth, has been well-studied from a mathematical perspective and has seen widespread application across ecological contexts (SOURCES). Other diffusion models incorporate Allee effects, an ecological phenomenon characterized by decreased individual fitness (lower per capita growth rates) at small population sizes. Accounting for Allee effects in continuous reaction-diffusion models or analogous discrete integrodifference models can alter predictions about the potential success or failure of an invasion, rates of spread, and plausible ranges of an invasive species (Keitt et al., 2001; Kot et al., 1996; Liu and Kot, 2019).
 
