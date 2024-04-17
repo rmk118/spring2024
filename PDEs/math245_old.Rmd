@@ -494,3 +494,42 @@ v_raft_high_r <- 2*sqrt(1.9*D_raft) # ~60 km/year
 #Grosholz for B. leachi predicted 114 km/year and observed 16
 
 We calculated $V$ to be between 39-60 km/year, depending on the population growth rate, with a mean of 49 km/year. Species occurrence data suggests that over the past two decades, *B. violaceus* has spread at rates around 27-84 km/year, with a mean of 46 km/year. While such accurate prediction
+
+table1 <- gt(params)  %>% 
+  fmt_number(
+    columns = Value,
+    decimals = 3,
+    use_seps = FALSE,
+    drop_trailing_zeros = TRUE
+  ) %>% 
+  cols_width(Parameter ~ pct(78),
+             Value ~pct(22)) %>% 
+  tab_header(title = "Table 1: Calculating the diffusion coefficient")  %>%  opt_align_table_header(align = "left") %>% 
+  tab_options(table.border.top.width = 0,table.font.size =12,
+              heading.title.font.size = 14)
+
+table1 %>% gt::as_latex()
+
+
+# circles <- years2 %>%
+#   rowwise() %>%
+#   mutate(circle = st_minimum_bounding_circle(years_agg), .keep="unused") %>% ungroup()
+# 
+# circles2 <- circles %>% st_drop_geometry() %>% 
+#   select(year, circle)
+# 
+# circles3 <- st_as_sf(circles2) %>% arrange(-year)
+# 
+# ggplot()+geom_sf(data=circles3)
+
+m <- leaflet() %>% fitBounds(-72,41,-59,50) %>% 
+  addProviderTiles(providers$Stadia.StamenTonerLite)
+
+m  %>% 
+  addCircles(data=tunicate %>% slice_min(date), color="black") %>% 
+  addPolygons(data=circles3, fillOpacity = 0.2, color = ~pal(year))
+
+m  %>% 
+  addCircles(data=tunicate, color="black") %>% 
+  addPolygons(data=circles3, fillOpacity = 0.2, color = ~pal(year))
+  

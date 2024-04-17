@@ -1,101 +1,92 @@
 ---
-title: "Application of a reaction-diffusion equation to the spread of the invasive tunicate *Botrylloides violaceus*"
+title: "Application of a reaction-diffusion equation to the spread of the invasive ascidian *Botrylloides violaceus*"
 author: "Ruby Krasnow"
 date: "2024-04-17"
 format:
   pdf:
-    documentclass: article
+    documentclass: scrartcl
     include-in-header:
-      - text: \usepackage{booktabs, caption, longtable, colortbl, array}
+      - text: \usepackage{booktabs, caption, longtable, colortbl, array, graphicx}
 execute:
   echo: false
 bibliography: references.bib
+csl: molecular-ecology.csl
+link-external-newwindow: true 
 ---
 
-```{r, include=FALSE}
-#| label: load_packages
+```{r}
+#| echo: false
+#| message: false
+#| results: "hide"
 
-library(tidyverse)
-library(gt)
-library(sf)
-library(spocc)
-library(PNWColors)
-library(leaflet)
-library(webshot2)
-library(ggmap)
-library(rstatix)
+
+source("pde_mod.R")
 ```
 
 # Introduction
 
 Reaction-diffusion models are a type of partial differential equation (PDE) that have long been used by ecologists to analyze the migration and population dynamics of invasive species [@cosner2008]. Recent work has led to innumerable modifications on the original formulations by Fisher [-@fisher1937] and Skellam [-@skellam1951]. Beyond the fundamental processes of growth and spread, extensions of reaction-diffusion models can be applied to age- and size-structured populations [@neubert2000], and incorporate environmental heterogeneity, interspecies interactions (competition, predation, mutualism, etc.), Allee effects, invasion control efforts, and long-distance dispersal. For an introduction to the use of PDEs to represent dispersal in a population ecology context, the reader is directed to Holmes et al. [-@holmes1994] and the seminal papers referenced therein. For an accessible review of recent advancements in modeling invasion using reaction-diffusion equations and integro-difference equations, see Hastings et al. [-@hastings2005]; for a comprehensive treatment, see the textbooks by Shigesada and Kawasaki [-@shigesada1997] or Lewis et al. [-@lewis2016].
 
-Here, we use a simple two-dimensional reaction-diffusion model to represent the spread of the invasive ascidian *Botrylloides violaceus* in the Gulf of Maine. Colonial tunicates (or ascidians) are compound organisms formed by a mass of small zooids organized within a common gelatinous matrix. These colonies often form visible crusts on rocks, vessel hulls, and other artificial floating structures and submerged objects. Colonial tunicates also commonly grow on macroalgae and bivalves such as shellfish and oysters, making them a nuisance for the low-trophic aquaculture industry.
+Here, we use a simple two-dimensional reaction-diffusion model to represent the spread of the invasive ascidian *Botrylloides violaceus* in the Gulf of Maine. Colonial ascidians (or tunicates) are compound organisms formed by a mass of small zooids organized within a common gelatinous matrix [@wagstaff2017]. These colonies often form visible crusts on rocks, vessel hulls, and other artificial floating structures and submerged objects [@wagstaff2017]. Colonial ascidians also commonly grow on macroalgae and bivalves such as mussels and oysters. Ascidian growth on cultivation equipment and the cultivated organisms themselves can have many harmful effects, including smothering the bivalves, reducing local water circulation, consuming nutrients and dissolved oxygen, and causing structural damage to cultivation equipment [@cahill2012; @fitridge2012; @aldred2014]. The detrimental impacts of ascidians on farm production and efficiency present significant economic costs for the North American aquaculture industry [@fitridge2012].
 
-In New England, economic impacts from biofouling are estimated to be NUMBER. Add additional background about impact of *Botrylloides violaceus* on kelp and oyster aquaculture in the GOM here.
+In New England and Atlantic Canada, aquaculturists have had little success controlling the spread or impact of invasive ascidians, particularly species like *B. violaceus* that have few natural predators and can outcompete other fouling organisms [@carman2016; @carver2006; @gittenberger2011; @bullard2013]. *B. violaceus* is the most common fouling ascidian at shellfish aquaculture sites along the East coast of North America and the most widely distributed nonindigenous ascidian in British Columbia. [@simkanin2013; @carman2010a].
 
-Most common fouling tunicate at shellfish aquaculture sites along the East coast (Carman et al., 2010)
-
-*Botrylloides violaceus* has a complex life cycle, including a cyclical growth pattern dependent on both sexual and asexual reproduction. The growth and reproduction of colonial tunicates can be highly variable based on a number of environmental factors, including food availability, temperature, salinity, sediment load, and water pollution [@carver2006; @nelson2014]. The microscale mechanisms behind tunicate dispersion are therefore very complicated, and a fully-resolved spatiotemporal model of *B. violaceus* spread would need also to incorporate local hydrodynamic conditions, human-mediated transport, competition, and predation.
+*B.* *violaceus* has a complex life cycle, including a cyclical growth pattern dependent on both sexual and asexual reproduction. The growth and reproduction of colonial tunicates can be highly variable based on a number of environmental factors, including food availability, temperature, salinity, sediment load, and water pollution [@carver2006; @nelson2014]. The microscale mechanisms behind tunicate dispersion are therefore very complicated, and a fully-resolved spatiotemporal model of *B. violaceus* spread would need also to incorporate local hydrodynamic conditions, human-mediated transport, competition, and predation.
 
 However, simple reaction-diffusion models can accurately capture population spread without replying on many assumptions and often unknown information about organism-level behavior. The value of these models is derived from their tremendous utility in ecological applications, despite abstracting many biological details [@andow1990]. By eliminating unnecessary complexity and noise, simple reaction-diffusion models present a tangible method of connecting the mathematical theory of partial differential equations to observed data on invasive species, with implications for real-world ecological and economic problems.
 
 # Model Development & Theory
 
-Here, we follow the derivation method of Lewis et al. (2016) to justify our use of the following equation to represent the rate of spread of *B. violaceus*:
+Here, we follow the derivation method of Lewis et al. [-@lewis2016] to justify our use of the following equation to represent the rate of spread of *B. violaceus*:
 
-```{=tex}
 \begin{equation}\label{eqn:V} V=\sqrt{4rD} \end{equation}
-```
+
 where $V>0$ is the velocity (distance/time) of the advancing front of the invasive population and $D$ and $r$ are positive constants representing the diffusion coefficient and maximum per capita growth rate, respectively.
 
 Since *B. violaceus* has overlapping generations and can be considered to be continuously reproducing, it is appropriate to represent the invasion dynamics using a continuous-time PDE rather than a discrete integrodifference equation. We represent the the population density of *B. violaceus* at time $t$ and spatial coordinate $x$ as $u(t,x)$.
 
 Assume that the population initially occupies a finite section of the New England coastline of length $L$ and that the initial population distribution is compact.
 
-```{=tex}
 \begin{align}\label{eqn:IC_1} u(0,x) =
 \begin{cases}
 \phi(x)>0 & 0<x<L \\
 0 & \text{otherwise}
 \end{cases}
 \end{align}
-```
+
 The reaction-diffusion model describing the population dynamics takes the form \begin{equation}\label{eqn:PDE}
 \frac{\partial{u}}{\partial{t}}=\text{D}\frac{\partial{u}^2}{\partial{x^2}}+F(u)
 \end{equation}
 
-Determining the correct form of the population growth term in (\ref{eqn:PDE}) is challenging. Colonial ascidians generally display indeterminate growth, meaning that colony area tends to increase exponentially with time (Jackson, 1977). If we assumed simple linear population growth, our PDE would take the form
+Determining the correct form of the population growth term in (\ref{eqn:PDE}) is challenging. Colonial ascidians generally display indeterminate growth, meaning that colony area tends to increase exponentially with time [@jackson1977]. If we assumed simple linear population growth, our PDE would take the form
 
-```{=tex}
 \begin{equation}\label{eqn:lin_PDE}
 \frac{\partial{U}}{\partial{t}}=\text{D}\frac{\partial{U}^2}{\partial{x^2}}+rU
 \end{equation}
-```
+
 This is the simplest version of the general reaction-diffusion model, for a homogeneous, unstructured population growing exponentially and dispersing in a uniform, one-dimensional environment [@andow1990; @skellam1951]. However, it is unlikely that colony-scale dynamics would apply over much larger spatial scales. Leaving $F(u)$ as an unspecified function allows for the possibility of logistic growth, as in the Fisher-KPP equation:
 
-```{=tex}
 \begin{equation}\label{eqn:Fisher}
 \frac{\partial{u}}{\partial{t}}=
 \text{D}\frac{\partial{u}^2}{\partial{x^2}}+r(1-\frac{u}{K})
 \end{equation}
-```
-The use of nonlinear reaction diffusion models in a biological context is well-established (see Cherniha and Davydovych, 2017). However, note that for biologically reasonable choices of $F(u)$, the growth function will be bounded by the linear function, such that $F(u) \leq ru$. Thus,
 
-```{=tex}
+We can generalize our section of the coastline of length $L$ to an $n$-dimensional domain $\Omega$, with boundary $\partial\Omega$. If the function $u(t,x)$ and $\partial\Omega$ are smooth and $\phi(x)$ is continuous on the $\Omega \cup \partial\Omega$, the problem presented by (\ref{eqn:IC_1}) and (\ref{eqn:PDE}) will be well posed in the sense that it will have a unique solution $u(x,t)$ on $\Omega \times (0,T]$ for some $T > 0$, with $u(x,t)$ depending continuously on $\phi(x)$ [@cosner2008]. Further discussion of the existence, uniqueness, and smoothness of solutions to reaction-diffusion equations can be found in @cosner2008, along with a review of the relevant maximum principle and comparison theorem and a discussion of the stability and propagation of solutions.
+
+The use of nonlinear reaction diffusion models in a biological context is well-established [see @cherniha2017]. However, note that for biologically reasonable choices of $F(u)$, the growth function will be bounded by the linear function, such that $F(u) \leq ru$. Thus,
+
 \begin{equation}\label{eqn:comp1}
 \text{D}\frac{\partial{u}^2}{\partial{x^2}}+F(u) \leq \text{D}\frac{\partial{U}^2}{\partial{x^2}}+rU
 \end{equation}
-```
+
 Now, note that for compact initial conditions like (\ref{eqn:IC_1}), there exist positive constants $G$ and $\sigma$ such that we bound the initial distribution from above by a Gaussian distribution: \begin{equation}\label{eqn:initGaus}
 U(x,0)=\frac{G}{\sqrt{4\pi\sigma^2}}\exp{\left(-\frac{x^2}{4\sigma^2}\right)}
 \end{equation}
 
-```{=tex}
 \begin{equation}\label{eqn:comp2} 
 \text{such that}\quad u(0,x) \leq U(0,x)\quad \text{for all }x
 \end{equation}
-```
+
 From (\ref{eqn:comp1}) and (\ref{eqn:comp2}), we use the comparison theorem for PDEs to find that the solution to the linear equation in (\ref{eqn:comp1}) provides an upper bound to the solution of the potentially nonlinear equation (\ref{eqn:PDE}).
 
 A detailed derivation of the solution of (\ref{eqn:lin_PDE}) can be found in Lewis et al. [-@lewis2016]. In brief, we utilize the change of variables $U(t,x)= W(t,x)e^{rt}$, reducing (\ref{eqn:lin_PDE}) to the standard diffusion equation for $W$. We then apply Fourier and inverse Fourier transforms to the new PDE and the initial condition (\ref{eqn:initGaus}) to find that
@@ -104,19 +95,18 @@ $$W(t,x)=\frac{G}{\sqrt{4\pi(\sigma^2+Dt)}}\exp{\left(-\frac{x^2}{4(\sigma^2+Dt)
 
 Converting back to our original variable, we conclude that the solution to (\ref{eqn:lin_PDE}) with the initial condition (\ref{eqn:initGaus}) is a normal distribution:
 
-```{=tex}
 \begin{equation}\label{eqn:PDEsol}
 U(t,x)=\frac{G}{\sqrt{4\pi(\sigma^2+Dt)}}\exp{\left(-\frac{x^2}{4(\sigma^2+Dt)}+rt\right)}\end{equation}
-```
+
 Now, we can quantify the spatial spread of the population by considering how quickly a level set $U(x,t)=U_c$ moves in space, where $U_c$ could be considered a threshold of detection. In other words, below $U_c$ it is so difficult to find the invasive organisms that for practical purposes they are not present. By rearranging (\ref{eqn:PDEsol}), we can get the following expression $$\left(\frac{x}{t}\right) ^2=4rD+\frac{4r\sigma^2}{t}-\frac{4(\sigma^2+Dt)}{t^2}\ln{  \left(\frac{U_{cr}\sqrt{4\pi(\sigma^2+Dt)}}{G}\right) }$$
 
 As $t$ becomes large, this formula simplifies to $\frac{\lvert x \rvert}{t}\rightarrow \sqrt{4rD}$. Thus, the asymptotic rate of spread is $V=\sqrt{4rD}$, as we initially sought to show.
 
-This relationship between $V, r$, and $D$ holds true for nonlinear forms of $F(u)$, can be extended to higher dimensions, and does not need to rely on the idea of a threshold of detection— in fact, true advancing fronts with asymptotic speeds given by (\ref{eqn:V}) form ([@skellam1951; @okubo2001], Okubo and Levin, 2001). For invasion of a two-dimensional homogeneous habitat described by the reaction-diffusion equation \begin{equation}\label{eqn:PDE2D}
+This relationship between $V, r$, and $D$ holds true for nonlinear forms of $F(u)$, can be extended to higher dimensions, and does not need to rely on the idea of a threshold of detection— in fact, true advancing fronts with asymptotic speeds given by (\ref{eqn:V}) form [@skellam1951; @okubo2001; @holmes1994]. For invasion of a two-dimensional homogeneous habitat described by the reaction-diffusion equation \begin{equation}\label{eqn:PDE2D}
 \frac{\partial{u(x,y)}}{\partial{t}}=\text{D}\left[\frac{\partial{u}^2}{\partial{x^2}}+\frac{\partial{u}^2}{\partial{y^2}}\right]+F(u),
 \end{equation} the radius of the species range should increase linearly with time, with the slope of the increase given by $\sqrt{4rD}$.
 
-This theory has been tested for numerous ecological systems and often agrees well with the empirical relationship between measured spread rates, per capita growth rates, and diffusion coefficients. Microscale observations can be used to parameterize (\ref{eqn:V}) and predict the spreading rate for a given species at a geographic scale. Such spreading-speed analyses have been conducted for a number of terrestrial animal species, including the muskrat, cereal leaf beetle, small cabbage white butterfly, and grey squirrel [@andow1990; @grosholz1996].
+This theory has been tested for numerous ecological systems and often agrees well with the empirical relationship between measured spread rates, per capita growth rates, and diffusion coefficients. Microscale observations can be used to parameterize (\ref{eqn:V}) and predict the spreading rate for a given species at a geographic scale. Such spreading-speed analyses have been conducted for a number of terrestrial animal species, including the muskrat, cereal leaf beetle, European starling, small cabbage white butterfly, and grey squirrel [@andow1990; @grosholz1996; @holmes1993].
 
 Spreading speed theory has also been applied to numerous aquatic species, including the brown trout, green crab, hermit crab, periwinkle, barnacle, mussels, and molluscs [@macdonald2022; @grosholz1996; @marculis2016; @gharouni2015]. Possibly the only application of this method to a tunicate was performed by Grozholz [-@grosholz1996] for *B. leachi*, but his estimates of $r=1.8$ and $D=1800$ yielded a predicted rate of spread an order of magnitude larger than observed rates. In addition to providing insight on the spread of a specific invasive species of commercial concern, comparing the accuracy of our estimation for *B. violaceus* to the previous results for *B. leachi* could allow for broader conclusions to be drawn regarding the applicability of this approach for colonial tunicates in general.
 
@@ -124,152 +114,49 @@ Spreading speed theory has also been applied to numerous aquatic species, includ
 
 ## Predicting invasion speed
 
-The diffusion coefficient, $D$, was calculated using the formula $$D=\frac{2M_D(t)^2}{\pi t} $$ where $M_D (t)$ is the mean displacement of tracked organisms $t$ time units after they begin moving [@andow1990]; Skellam, 1973).
+The diffusion coefficient, $D$, was calculated using the formula $$D=\frac{2M_D(t)^2}{\pi t} $$ where $M_D (t)$ is the mean displacement of tracked organisms $t$ time units after they begin moving [@andow1990; @othmer1988].
 
-We estimated $M_D$ using information on the dispersal potential of post-larval *Botrylloides sp.* colonies collected by Worcester [-@worcester1994] (@tbl-params). *B. violaceus* can disperse naturally by rafting on eelgrass and other floating vegetation or debris [@carver2006; @worcester1994]. The dispersal distance/speed of rafting colonies was used rather than swimming larvae to better reflect the likely mechanisms by which *B. violaceus* has spread along the coastline. Additionally, calculating dispersal potential from larval swimming speeds would be very difficult for a species with a complex reproduction cycle in which the timing and magnitude of spawning events varies between locations and can be highly affected by environmental conditions (SOURCES).
-
-```{r}
-#| label: calc_D
-
-
-colony_day <- 0.225 #0.225 km per colony/day
-raft_prob <- (2/3) # probability that a given colony will raft
-hab_prob <- 0.5 # probability that a given rafting colony will reach a suitable habitat
-km_year_raft <- colony_day*raft_prob*hab_prob*365
-D_raft <- 2*(km_year_raft^2)/(pi)
-
-obs_r <- c(1.887,1.842,1.665,1.512,0.972,0.984, 0.867,0.778)
-test_v <- function(x) {
-  2*sqrt(x*D_raft)
-}
-preds <- map_vec(obs_r, test_v)
-```
+We estimated $M_D$ using information on the dispersal potential of post-larval *Botrylloides sp.* colonies collected by Worcester [-@worcester1994] (@tbl-parameters). *B. violaceus* can disperse naturally by rafting on eelgrass and other floating vegetation or debris [@carver2006; @worcester1994; @carman2010]. The dispersal distance/speed of rafting colonies was used rather than swimming larvae to better reflect the likely mechanisms by which *B. violaceus* has spread along the coastline.
 
 ```{r}
-#| label: tbl-params
+#| label: tbl-parameters
 #| tbl-cap: "Calculating the diffusion coefficient"
-
-
-params <- tribble(
-  ~Parameter, ~Value,
-  "Distance traveled per colony per day (km)", 0.225,
-  "Probability that a given colony will raft", 2/3,
-  "Probability that a given rafting colony will reach a suitable habitat", 0.5,
-  "Mean displacement (km/year)", 27.38,
-  "D (km\U00B2/year)", 477.1
-)
-table1 <- gt(params)  %>% 
-  fmt_number(
-    columns = Value,
-    decimals = 3,
-    use_seps = FALSE,
-   drop_trailing_zeros = TRUE
-  ) %>% 
-  cols_width(Parameter ~ pct(78),
-    Value ~pct(22)) %>% 
-  tab_options(table.font.size =12)
 
 table1
 ```
 
-Eight estimates of population growth rate ($r$) were taken from Grey [-@grey2011], ranging from 0.87-1.89. Each $r$ value was combined with our estimate of $D$ to find a predicted invasion speed, $V$, in km/year.
+Eight estimates of population growth rate ($r$) were taken from Grey [-@grey2011], ranging from 0.78-1.89. Each $r$ value was combined with our estimate of $D$ to find a predicted invasion speed, $V$, in km/year.
 
 ## Model validation
 
-We validated our invasion speed estimates against the rate of boundary displacement for the region in which *B. violaceus* has been observed. We retrieved species occurrence data from the Global Biodiversity Information Facility (GBIF, https://www.gbif.org/) using the package 'spocc' [@spocc]. GBIF is an international database of biological data that has been used in over 10,000 peer-reviewed scientific articles and incorporates data from a variety of sources, primarily the citizen science platform iNaturalist. Although citizen science data can contain spatial and temporal bias [@dicecco2021], it is a valuable and widely-used tool for monitoring the spread of invasive species [@encarnação2021]. Furthermore, iNaturalist observations must meet certain quality standards to be included in GBIF (https://www.inaturalist.org/pages/help#GBIFdata), and tunicates like *B. violaceus* have a relatively low risk of misidentification by citizen volunteers [@lawson2022].
+We validated our invasion speed estimates against the rate of boundary displacement for the region in which *B. violaceus* has been observed. We retrieved species occurrence data from the Global Biodiversity Information Facility (GBIF, \url{https://www.gbif.org/}) using the package 'spocc' [@spocc]. GBIF is an international database of biological data that has been used in over 10,000 peer-reviewed scientific articles and incorporates data from a variety of sources, primarily the citizen science platform iNaturalist.
 
-The region of interest for the GBIF query was arbitrarily defined to be the rectangular region bounded by the coordinates (72°W, 41°N, 59°W, 50°N). We only included observations labeled as "Human Observation" in order to exclude preserved specimens located in museum collections. Although *B. violaceus* may have been introduced to the east coast of the United States as early as the 1970s (SOURCE), the earliest record in the GBIF database is from 2005.
+Although citizen science data can contain spatial and temporal bias [@dicecco2021], it is a valuable and widely-used tool for monitoring the spread of invasive species [@encarnação2021]. Furthermore, iNaturalist observations must meet certain quality standards to be included in GBIF (\url{https://www.inaturalist.org/pages/help#GBIFdata}), and tunicates like *B. violaceus* have a relatively low risk of misidentification by citizen volunteers [@lawson2022].
 
-For each year ($t$) since the year of the initial observation ($t_0=2005$), we calculated $V$ as $$V=\frac{\max{\lvert x_{i}}-x_0\rvert}{t-t_0}$$ where $x_0$ was the coordinate location of the 2005 observation and $x_i$ is a single observation within the vector $\bf{x}$ of locations where *B. violaceus* had been observed over the period $t_0$ to $t$. While there are various methods of quantifying macroscale patterns of species' range expansions, similar boundary displacement approaches are common in invasion ecology [@clark2018; @tobin2007]. We discarded the very low speed estimated for 2006 (1.1 km/year) as a clear outlier, but all other data was retained.
+The region of interest for the GBIF query was arbitrarily defined to be the rectangular region bounded by the coordinates (72°W, 41°N, 59°W, 50°N). We only included observations labeled as "Human Observation" in order to exclude preserved specimens located in museum collections. Although *B. violaceus* may have been introduced to the east coast of the United States as early as the 1970s [@bock2011; @dijkstra2007], the earliest record in the GBIF database that did not have any issues or flags is from 2005.
 
-```{r}
-#| label: query_data
-##| cache: true
-
-# Define spatial boundary for observations
-polygon_list = list(rbind(c(-72, 41), c(-59, 41), c(-59, 50), c (-72, 50), c(-72, 41)))
-poly<- st_polygon(polygon_list)
-poly<-st_sfc(poly, crs=4326)
-
-# Query GBIF database
-df_gbif <- occ(query = 'Botrylloides violaceus',
-               from = 'gbif',
-               has_coords = TRUE,
-               geometry = c(-72, 41, -59, 50),
-               limit = 1000,
-               gbifopts = list(basisOfRecord ="HUMAN_OBSERVATION"))
-
-# Convert lon and lat to numbers, remove observations with no date
-df_gbif_cleaned <- occ2df(df_gbif) %>% 
-  mutate(lng=as.double(longitude), lat=as.double(latitude), .keep="unused") %>% 
-  filter(!is.na(date))
-```
-
-```{r}
-#| label: calc_V
-
-
-# Convert df to sf
-tunicate <- st_as_sf(df_gbif_cleaned %>% 
-                    select(date, lng, lat) %>% # Select relevant columns
-                    mutate(year = year(date)),  # Add year column
-                    coords = c("lng","lat")) # Specify which cols are coordinates
-
-years <- tunicate %>% group_by(year) %>% summarise(year=mean(year)) # Group by year of obs
- 
-# Define function to get and merge all obs from previous years
-get_yrs <- function(yr) { 
-   out <- years %>% filter(year <= yr) %>% st_union()
-   }
- 
-years_vec <- c(2005:2024) # Years with observations in the GBIF dataset
-
-years2 <- years %>% mutate(years_agg = map_vec(year, get_yrs))
-
-init_pt <- tunicate %>% 
-  st_set_crs(4326) %>% # Define CRS
-  filter(year==2005) %>% # Select only the year of introduction
-  pull(geometry) # Pull the coordinates
-
-dist <- tunicate %>% 
-  filter(year>2005) %>% # Remove year of introduction
-  st_set_crs(4326) %>% # Define CRS
-  ungroup() %>% 
-  mutate(dist = st_distance(geometry, init_pt)) %>% # Find the distance b/w the initial point and a given observation
-  group_by(year) %>% 
-  st_drop_geometry() %>% 
-  select(year, dist) %>%  # Select only year and distance columns
-  summarize(max_dist = max(dist)) %>% # Find the maximum distance b/w observations and initial point in each year
-  mutate(max_dist=cummax(max_dist)) # Maximum distance the species has been observed from the initial point before and during a given year
-
-speed <- dist %>% mutate(km=as.double(max_dist/1000), # Convert from m to km
-                         speed=km/(year-2005)) %>% # Speed = distance (km)/time (yr)
-                         na.omit() %>% 
-  mutate(outlier = is_outlier(speed), extreme=is_extreme(speed))
-
-speed2 <- speed %>% 
-  filter(year>2006)
-```
+For each year ($t$) since the year of the initial observation ($t_0=2005$), we calculated $V$ as $$V=\frac{\max{\lvert x_{i}}-x_0\rvert}{t-t_0}$$ where $x_0$ was the coordinate location of the 2005 observation and $x_i$ is a single observation within the vector ${x}$ of locations where *B. violaceus* had been observed over the period $t_0$ to $t$. While there are various methods of quantifying macroscale patterns of species' range expansions, similar boundary displacement approaches are common in invasion ecology [@clark2018; @tobin2007]. We discarded the very low speed estimated for 2006 (1.1 km/year) as a clear outlier, but all other data was retained.
 
 All calculations were performed in R version 4.3.2 [@rcoreteam2023]. R packages central to data analysis and visualization included 'spocc', 'sf', 'leaflet', and the tidyverse collection [@sf; @tidyverse; @spocc; @leaflet].
 
 # Results
 
-![A map of the spread of *B. violaceus* in the Gulf of Maine. Black dots represent confirmed observations of *B. violaceus* from the GBIF database. Colored circles (centered at the location of the first observation) illustrate the expanding range.](map_radii.png){fig-align="center"}
+\begin{figure}[h!]
+\centering
+\includegraphics[width=0.75\textwidth]{map_radii.png}
+\caption{A map of the spread of \textit{B. violaceus} in the Gulf of Maine. Black dots represent confirmed observations of \textit{B. violaceus} from the GBIF database. Colored circles (centered at the location of the first observation) illustrate the expanding range.}
+\end{figure}
+
+Predicted invasion speeds using (\ref{eqn:V}) varied from 38.5 to 60.0 km/year, corresponding to the lowest ($r=0.78$) and highest ($r=1.89$) population growth rates assumed for *B. violaceus* (@tbl-summaries).
 
 ```{r}
 #| label: tbl-summaries
 #| tbl-cap: "Summary statistics for observed and predicted *B. violaceus* invasion speed (km/year)."
 
-test<-data.frame("Observed"=c(summary(speed2$speed)),
-           "Predicted"=c(summary(preds))) %>% rownames_to_column() %>% gt() %>% 
-  fmt_number(
-    columns = c(Observed, Predicted),
-    decimals = 1,
-    use_seps = FALSE
-  )
-test
+summaries_df
 ```
+
+There was significant overlap between the range of predicted speeds and the distribution of "true" invasion speeds, estimated by dividing the distance between the introduction point and furthest observation of *B. violaceus* in each year by the time elapsed since introduction (@fig-hist). The mean observed and predicted invasion speeds differed by fewer than 9 km/year, a remarkably small disparity (@tbl-summaries).
 
 ```{r}
 #| label: fig-hist
@@ -277,28 +164,19 @@ test
 #| fig-align: "center"
 #| fig-cap: "Histogram of observed invasion speeds for *B. violaceus* in the Gulf of Maine, calculated from GBIF species occurrence data from 2006-2024. Dashed lines represent the minimum and maximum predicted invasion speeds when varying population growth rates were used as input values."
 #| fig-pos: "H"
+#| fig-height: 2.5
+#| fig-width: 4.5
 
-ggplot()+
-  geom_histogram(aes(x=speed2 %>% pull(speed)), bins=23,
-                 color=pnw_palette("Starfish")[2], fill=pnw_palette("Starfish")[2], alpha=0.5)+
-  geom_vline(aes(xintercept = min(preds)),lty="dashed", color="black")+
-  geom_vline(aes(xintercept = max(preds)),lty="dashed", color="black")+
-  labs(x="Observed invasion speed (km/year)", y="Count", lty=NULL)+
-  lims(x=c(0,NA))+
-  theme_classic()+
- scale_linetype(guide=FALSE)+
-  theme(axis.title.y = element_text(margin = margin(t = 0, r = 10, b = 0, l = 0)),
-        axis.title.x = element_text(margin = margin(t = 10, r = 0, b = 0, l = 0)),
-        text = element_text(size = 13))
+fig2
 ```
 
 # Discussion
 
 This model attempted to predict the macro-scale dispersal of an invasive tunicate using a simple reaction-diffusion model. Given the low biological realism of our simple diffusion model, the very strong agreement between observed and predicted invasion speeds is quite remarkable. Most studies that have applied this method of predicting invasion speed characterized their results as successful if estimates were within the same order of magnitude as observed spreading speeds. For example, Grosholz [-@grosholz1996] predicted the spreading speed of the tunicate *B. leachi* (a member of the same genus as to be *B. violaceus*) to be $114$ km/year, which was much faster than the observed rate of $16$ km/year.
 
-In contrast, our predicted speed of 49 km/year was extremely close to the mean of 41 km/year derived from observations of *B. violaceus* made in the Gulf of Maine over the past two decades (@tbl-summaries). Both the observed and predicted invasion speeds were generally in the range of 40-60 km/year ([Fig @fig-hist]). While such accurate prediction is unlikely to be replicable with other data sets, it does suggest that estimating spreading speed from empirical data on local diffusion potential and experimentally-derived population growth rates could be an underutilized approach in invasion ecology.
+In contrast, our predicted speed of ~49 km/year was extremely close to the mean of ~40 km/year derived from observations of *B. violaceus* made in the Gulf of Maine over the past two decades (@tbl-summaries). Both the observed and predicted invasion speeds were generally in the range of 40-60 km/year ([Fig @fig-hist]). While such accurate prediction is unlikely to be replicable with other data sets, it does suggest that estimating spreading speed from empirical data on local diffusion potential and experimentally-derived population growth rates could be an underutilized approach in invasion ecology.
 
-Multiple avenues are apparent for future work modeling the spread of *B. violaceus* using diffusion-type equations. First, there exist many other possible formulations for the term representing population growth. The Fisher-KPP equation, which assumes logistic rather than exponential growth, has been well-studied from a mathematical perspective and has seen widespread application across ecological contexts (SOURCES). Other diffusion models incorporate Allee effects, an ecological phenomenon characterized by decreased individual fitness (lower per capita growth rates) at small population sizes. Accounting for Allee effects in continuous reaction-diffusion models or analogous discrete integrodifference models can alter predictions about the potential success or failure of an invasion, rates of spread, and plausible ranges of an invasive species [@keitt2001; @kot1996; @liu2019].
+Multiple avenues are apparent for future work modeling the spread of *B. violaceus* using diffusion-type equations. First, there exist many other possible formulations for the term representing population growth. The Fisher equation, which assumes logistic rather than exponential growth, has been well-studied from a mathematical perspective and has seen widespread application across ecological contexts [e.g., @holmes1994; @berestycki2009]. Other diffusion models incorporate Allee effects, an ecological phenomenon characterized by decreased individual fitness (lower per capita growth rates) at small population sizes. Accounting for Allee effects in continuous reaction-diffusion models or analogous discrete integrodifference models can alter predictions about the potential success or failure of an invasion, rates of spread, and plausible ranges of an invasive species [@keitt2001; @kot1996; @liu2019].
 
 The model from which (\ref{eqn:V}) was derived assumes a uniform environment and isotropic dispersal. In reality, invasive species are more likely to disperse into more favorable habitats, so assuming that the rate of spread does not vary based on the direction of movement is not realistic. For example, the growth and reproduction of *B. violaceus* generally increase with warmer temperatures, so in a relatively cold climate, southward dispersal may be more likely than northward dispersal.
 
@@ -308,4 +186,6 @@ Future work could utilize discrete integrodifference equations with leptokurtic 
 
 Recent work coupling deterministic models with a stochastic component has led to major improvements in the biological realism of PDE-based invasion models. These stochastic models can account for both process and observation error, incorporating the randomness inherent in natural systems. For example, Roques et al. [-@roques2011] used a "statistical-reaction–diffusion approach" to analyze the expansion of the pine processionary moth based on moth nest presence/absence data. Using a "mechanistic-statistical" diffusion model assuming logistical growth and imperfect species observation data, Louvrier et al. [-@louvrier2020] were able to forecast the expanding distribution of the grey wolf in France. Applying similar methods to data on *B. violaceus* would be valuable for developing useful predictions of potential future invasions.
 
-Finally, competition-diffusion models that represent the population growth and spread of two competing species in the same habitat admit similar traveling front solutions to those described above for the simple reaction-diffusion equation [@carrère2018]. It is often interesting to investigate the stability and long-term behavior of a system of competition-diffusion models for different parameter values, including varying the propagation speeds of the two organisms or the differential impacts of the competitive interactions on each species [@carrère2018; @ducrot2014]. Experimental evidence suggests that *B. violaceus* colonies can outcompete *Botryllus schlosseri*, a different invasive tunicate that has been equally or more problematic for the New England aquaculture industry [@dijkstra2007; @gittenberger2011]. However, these studies have been limited to small-scale experiments conducted on a single substrate (e.g., an oyster cage, SOURCE). Our single-species reaction diffusion model could be extended to a system of competition-diffusion equations to examine the potential impacts of competition between *B. violaceus* and *B. schlosseri* on the spread of these two species on a broader scale.
+Finally, competition-diffusion models that represent the population growth and spread of two competing species in the same habitat admit similar wavefront solutions to those described above, and may result in periodic spatial patterns driven by the dynamics of the interspecific interactions [@carrère2018; @holmes1994]. It is often interesting to investigate the stability and long-term behavior of a system of competition-diffusion models for different parameter values, including varying the propagation speeds of the two organisms or the differential impacts of the competitive interactions on each species [@carrère2018; @ducrot2014]. Experimental evidence suggests that *B. violaceus* colonies can outcompete *Botryllus schlosseri*, a different invasive tunicate that has been equally or more problematic for the New England aquaculture industry [@dijkstra2007; @gittenberger2011]. However, these studies have been limited to small-scale experiments conducted on a single substrate like a PVC panel [@wagstaff2017]. Our single-species reaction diffusion model could be extended to a system of competition-diffusion equations to examine the potential impacts of competition between *B. violaceus* and *B. schlosseri* on the spread of these two species on a broader scale.
+
+## References
