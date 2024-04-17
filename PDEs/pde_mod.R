@@ -10,20 +10,21 @@ library(lwgeom)
 library(leaflet)
 library(PNWColors)
 library(gt)
+library(mapview)
 
 # Define spatial boundary for observations
-polygon_list = list(rbind(c(-72, 41), c(-59.52, 41), c(-59.52, 50), c (-72, 50), c(-72, 41)))
+polygon_list = list(rbind(c(-72, 41), c(-59, 41), c(-59, 50), c (-72, 50), c(-72, 41)))
 poly<- st_polygon(polygon_list)
 poly<-st_sfc(poly, crs=4326)
 
 # Query GBIF database
 df_gbif <- occ(query = 'Botrylloides violaceus',
                from = 'gbif', has_coords = TRUE,
-               geometry = c(-72, 41, -59.52, 50), limit = 1000)
+               geometry = c(-72, 41, -59, 50), limit = 1000)
 
 # Convert lon and lat to numbers, remove observations with no date
 df_gbif_cleaned <- occ2df(df_gbif) %>% 
-  mutate(lng=as.doublelongitude, lat=as.double(latitude), .keep="unused") %>% 
+  mutate(lng=as.double(longitude), lat=as.double(latitude), .keep="unused") %>% 
   filter(!is.na(date))
 
 # Convert df to sf
@@ -107,9 +108,9 @@ ggplot()+geom_sf(data=circles3)
 # Create a continuous palette function
 pal <- colorNumeric(
   palette = "viridis",
-  domain = circles3$year)
+  domain = years_vec)
 
-m <- leaflet() %>% fitBounds(-72,41,-59.52,50) %>% 
+m <- leaflet() %>% fitBounds(-72,41,-59,50) %>% 
   addProviderTiles(providers$Stadia.StamenTonerLite)
 
 m  %>% 
@@ -124,7 +125,7 @@ radii <- speed %>% select(year, max_dist, km) %>% arrange(-year)
 
 map <- leaflet(options = leafletOptions(zoomControl = FALSE)) %>% 
   fitBounds(-72,41,-59.52,50) %>% 
-  addProviderTiles(providers$Stadia.StamenTonerLite) %>% 
+  addProviderTiles(providers$CartoDB.Positron) %>% 
   addCircles(data=tunicate, color="black") %>% 
   addCircles(data=radii, 
              lng=-70.03979, 
@@ -137,6 +138,9 @@ map <- leaflet(options = leafletOptions(zoomControl = FALSE)) %>%
             opacity = 1
   )
 map
+
+
+
 
 
 table1 <- gt(params)  %>% 
@@ -153,3 +157,4 @@ table1 <- gt(params)  %>%
               heading.title.font.size = 14)
 
 table1 %>% gt::as_latex()
+#| tbl-subcap: "Based on Worcester (1994)"
