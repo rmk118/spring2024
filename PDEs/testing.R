@@ -60,56 +60,29 @@ speed_old <- dist_old %>% mutate(km=as.double(max_dist/1000), # Convert from m t
 
 # 44°56'47.6"N 66°54'19.7"W in 2009, from Martin et al. (2011): doi: 10.3391/ai.2011.6.4.05  
 
-# http://www.aquaticinvasions.net/2011/AI_2011_6_4_Sephton_etal_Supplement.pdf 
-# 2006: 43.71370 65.96947
-# 2006: 43.72360 65.84057
-# 2006: 43.56273 65.36245
-# 2006: 44.36113 64.33362
-# 2006: 44.37525 64.33069
-# 2006: 45.51055 61.01768
-# 2006: 45.50252 60.96400
-# 2006: 46.62680 61.01597
-# 2006: 46.28117 60.42500 
-# 2006: 43.54773 65.43217
-# 2006: 43.56273 65.36245 
+canada <- read_csv("./PDEs/sephton2011.csv",
+                   col_names=TRUE,
+                   col_types="cddllll")
+canada <- canada %>% mutate(lng = -1*lon) %>% mutate(across(where(is.logical),~replace_na(.x, FALSE)))
 
-# 2007
-# 44.19365 66.16688
-# 43.71370 65.96947
-# 43.72360 65.84057
-# 43.44470 65.63510
-# 43.56273 65.36245
-# 43.75780 65.32200
-# 43.69950 65.10740
-# 44.37525 64.33069
-# 44.45598 64.30683 
-# 44.53780 64.23840
-# 45.33450 60.98610
-# 46.20680 60.24900
-# 46.62680 61.01597 
+canada <- canada %>% 
+  pivot_longer(cols=where(is.logical), 
+               values_to = "present", names_to = "year") %>%  filter(present==TRUE)%>%
+  mutate(year=as.numeric(year)) %>% group_by(site) %>% slice_min(year) %>% ungroup()
 
-# 2008
-# 44.19365 66.16688
-# 43.81648 66.14785
-# 43.71370 65.96947
-# 43.72360 65.84057
-# 43.44470 65.63510
-# 43.56273 65.36245
-# 43.69950 65.10740 
-# 44.37525 64.33069
-# 44.45598 64.30683
-# 44.44782 64.37437
-# 44.53780 64.23840
-# 45.50710 60.96050
-# 45.58870 60.96180
-# 45.58333 60.74067 
-# 45.66115 60.87440
-# 46.82020 60.15450 
-# 46.30850 60.28400
-# 46.90320 60.46040
-# 47.00010 60.46470 
-# 46.62680 61.01597 
-# 46.23000 61.31690
+# Convert df to sf
+ca_tunicate <- st_as_sf(canada %>%
+                       select(year, lng, lat), # Select relevant columns
+                     coords = c("lng","lat")) # Specify which cols are coordinates
 
-# 2009
+pal_ca <- colorNumeric(
+  palette = c(pnw_palette("Sailboat", 4, type = "discrete")),
+  domain = c(2006, 2007, 2008, 2009))
 
+
+leaflet(data=ca_tunicate) %>% 
+  addProviderTiles(providers$CartoDB.Positron) %>% 
+  addCircles(color = ~pal_ca(year)) %>%
+  addLegend("bottomright", pal = pal_ca, values = ~year,
+            title = "Year",
+            labFormat = labelFormat(big.mark = ""))

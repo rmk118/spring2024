@@ -1,7 +1,7 @@
 ---
 title: "MATH 245 Homework 6"
 author: "Ruby Krasnow and Tommy Thach"
-date: "2024-04-14"
+date: "2024-04-23"
 format: 
   pdf:
     fig-width: 4
@@ -18,8 +18,6 @@ execute:
 library(tidyverse)
 ```
 
-## Done: 1-4
-## Not started: 5-9
 
 ## Problem 1
 
@@ -209,7 +207,7 @@ $$\lambda_n=n^2, \quad X_n(x)=\sin{(n\theta)},\quad n=1,2,3... $$
 Now onto the $R$ problem:
 $$\frac{R''}{R}r^2 + \frac{R'}{R}r=\lambda$$
 $$R''r^2 + R'r-\lambda R=0$$
-This is an Euler ODE of the form $ax^2y''+bxy'+cy=0$, which has the characteristic equation $am(m-1)+bm+c$ and, if $m_1, m_2$ are distinct real roots, the general solution $y=. (Note that I have used $m$ instead of the standard $r$ to avoid confusion with the variable $r$ from (\ref{eqn:semi}).  
+This is an Euler ODE of the form $ax^2y''+bxy'+cy=0$, which has the characteristic equation $am(m-1)+bm+c$ and, if $m_1, m_2$ are distinct real roots, the general solution $y=C_1 x^{m_1}+C_2x^{m_2}$. (Note that I have used $m$ instead of the standard $r$ to avoid confusion with the variable $r$ from (\ref{eqn:semi}).  
 
 Here, $a=1, b=1, c=-\lambda$, so the characteristic equation becomes $m(m-1)+m-\lambda$, which simplifies to $m^2-\lambda$. Thus, our roots are $\pm \sqrt{\lambda}=\pm n$. Thus, $R(r)=Cr^n+Dr^{-n}$.
 
@@ -247,12 +245,79 @@ Consider the Neumann problem with periodic BC:
 \end{equation}
 
 Find the necessary condition for the existence of a solution and then solve the problem. Hint: Use Green's identity
-$$\iint\limits_{D}(u\Delta v-v\Delta u)\,dA=\int\limits_{\partial D} \left(u\frac{\partial v}{\partial n} - v\frac{\partial u}{\partial n}\right)\,ds $$
+\begin{equation}\label{eqn:Green}
+\iint\limits_{D}(u\Delta v-v\Delta u)\,dA=\int\limits_{\partial D} \left(u\frac{\partial v}{\partial n} - v\frac{\partial u}{\partial n}\right)\,ds 
+\end{equation}
 where $D$ is a domain and $n$ is a unit normal vector. Note that for a 2-dimensional domain $D$, $dA=dx\,dy$ and $ds$ is arc length.
+
+- - - - 
+
+Since (\ref{eqn:Green}) must hold for any $(u,v)$, take $v=1$. Then $\Delta v = 0 = \frac{\partial v}{\partial n}$, so
+\begin{align*}
+\iint\limits_{D}(u\Delta v-v\Delta u)\,dA &=\int\limits_{\partial D} \left(u\frac{\partial v}{\partial n} - v\frac{\partial u}{\partial n}\right)\,ds \quad \text{becomes} \\
+\iint\limits_{D}(0-\Delta u)\,dA &=\int\limits_{\partial D} \left(0 - \frac{\partial u}{\partial n}\right)\,ds \\
+0 &=-\int\limits_{\partial D} g\left( \theta \right)\,ds
+\end{align*}
+
+Where we used the fact that by (\ref{eqn:prob5}), $\Delta u = 0$ and $\frac{\partial u}{\partial n}=u_r=g(\theta)$. Thus, the necessary condition for the existence of a solution is $$\int\limits_{\partial D} g\left( \theta \right)\,ds=0$$
+
+
+To solve the problem, we now look for a separated solution of the form $u=\Theta(\theta)R(r)$. In polar coordinates, $\Delta u=0$ becomes $u_{rr}+\frac{1}{r}u_r+ \frac{1}{r^2}u_{\theta\theta}=0$, giving us $R''\Theta + \frac{1}{r}R'\Theta+\frac{1}{r^2}R\Theta''=0$. From the previous problem, we know that this yields two problems, one in $\Theta$ and one in $R$. 
+
+For $\Theta$, we have  $\Theta''+\Theta\lambda=0$ with periodic BCs. Using the table provided and setting $l=\pi$, this means we have eigenvalues
+\begin{equation*}
+    \begin{cases}
+     \lambda_0=0 \\
+     \lambda_n = \left( \frac{n \pi}{l} \right)^2=n^2 \quad n=1,2,3,...
+    \end{cases}       
+\end{equation*}
+
+with eigenfunctions
+
+\begin{equation*}
+    \begin{cases}
+     \Theta_0(\theta)=C_0 \\
+     \Theta_n(\theta) = \Bigl\{ \cos{ \left( n\theta \right)},\sin{\left( n\theta \right)} \Bigr\}
+    \end{cases}       
+\end{equation*}
+
+Now we return to the $R$ problem. As before, we get an Euler equation with $a=1, b=1, c=-\lambda$, so the characteristic equation becomes $m(m-1)+m-\lambda$, which simplifies to $m^2-\lambda$. 
+
+For $\lambda_0$, we get the repeated root $m_1=m_2=0$, giving us the solution $R_0(r)=C_1+C_2 \ln{r}$.
+For $\lambda_n=n^2$, our roots are $m=\pm n$. Thus, $R_n(r)=C_3r^n+C_4r^{-n}$.
+
+We are only explicitly provided one BC, so in order to determine the unknown coefficients, we will need to assume that we should disregard the solutions that go to infinity as $r$ approaches infinity, since our domain is the region *outside* the disk with radius $a$.
+
+Thus, we exclude $\ln{r}$ and $r^n$, which will both go to $+\infty$ as $r\rightarrow+\infty$, and sum the remaining solutions to find that 
+
+$$u(r,\theta)=A_0+\sum_{n=1}^{\infty}r^{-n} \left(A_n\cos{(n\theta)}+B_n\sin{(n\theta)}\right) $$
+$$u_r(r,\theta)=A_0+\sum_{n=1}^{\infty}-nr^{-n-1} \left(A_n\cos{(n\theta)}+B_n\sin{(n\theta)}\right) $$
+
+Finally, we use the inhomogeneous BC at $r=a$. Setting $r=a$ in the series above, we require that
+$$g(\theta)=A_0+\sum_{n=1}^{\infty}-na^{-n-1} \left(A_n\cos{(n\theta)}+B_n\sin{(n\theta)}\right) $$
+
+Since this is a Fourier series for $g(\theta)$, we can now solve for the unknown coefficients:
+
+$$A_0=\frac{1}{2\pi} \int_{-\pi}^{\pi}g(\theta)\,d\theta $$
+But from the necessary condition for the existence of a solution, this integral must be zero.
+Therefore, our solution to (\ref{eqn:prob5}) is
+\begin{tcolorbox}[colback=blue!5!white,colframe=blue!75!black,title=Solution]
+
+$$u(r,\theta)=\sum_{n=1}^{\infty}r^{-n} \left(A_n\cos{(n\theta)}+B_n\sin{(n\theta)}\right) $$
+where
+$$A_n=\frac{-1}{n\pi(a^{n+1})} \int_{-\pi}^{\pi}g(\theta) \cos{(n\theta)}\,d\theta $$
+$$B_n=\frac{-1}{n\pi(a^{n+1})} \int_{-\pi}^{\pi}g(\theta) \sin{(n\theta)}\,d\theta $$
+\end{tcolorbox}
+
+
+
+
+
+
 
 ## Problem 6. 
 
-Prove the uniqueness of the Neumann problem on $D \subset \mathbb{R}$
+Prove the uniqueness of the Neumann problem on $D \subset \mathbb{R^2}$
 \begin{equation}\label{eqn:unique}
     \begin{cases}
      \Delta u=f  & \text{in }D \\
@@ -271,3 +336,19 @@ Suppose we have two solutions $u$ and $v$ to (\ref{eqn:unique}) and define $w=u-
      \frac{\partial w}{\partial n}=0   & \text{on }\partial D
     \end{cases}       
 \end{equation}
+
+Using the version of Green's first identity given in the textbook but in two dimensions, we have
+
+$$\int\limits_{\partial D}  v\frac{\partial u}{\partial n} \,ds = \iint \limits_{D} \nabla v \cdot \nabla u \;d \mathbf{x}+ \iint \limits_{D}v\Delta u \;d \mathbf{x}$$
+
+
+
+Now set $u=v=w$:
+
+$$\int\limits_{\partial D}  w\frac{\partial w}{\partial n} \,ds = \iint \limits_{D} \lvert \nabla w\rvert^2 \;d \mathbf{x}+ \iint \limits_{D}w\Delta w \;d \mathbf{x}$$
+
+But from (\ref{eqn:unique2}), $\Delta w=\frac{\partial w}{\partial n}=0$, so
+
+$$0 = \iint \limits_{D} \lvert\nabla w\rvert^2\;d \mathbf{x}$$
+
+By the vanishing theorem, it follows that $\lvert\nabla w\rvert^2 \equiv 0$ in $D$, so $\nabla w=0$. But since a function with a vanishing gradient must be constant, provided that $D$ is connected, this means that $w=c$. Thus, $c=u-v$ and the two solutions to the Neumann problem are unique up to a constant. $\square$
