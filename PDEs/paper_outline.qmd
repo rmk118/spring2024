@@ -1,7 +1,7 @@
 ---
 title: "Application of a reaction-diffusion equation to the spread of the invasive ascidian *Botrylloides violaceus*"
 author: "Ruby Krasnow"
-date: "2024-04-22"
+date: "2024-04-29"
 format:
   pdf:
     documentclass: scrartcl
@@ -22,6 +22,11 @@ link-external-newwindow: true
 
 source("pde_mod.R")
 ```
+
+# Abstract
+Modeling is a critical tool for minimizing the harmful effects of invasive species on natural ecosystems. Despite the recent popularity of correlative environmental niche models, mechanistic reaction-diffusion models remain powerful tools for predicting and controlling the spread of invasive species. The colonial ascidian *Botrylloides violaceus* has rapidly spread across the Gulf of Maine, outcompeting and smothering native species and presenting a major nuisance for shellfish aquaculture.Here, we apply arelationship between the rate of spread of an invasive species and select biological parameters(namely, the population growth rate and diffusion coefficient) derived from the generalized reaction-diffusion equation. We validated the predicted rate of spread for *B. violaceus* against rates calculated from species occurrence data from the citizen science platform iNaturalist. The model predicted a mean speed of ~49 km/year, which was extremely close to the observed mean of ~40 km/year. Although simple reaction-diffusion models have limited biological realism, the accuracy of our results suggest that estimating spreading speed based on empirical data on local
+diffusion potentials and population growth rates could be an underutilized approach in invasion ecology.
+
 
 # Introduction
 
@@ -68,7 +73,7 @@ This is the simplest version of the general reaction-diffusion model, for a homo
 
 \begin{equation}\label{eqn:Fisher}
 \frac{\partial{u}}{\partial{t}}=
-\text{D}\frac{\partial{u}^2}{\partial{x^2}}+r(1-\frac{u}{K})
+\text{D}\frac{\partial{u}^2}{\partial{x^2}}+ru\left(1-\frac{u}{K}\right)
 \end{equation}
 
 We can generalize our section of the coastline of length $L$ to an $n$-dimensional domain $\Omega$, with boundary $\partial\Omega$. If the function $u(t,x)$ and $\partial\Omega$ are smooth and $\phi(x)$ is continuous on the $\Omega \cup \partial\Omega$, the problem presented by (\ref{eqn:IC_1}) and (\ref{eqn:PDE}) will be well posed in the sense that it will have a unique solution $u(x,t)$ on $\Omega \times (0,T]$ for some $T > 0$, with $u(x,t)$ depending continuously on $\phi(x)$ [@cosner2008]. Further discussion of the existence, uniqueness, and smoothness of solutions to reaction-diffusion equations can be found in @cosner2008, along with a review of the relevant maximum principle and comparison theorem and a discussion of the stability and propagation of solutions.
@@ -98,7 +103,7 @@ Converting back to our original variable, we conclude that the solution to (\ref
 \begin{equation}\label{eqn:PDEsol}
 U(t,x)=\frac{G}{\sqrt{4\pi(\sigma^2+Dt)}}\exp{\left(-\frac{x^2}{4(\sigma^2+Dt)}+rt\right)}\end{equation}
 
-Now, we can quantify the spatial spread of the population by considering how quickly a level set $U(x,t)=U_c$ moves in space, where $U_c$ could be considered a threshold of detection. In other words, below $U_c$ it is so difficult to find the invasive organisms that for practical purposes they are not present. By rearranging (\ref{eqn:PDEsol}), we can get the following expression $$\left(\frac{x}{t}\right) ^2=4rD+\frac{4r\sigma^2}{t}-\frac{4(\sigma^2+Dt)}{t^2}\ln{  \left(\frac{U_{cr}\sqrt{4\pi(\sigma^2+Dt)}}{G}\right) }$$
+Now, we can quantify the spatial spread of the population by considering how quickly a level set $U(x,t)=U_c$ moves in space, where $U_c$ could be considered a threshold of detection. In other words, below $U_c$ it is so difficult to find the invasive organisms that for practical purposes they are not present. By rearranging (\ref{eqn:PDEsol}), we can get the following expression $$\left(\frac{x}{t}\right) ^2=4rD+\frac{4r\sigma^2}{t}-\frac{4(\sigma^2+Dt)}{t^2}\ln{  \left(\frac{U_{c}\sqrt{4\pi(\sigma^2+Dt)}}{G}\right) }$$
 
 As $t$ becomes large, this formula simplifies to $\frac{\lvert x \rvert}{t}\rightarrow \sqrt{4rD}$. Thus, the asymptotic rate of spread is $V=\sqrt{4rD}$, as we initially sought to show.
 

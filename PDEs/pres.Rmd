@@ -1,0 +1,128 @@
+---
+title: "PDE pres"
+author: "Ruby Krasnow"
+date: "2024-04-27"
+output:
+  pdf_document:
+    extra_dependencies: ["tcolorbox", "xcolor"]
+    
+bibliography: references.bib
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+```
+
+We represent the the population density of *B. violaceus* at time $t$ and spatial coordinate $x$ as $u(t,x)$.
+
+Assume that the population occupies a domain of fixed length $L$, so that $0 < x < L$.
+The environment outside the domain is hostile, so there is no population there: if
+$x\leq 0$ or $x \geq L$, then $u(x,t)= 0$ for all $t$.
+
+If we assumed simple linear population growth, our PDE would take the form
+
+\begin{equation}\label{eqn:lin_PDE}
+\frac{\partial{u}}{\partial{t}}=\text{D}\frac{\partial{u}^2}{\partial{x^2}}+ru, \quad 0<x<L
+\end{equation}
+
+with the Dirichlet BCs $u(0,t)=u(0,L)=0$.
+
+This is the simplest version of the general reaction-diffusion model, for a homogeneous, unstructured population growing exponentially and dispersing in a uniform, one-dimensional environment [@andow1990; @skellam1951].
+
+
+
+We know how to solve this! The solution is
+$$u(t,x)= \sum_{n=1}^{\infty} C_n e^{(r-\lambda_n)t} \sin{\left(\frac{n\pi x}{L}\right)}, $$
+where
+
+$$\lambda_n= \left(\frac{n\pi}{L}\right)^2D,\quad n=1,2,3... $$
+and the coefficients $C_n$ are determined by the initial density $u(x,0)$.
+
+$$\lambda_1= \left(\frac{\pi}{L}\right)^2D \quad \Longrightarrow \quad r= \left(\frac{\pi}{L}\right)^2D \quad \Longrightarrow \quad L_{cr}=\pi \sqrt{\frac{D}{r}}$$
+
+
+A more realistic model considers the evolution of a compact initial
+population distribution in a large open space. Rather than imposing the restriction that the population always occupy a fixed region, we instead allow the population to grow freely. Only the
+initial condition is bounded, assumed for simplicity to be connected:
+\begin{align}\label{eqn:IC_1} u(0,x) =
+\begin{cases}
+\phi(x)>0 & 0<x<L \\
+0 & \text{otherwise}
+\end{cases}
+\end{align}
+
+Here, $L$ is the size of the initially occupied area and the function $\phi$ describes the
+initial population distribution. The equation describing the population dynamics,
+that is,
+
+\begin{equation}\label{eqn:PDE}
+\frac{\partial{u}}{\partial{t}}=\text{D}\frac{\partial{u}^2}{\partial{x^2}}+F(u)
+\end{equation}
+
+should now be defined on a much larger domain than $L$; here, we assume $-\infty<x<\infty$. Note that $F(u)$ can now be a nonlinear function (like logistic growth), which is much more biologically realistic.
+
+
+
+For biologically reasonable choices of $F(u)$, the growth function will be bounded by the linear function, such that $F(u) \leq ru$.
+
+
+
+\begin{equation}\label{eqn:comp1}
+\text{D}\frac{\partial{u}^2}{\partial{x^2}}+F(u) \leq \text{D}\frac{\partial{U}^2}{\partial{x^2}}+rU
+\end{equation}
+
+
+Now, note that for compact initial conditions like (\ref{eqn:IC_1}), there exist positive constants $G$ and $\sigma$ such that we bound the initial distribution from above by a Gaussian distribution: \begin{equation}\label{eqn:initGaus}
+U(0,x)=\frac{G}{\sqrt{4\pi\sigma^2}}\exp{\left(-\frac{x^2}{4\sigma^2}\right)}
+\end{equation}
+
+\begin{equation}\label{eqn:comp2} 
+\text{such that}\quad u(0,x) \leq U(0,x)\quad \text{for all }x
+\end{equation}
+
+
+
+
+\begin{equation}
+\frac{\partial{U}}{\partial{t}}=\text{D}\frac{\partial{U}^2}{\partial{x^2}}+rU
+\end{equation}
+
+The linear equation in (1) can be readily solved, since the change of variables $U(t,x)= W(t,x)e^{rt}$ reduces it to the standard diffusion equation for $W$. Using forward and inverse Fourier transforms, we find that
+$$W(t,x)=\frac{G}{\sqrt{4\pi(\sigma^2+Dt)}}\exp{\left(-\frac{x^2}{4(\sigma^2+Dt)}\right)}  $$
+
+Converting back to our original variable, we conclude that the solution to (1) with the initial condition (5a) is a normal distribution, specifically
+$$U(t,x)=\frac{G}{\sqrt{4\pi(\sigma^2+Dt)}}\exp{\left(-\frac{x^2}{4(\sigma^2+Dt)}+rt\right)}$$
+
+Now, we can quantify the spatial spread of the population by considering how quickly a level set $U(x,t)=U_c$ moves in space, where $U_c$ could be considered a threshold of detection. Rearranging the above equation, we can get the following expression
+$$\left(\frac{x}{t}\right) ^2=4rD+\frac{4r\sigma^2}{t}-\frac{4(\sigma^2+Dt)}{t^2}\ln{  \left(\frac{U_{c}\sqrt{4\pi(\sigma^2+Dt)}}{G}\right) }$$
+
+As $t$ becomes large, this formula simplifies to $\frac{\lvert x \rvert}{t}\rightarrow \sqrt{4rD}$. Thus, the asymptotic rate of spread is $V=\sqrt{4rD}$, as we initially sought to show.
+
+
+## General reaction-diffusion equation
+$$\frac{\partial{u}}{\partial{t}}=
+\text{D}\left(\frac{\partial{u}^2}{\partial{x^2}}\right)+f(u)$$
+
+## Linear growth
+$$\frac{\partial{u}}{\partial{t}}=
+\text{D}\left(\frac{\partial{u}^2}{\partial{x^2}}\right)+ru$$
+
+## Fisher's equation
+$$\frac{\partial{u}}{\partial{t}}=
+\text{D}\left(\frac{\partial{u}^2}{\partial{x^2}}\right)+ru\left(1-\frac{u}{K}\right)$$
+
+## Harvest/fishing mortality
+$$\frac{\partial{u}}{\partial{t}}=
+\text{D}\left(\frac{\partial{u}^2}{\partial{x^2}}\right)+ru\left(1-\frac{u}{K}\right)-qE(x)u$$
+
+## With advection
+$$\frac{\partial{u}}{\partial{t}}=
+\text{D}\left(\frac{\partial{u}^2}{\partial{x^2}}\right)-a\frac{\partial{u}}{\partial{x}}+f(u)$$
+
+
+
+
+
+
+# References

@@ -18,6 +18,7 @@ execute:
 library(tidyverse)
 ```
 
+# (Wednesday morning correction to Problem 5)
 
 ## Problem 1
 
@@ -140,7 +141,12 @@ The mean value property says that for a harmonic function $u$ in a disk $D$, con
 $$f_{avg}(x)=\frac{1}{b-a}\int_a^b f(x)\;dx$$
 Here,
 \begin{align*}
-u_{avg}(\theta)& =\frac{1}{2\pi}\int_0^{2\pi} (\sin\theta+1)\;d\theta \\
+u(0) &=\text{average of u over } \partial{B}(0,2) \\
+&=\frac{1}{2\pi R} \int_{\partial{B}(0,R)} u \; ds \\
+&=\frac{1}{4\pi} \int_{\partial{B}(0,R)} u \; ds \\
+&=\frac{1}{4\pi} \int_{\theta=0}^{\theta=2\pi} u \cdot R \; d\theta \\
+& =\frac{1}{2\pi}\int_0^{2\pi} u\;d\theta \\
+& =\frac{1}{2\pi}\int_0^{2\pi} (\sin\theta+1)\;d\theta \\
 &=\frac{1}{2\pi}\Bigl[(\cos\theta+\theta) \Bigr]_0^{2\pi} \\
 &=\frac{1}{2\pi}\Bigl[(\cos{2\pi}+2\pi)-\cos{0} \Bigr] \\
 &= \frac{1}{2\pi}(1+2\pi-1)=1
@@ -256,10 +262,10 @@ Since (\ref{eqn:Green}) must hold for any $(u,v)$, take $v=1$. Then $\Delta v = 
 \begin{align*}
 \iint\limits_{D}(u\Delta v-v\Delta u)\,dA &=\int\limits_{\partial D} \left(u\frac{\partial v}{\partial n} - v\frac{\partial u}{\partial n}\right)\,ds \quad \text{becomes} \\
 \iint\limits_{D}(0-\Delta u)\,dA &=\int\limits_{\partial D} \left(0 - \frac{\partial u}{\partial n}\right)\,ds \\
-0 &=-\int\limits_{\partial D} g\left( \theta \right)\,ds
+0 &=-\int\limits_{\partial D} g\left( \theta \right)\,d\theta
 \end{align*}
 
-Where we used the fact that by (\ref{eqn:prob5}), $\Delta u = 0$ and $\frac{\partial u}{\partial n}=u_r=g(\theta)$. Thus, the necessary condition for the existence of a solution is $$\int\limits_{\partial D} g\left( \theta \right)\,ds=0$$
+Where we used the fact that by (\ref{eqn:prob5}), $\Delta u = 0$ and $\frac{\partial u}{\partial n}=u_r=g(\theta)$. Thus, the necessary condition for the existence of a solution is $$\int\limits_{\partial D} g\left( \theta \right)\,d\theta=0$$
 
 
 To solve the problem, we now look for a separated solution of the form $u=\Theta(\theta)R(r)$. In polar coordinates, $\Delta u=0$ becomes $u_{rr}+\frac{1}{r}u_r+ \frac{1}{r^2}u_{\theta\theta}=0$, giving us $R''\Theta + \frac{1}{r}R'\Theta+\frac{1}{r^2}R\Theta''=0$. From the previous problem, we know that this yields two problems, one in $\Theta$ and one in $R$. 
@@ -291,22 +297,23 @@ We are only explicitly provided one BC, so in order to determine the unknown coe
 Thus, we exclude $\ln{r}$ and $r^n$, which will both go to $+\infty$ as $r\rightarrow+\infty$, and sum the remaining solutions to find that 
 
 $$u(r,\theta)=A_0+\sum_{n=1}^{\infty}r^{-n} \left(A_n\cos{(n\theta)}+B_n\sin{(n\theta)}\right) $$
-$$u_r(r,\theta)=A_0+\sum_{n=1}^{\infty}-nr^{-n-1} \left(A_n\cos{(n\theta)}+B_n\sin{(n\theta)}\right) $$
+$$u_r(r,\theta)=\sum_{n=1}^{\infty}-nr^{-n-1} \left(A_n\cos{(n\theta)}+B_n\sin{(n\theta)}\right) $$
 
 Finally, we use the inhomogeneous BC at $r=a$. Setting $r=a$ in the series above, we require that
-$$g(\theta)=A_0+\sum_{n=1}^{\infty}-na^{-n-1} \left(A_n\cos{(n\theta)}+B_n\sin{(n\theta)}\right) $$
+$$g(\theta)=\sum_{n=1}^{\infty}-na^{-n-1} \left(A_n\cos{(n\theta)}+B_n\sin{(n\theta)}\right) $$
 
 Since this is a Fourier series for $g(\theta)$, we can now solve for the unknown coefficients:
 
-$$A_0=\frac{1}{2\pi} \int_{-\pi}^{\pi}g(\theta)\,d\theta $$
-But from the necessary condition for the existence of a solution, this integral must be zero.
+$$-nA_na^{-n-1}=\frac{1}{\pi} \int_{-\pi}^{\pi}g(\theta)\cos(n\theta)\,d\theta $$
+$$-nB_na^{-n-1}=\frac{1}{\pi} \int_{-\pi}^{\pi}g(\theta)\sin(n\theta)\,d\theta $$
+
 Therefore, our solution to (\ref{eqn:prob5}) is
 \begin{tcolorbox}[colback=blue!5!white,colframe=blue!75!black,title=Solution]
 
-$$u(r,\theta)=\sum_{n=1}^{\infty}r^{-n} \left(A_n\cos{(n\theta)}+B_n\sin{(n\theta)}\right) $$
+$$u(r,\theta)=A_0+\sum_{n=1}^{\infty}r^{-n} \left(A_n\cos{(n\theta)}+B_n\sin{(n\theta)}\right) $$
 where
-$$A_n=\frac{-1}{n\pi(a^{n+1})} \int_{-\pi}^{\pi}g(\theta) \cos{(n\theta)}\,d\theta $$
-$$B_n=\frac{-1}{n\pi(a^{n+1})} \int_{-\pi}^{\pi}g(\theta) \sin{(n\theta)}\,d\theta $$
+$$A_n=-\frac{a^{n+1}}{n\pi} \int_{-\pi}^{\pi}g(\theta) \cos{(n\theta)}\,d\theta $$
+$$B_n=-\frac{a^{n+1}}{n\pi} \int_{-\pi}^{\pi}g(\theta) \sin{(n\theta)}\,d\theta $$
 \end{tcolorbox}
 
 
@@ -343,11 +350,11 @@ $$\int\limits_{\partial D}  v\frac{\partial u}{\partial n} \,ds = \iint \limits_
 
 
 
-Now set $u=v=w$:
+Now replace $u$ and $v$ in this formula with $w$:
 
 $$\int\limits_{\partial D}  w\frac{\partial w}{\partial n} \,ds = \iint \limits_{D} \lvert \nabla w\rvert^2 \;d \mathbf{x}+ \iint \limits_{D}w\Delta w \;d \mathbf{x}$$
 
-But from (\ref{eqn:unique2}), $\Delta w=\frac{\partial w}{\partial n}=0$, so
+But from (\ref{eqn:unique2}), $\Delta w=0$ in $D$ and $\frac{\partial w}{\partial n}=0$ on $\partial{D}$, so
 
 $$0 = \iint \limits_{D} \lvert\nabla w\rvert^2\;d \mathbf{x}$$
 
