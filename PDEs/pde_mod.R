@@ -63,6 +63,7 @@ get_yrs <- function(yr) {
  
 years_vec <- c(2005:2024) # Years with observations in the GBIF dataset
 
+# Apply function to all years in the years_vec vector
 years2 <- years %>% mutate(years_agg = map_vec(year, get_yrs))
 
 init_pt <- tunicate %>% 
